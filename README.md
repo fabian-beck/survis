@@ -8,10 +8,11 @@ SurVis reference literature database:
  
 Other literature databases using SurVis:
 
+* Visualizing Group Structures in Graphs - http://go.visus.uni-stuttgart.de/groups-in-graphs/
 * Performance Visualization - http://idav.ucdavis.edu/~ki/STAR/
 * Visualization for Software Reuse - http://www.cos.ufrj.br/~schots/survis_reuse/
 
-Currently, the system is distributed on request only. Please contact fabian.beck@visus.uni-stuttgart.de if you are interested. A first public release of the code is planned for late October 2014.
+Currently, the system is distributed on request only. Please contact fabian.beck@visus.uni-stuttgart.de if you are interested.
 
 ## Contact
 
