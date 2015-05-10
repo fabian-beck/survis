@@ -12,6 +12,7 @@ Other literature databases using SurVis:
 * Performance Visualization - http://idav.ucdavis.edu/~ki/STAR/
 * Visualization for Software Reuse - http://www.cos.ufrj.br/~schots/survis_reuse/
 * Set Visualization - http://www.cvast.tuwien.ac.at/~alsallakh/SetViz/literature/www/index.html
+* Visualizing High-Dimensional Data - http://www.sci.utah.edu/~shusenl/highDimSurvey/website/
 
 Currently, the system is distributed on request only. Please contact fabian.beck@visus.uni-stuttgart.de if you are interested.
 
