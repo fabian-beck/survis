@@ -8,7 +8,7 @@ Test SurVis with a reference literature database: http://dynamicgraphs.fbeck.com
 
 ## How To Use SurVis for Your Literature Collection
 
-Dowload the latest SurVis release or fork this repository.
+Dowload the [latest SurVis release](https://github.com/fabian-beck/survis/releases/latest) or fork this repository.
 
 To start SurVis, open 'src/index.html' in your browser.
 
@@ -35,7 +35,7 @@ Enjoy SurVis and send feedback if you like.
 
 We've published a paper about SurVis at VAST 2015 - please reference it if you use or want to refer to SurVis in one of your publications. 
 
-Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Dissemination of Scientific Literature Collections with SurVis. In: IEEE Transactions on Visualization and Computer Graphics (2015).
+Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Dissemination of Scientific Literature Collections with SurVis. In: IEEE Transactions on Visualization and Computer Graphics (2016).
 
 * DOI: http://dx.doi.org/10.1109/TVCG.2015.2467757
 * Preview video: https://vimeo.com/136206061 
