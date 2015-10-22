@@ -1,0 +1,135 @@
+.entry {
+    margin: 2px;
+    background: #EEEEEE;
+    counter-increment: problem;
+    border: 1px solid black;
+    border-left: 5px solid black;
+    padding: 0;
+    float: left;
+    width: 105px;
+    overflow: hidden;
+}
+
+.entry_img {
+    display: none;
+}
+
+.entry .thumb {
+    max-width: 100px;
+    float:left;
+}
+
+.entry_main {
+    width: 100%;
+}
+
+.entry .sparkline {
+    display: none;
+}
+
+.entry .id {
+    display: none;
+}
+
+.entry .series{
+    display: none;
+}
+
+.entry .year {
+    font-size: 8pt;
+    padding: 0;
+    margin: 0 2px 0 0;
+    color: #666666;
+    display: inline-block;
+    float: right;
+}
+
+.entry .title {
+    display: none;
+}
+
+
+.entry .author {
+    font-size: 8pt;
+    font-weight: bold;
+    overflow: hidden;
+    display: inline-block;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.entry .author .first_name {
+    display: none;
+}
+
+.entry .tags {
+    display: none;
+}
+
+.entry .tags .tag_category {
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.entry .tags .tag {
+    color: #000000;
+}
+
+.entry .tags .add_tag {
+    display: none;
+}
+
+.entry .tags .add_tag .tag_input {
+    display: none;
+}
+
+.entry .abstract {
+    display: none;
+}
+
+.entry .comment {
+    display: none;
+}
+
+.entry .label {
+    font-weight: bold;
+}
+
+.entry .links {
+    display: none;
+}
+
+.entry .links a {
+}
+
+.entry .links a:visited {
+    color: #666666;
+}
+
+.entry .reference {
+    clear: both;
+    font-size: 9pt;
+    margin-left: 20px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.entry ul {
+    clear: both;
+}
+
+.entry .entry_control {
+    display: none;
+}
+
+.entry .select_similar {
+    display: none;
+}
+
+.entry .bibtex_control {
+    display: none;
+}
+
+.entry .CodeMirror {
+    display: none;
+}

@@ -1,0 +1,23 @@
+.entry {
+    float: left;
+    width: 270px;
+    height: 160px;
+    margin-right: 10px;
+}
+
+.entry .id {
+    font-size: 8pt;
+}
+
+.entry .title {
+    font-size: 10pt;
+}
+
+.entry .authors .last_name {
+    font-size: 8pt;
+}
+
+.entry .series, .entry .year, .tag_list, .footer_container, .entry .author .first_name, .entry .abstract, .entry .comment, .entry .add_tag, .entry .links {
+    display: none;
+}
+

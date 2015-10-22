@@ -1,0 +1,36 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Calibri, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+label {
+    background: #FFFFEE;
+    border: 1px solid black;
+}
+
+a {
+    color: #223388;
+}
+
+iframe {
+    border: none;
+}
+
+a:active {
+    color: #223388;
+}
+
+a:visited {
+    color: #223388;
+}
+
+h1 {
+    font-size: 14pt;
+    border-bottom: 1px solid black;
+}

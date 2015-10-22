@@ -1,0 +1,99 @@
+.vis {
+	display: inline-block;
+	position: relative;
+	padding: 5px;
+}
+
+.vis.sparkline {
+	height: 16px;
+	bottom: -2px;
+	margin-right: 3px;
+	min-width: 6px;
+	padding: 0;
+}
+
+.vis .container {
+	display: inline-block;
+	border: 1px solid black;
+	height: 140px;
+}
+
+.vis.sparkline .container {
+	height: 14px;
+}
+
+.vis .container.total {
+	margin-left: 1px;
+}
+
+.vis .selector {
+	background-color: white;
+	display: table-cell;
+	vertical-align: bottom;
+	width: 40px;
+	max-width: 40px;
+	position: relative;
+	height: 140px;
+}
+
+.vis.sparkline .selector {
+	width: 4px;
+	height: 14px;
+}
+
+.vis .selector.total {
+	: 5px;
+}
+
+.vis .bar {
+}
+
+.vis .bar.total {
+	background-color: #666666;
+	margin-left: 0;
+}
+
+.vis .selector_icon {
+	min-width: 23px;
+	min-height: 23px;
+	border-radius: 7px;
+	color: white;
+	border: 2px solid white;
+	box-shadow: 1px 1px 5px #AAAAAA;
+	position: absolute;
+	top: 160px;
+	left: 4px;
+	text-align: center;
+	padding: 2px;
+}
+
+.vis .selector_icon .symbol {
+	margin-top: 5px;
+}
+
+.vis .value {
+	font-size: 10pt;
+	min-width: 40px;
+	position: absolute;
+	top: 143px;
+	text-align: center;
+	background: rgba(255,255,255,0.4);
+}
+
+.vis .selector .label {
+	position: absolute;
+	font-size: 9pt;
+	font-weight: normal;
+	top: 135px;
+	left: 10px;
+	padding: 2px;
+	max-width: 130px;
+	white-space: nowrap;
+	background: rgba(255, 255, 255, 0.3);
+	transform-origin: 0% 0%;
+	transform:rotate(-90deg);
+	-moz-transform:rotate(-90deg);
+	-o-transform:rotate(-90deg);
+	-webkit-transform:rotate(-90deg);
+	-ms-transform:rotate(-90deg);
+}

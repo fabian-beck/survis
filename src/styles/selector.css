@@ -1,0 +1,148 @@
+@font-face {
+    font-family: 'ModernPictogramsNormal';
+    src: url('../fonts/modernpics-webfont.eot');
+    src: url('../fonts/modernpics-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/modernpics-webfont.woff') format('woff'), url('../fonts/modernpics-webfont.ttf') format('truetype'), url('../fonts/modernpics-webfont.svg#ModernPictogramsNormal') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#selectors_container {
+    margin-top: 10px;
+    overflow: auto;
+}
+
+#selectors_container .label {
+    font-size: 12pt;
+    float: left;
+    margin-top: 8px;
+    margin-right: 10px;
+}
+
+#selectors_container .button {
+    margin-top: 8px;
+    float: left;
+}
+
+#selectors_container .selector {
+    border-radius: 7px;
+    float: left;
+    color: white;
+    margin: 2px 8px 2px 0;
+    min-width: 27px;
+    min-height: 27px;
+    border: 2px solid white;
+    box-shadow: 1px 1px 5px #AAAAAA;
+}
+
+#selectors_container .selector.inverted .text {
+    text-decoration: line-through;
+}
+
+
+#selectors_container .selector.locked {
+    border: 2px solid black;
+}
+
+#selectors_container .selector div {
+    display: inline-block;
+}
+
+#selectors_container .selector_content {
+    border-left: 1px solid white;
+    padding: 2px;
+}
+
+#selectors_container .selector .lock, .invert, .remove {
+    cursor: pointer;
+}
+
+#selectors_container .selector .lock:hover, .invert:hover, .remove:hover {
+    color: silver;
+}
+
+#selectors_container .selector .invert.inverted:after {
+    color: #000000;
+}
+
+
+#selectors_container .selector .lock:after {
+    margin: 0 2px;
+    font-family: 'ModernPictogramsNormal';
+    content: "q";
+    font-size: 16pt;
+}
+
+#selectors_container .selector .lock.locked:after {
+    content: "n";
+    color: #000000;
+}
+
+#selectors_container .selector .invert:after {
+	margin: 0 2px;
+    font-family: 'ModernPictogramsNormal';
+    content: "e";
+    font-size: 16pt;
+}
+
+#selectors_container .selector .remove:after {
+	margin: 0 2px;
+    font-family: 'ModernPictogramsNormal';
+    content: "X";
+    font-size: 16pt;
+}
+
+#selectors_container .selector .text {
+    background: white;
+    opacity: 0.8;
+    color: black;
+    padding: 1px 3px;
+}
+
+.selector0 {
+    background-color: #1a8e6a;
+}
+
+.selector1 {
+    background-color: #f9ba02;
+}
+
+.selector2 {
+    background-color: #6762a2;
+}
+
+.selector3 {
+    background-color: #eb298d;
+}
+
+.selector4 {
+    background-color: #7cc522;
+}
+
+.selector5 {
+    background-color: #ec6502;
+}
+
+.selector0.fill {
+    fill: #1a8e6a;
+}
+
+.selector1.fill {
+    fill: #f9ba02;
+}
+
+.selector2.fill {
+    fill: #6762a2;
+}
+
+.selector3.fill {
+    fill: #eb298d;
+}
+
+.selector4.fill {
+    fill: #7cc522;
+}
+
+.selector5.fill {
+    fill: #ec6502;
+}
+

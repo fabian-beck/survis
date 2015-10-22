@@ -4,19 +4,32 @@
 
 SurVis is a flexible online browser to present and analyze scientific literature. The system is made for authors of survey articles, theses, or books who want to share their references in a user-friendly way. All you need to start is a bib file and a list of keywords for your papers.
 
-SurVis reference literature database:
+Test SurVis with a reference literature database: http://dynamicgraphs.fbeck.com
 
-* Dynamic Graph Visualization - http://dynamicgraphs.fbeck.com
- 
-Other literature databases using SurVis:
+## How To Use SurVis for Your Literature Collection
 
-* Visualizing Group Structures in Graphs - http://go.visus.uni-stuttgart.de/groups-in-graphs/
-* Performance Visualization - http://idav.ucdavis.edu/~ki/STAR/
-* Visualization for Software Reuse - http://www.cos.ufrj.br/~schots/survis_reuse/
-* Set Visualization - http://www.cvast.tuwien.ac.at/~alsallakh/SetViz/literature/www/index.html
-* Visualizing High-Dimensional Data - http://www.sci.utah.edu/~shusenl/highDimSurvey/website/
+Dowload the latest SurVis release or fork this repository.
 
-Currently, the system is distributed on request only. Please contact fabian.beck@visus.uni-stuttgart.de if you are interested.
+To start SurVis, open 'src/index.html' in your browser.
+
+The bibliography data is stored in 'bib/references.bib' in BibTeX format.
+
+Supplemental data is contained in 'src/data/':
+* 'tag_categories.js': list of special tag categories; they can be used as a prefix for the tags and appear, for instance, 'a:b' refers to tag 'b' in tag category 'a'
+* 'authorized_tags.js': tags that are defined through a description (highlighted in SurVis, description appears as a tooltip)
+* 'search_stopwords.js': a list of stopwords used to exclude terms from search queries
+* 'papers_pdf' (optional): PDF files of the papers, please use the BibTeX id as a file name
+* 'papers_img' (optional): PNG thumbnails for the papers, please use the BibTeX id as a file name
+
+Please do not edit the files in 'src/data/generated/' because they are created automatically. 
+
+After completing your changes, just run 'update_data.py' with Python 3. Reload SurVis in the browser to see the changed bibliography. The script will continue to check for updates on the bib file until you stop it.
+
+If the edit mode is activated, BibTeX entries can be modified in the browser, but are not stored in the 'bib' directory. To make those changes persistent, use 'download BibTex' in SurVis and copy the BibTeX data to your bib file in the 'bib' directory. You can also use the features to save and load the data from local storage of the browser; be careful, however, these features are still experimental.
+
+Further properties of SurVis, such as the title of the page, can be modified in the file 'src/properties.js'. For the publication of your literature collection, you should usually deactivate the edit mode in the properties ('editable = false;').
+
+Enjoy SurVis and send feedback if you like.
 
 ## Learn more
 
@@ -26,6 +39,17 @@ Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Disseminati
 
 * DOI: http://dx.doi.org/10.1109/TVCG.2015.2467757
 * Preview video: https://vimeo.com/136206061 
+
+## List of Literature Collections Using Survis
+
+* Dynamic Graph Visualization - http://dynamicgraphs.fbeck.com
+* Visualizing Group Structures in Graphs - http://go.visus.uni-stuttgart.de/groups-in-graphs/
+* Performance Visualization - http://idav.ucdavis.edu/~ki/STAR/
+* Visualization for Software Reuse - http://www.cos.ufrj.br/~schots/survis_reuse/
+* Set Visualization - http://www.cvast.tuwien.ac.at/~alsallakh/SetViz/literature/www/index.html
+* Visualizing High-Dimensional Data - http://www.sci.utah.edu/~shusenl/highDimSurvey/website/
+
+Please contact me (fabian.beck@visus.uni-stuttgart.de) if you know other collections using SurVis.
 
 ## Contact
 
