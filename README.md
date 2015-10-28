@@ -37,6 +37,7 @@ We've published a paper about SurVis at VAST 2015 - please reference it if you u
 
 Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Dissemination of Scientific Literature Collections with SurVis. In: IEEE Transactions on Visualization and Computer Graphics (2016).
 
+* Preprint: http://www.visus.uni-stuttgart.de/uploads/tx_vispublications/vast15-survis.pdf
 * DOI: http://dx.doi.org/10.1109/TVCG.2015.2467757
 * Preview video: https://vimeo.com/136206061 
 
