@@ -369,23 +369,28 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
             if (tokenSearchSimilarityCache[id][token] != undefined) {
                 matchCount += tokenSearchSimilarityCache[id][token];
             } else {
-                $.each(entry, function (key, value) {
-                    if (key != 'references' && key != 'referencedby') {
-                        var index = value.toLowerCase().indexOf(token);
-                        if (index >= 0) {
-                            containedInValues = true;
-                            if (key == 'title' || key == 'author' || key == 'keywords') {
-                                matchInImportantFields = true;
-                            }
-                            if (index == 0 || value[index - 1].match(/\W/i)) {
-                                wordStartsWithToken = true;
+                var similarity = 0;
+                if (id.toLowerCase() === token) {
+                    similarity = 1;
+                } else {
+                    $.each(entry, function (key, value) {
+                        if (key != 'references' && key != 'referencedby') {
+                            var index = value.toLowerCase().indexOf(token);
+                            if (index >= 0) {
+                                containedInValues = true;
+                                if (key == 'title' || key == 'author' || key == 'keywords') {
+                                    matchInImportantFields = true;
+                                }
+                                if (index == 0 || value[index - 1].match(/\W/i)) {
+                                    wordStartsWithToken = true;
+                                }
                             }
                         }
-                    }
-                });
-                var matchFactor = matchInImportantFields ? 2 : 1;
-                var similarity = containedInValues ? 0.25 * matchFactor : 0;
-                similarity += wordStartsWithToken ? 0.25 * matchFactor : 0;
+                    });
+                    var matchFactor = matchInImportantFields ? 2 : 1;
+                    similarity = containedInValues ? 0.25 * matchFactor : 0;
+                    similarity += wordStartsWithToken ? 0.25 * matchFactor : 0;
+                }
                 matchCount += similarity;
                 tokenSearchSimilarityCache[id][token] = similarity;
             }
