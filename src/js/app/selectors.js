@@ -1,6 +1,6 @@
 define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
 
-    var tokenEntryCache = {};
+    var tokenSearchSimilarityCache = {};
 
     var typeSymbols = {
         search: 's',
@@ -40,8 +40,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                     text = util.latexToHtml(selector['text']);
                     if (selector.type == 'citations_incoming') {
                         text = 'citing ' + text;
-                    }
-                    else if (selector.type == 'citations_outgoing') {
+                    } else if (selector.type == 'citations_outgoing') {
                         text = 'cited by ' + text;
                     }
                     $('<span>', {
@@ -350,7 +349,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
 
     function tokenizeSearchString(text) {
         text = text.toLowerCase();
-        var re = /\W+/;
+        var re = /(\W|_)+/;
         var words = text.split(re);
         words = $.grep(words, function (word) {
             return word.length > 1 && !($.inArray(word, bib.stopwords) >= 0);
@@ -359,26 +358,37 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
     }
 
     function computeSearchSimilarity(id, entry, tokens) {
-        if (!tokenEntryCache[id]) {
-            tokenEntryCache[id] = {};
+        if (!tokenSearchSimilarityCache[id]) {
+            tokenSearchSimilarityCache[id] = {};
         }
         var matchCount = 0;
         $.each(tokens, function (i, token) {
             var containedInValues = false;
-            if (tokenEntryCache[id][token] != undefined) {
-                containedInValues = tokenEntryCache[id][token];
+            var wordStartsWithToken = false;
+            var matchInImportantFields = false;
+            if (tokenSearchSimilarityCache[id][token] != undefined) {
+                matchCount += tokenSearchSimilarityCache[id][token];
             } else {
                 $.each(entry, function (key, value) {
                     if (key != 'references' && key != 'referencedby') {
-                        if (value.toLowerCase().indexOf(token) >= 0) {
+                        var index = value.toLowerCase().indexOf(token);
+                        if (index >= 0) {
                             containedInValues = true;
+                            if (key == 'title' || key == 'author' || key == 'keywords') {
+                                matchInImportantFields = true;
+                            }
+                            if (index == 0 || value[index - 1].match(/\W/i)) {
+                                wordStartsWithToken = true;
+                            }
                         }
                     }
                 });
-                containedInValues = id.toLowerCase().indexOf(token) >= 0 || containedInValues;
-                tokenEntryCache[id][token] = containedInValues;
+                var matchFactor = matchInImportantFields ? 2 : 1;
+                var similarity = containedInValues ? 0.25 * matchFactor : 0;
+                similarity += wordStartsWithToken ? 0.25 * matchFactor : 0;
+                matchCount += similarity;
+                tokenSearchSimilarityCache[id][token] = similarity;
             }
-            matchCount += containedInValues ? 1 : 0;
         });
         return matchCount / tokens.length;
     }
