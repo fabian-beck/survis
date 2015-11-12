@@ -370,7 +370,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                 matchCount += tokenSearchSimilarityCache[id][token];
             } else {
                 var similarity = 0;
-                if (id.toLowerCase() === token) {
+                if (id.toLowerCase().indexOf(token) >= 0) {
                     similarity = 1;
                 } else {
                     $.each(entry, function (key, value) {
