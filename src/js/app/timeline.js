@@ -81,7 +81,7 @@ define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], funct
     }
 
     function computeSelectedReferencesColors(referenceYears) {
-// find color for selected references
+        // find color for selected references
         $.each(selectors.getSelectors(), function (i, selector) {
             if (selector && !selector['lock'] && selector['text'] &&
                 Object.keys(bib.filteredEntries).indexOf(selector['text']) >= 0) {
@@ -181,7 +181,7 @@ define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], funct
     }
 
     function computeCitationData(referenceCount) {
-// set color of all reference blocks
+        // set color of all reference blocks
 
         var referenceYears = {};
         computeReferenceFrequencyColors(referenceYears);
@@ -372,6 +372,30 @@ define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], funct
     }
 
     function drawFrequencyBars(chart, barWidth, publicationHeight) {
+        chart.selectAll('svg').data(d3data).enter().append('rect')
+            .attr('class', 'bar invisible tooltip')
+            .attr('fill-opacity', 0.0)
+            .style('fill', '#EEEEEE00')
+            //.style('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges')
+            .attr('x', function (d) {
+                return (d.key - minYear) * barWidth;
+            })
+            .attr('y', function (d) {
+
+                return 0;
+
+            })
+            .attr('width', barWidth)
+            .attr('height', function (d) {
+                return height;
+            })
+            .attr('title', function (d) {
+                return d.key + ': ' + d.value + ' publications';
+            })
+            .on('click', function (d) {
+                toggleSelector('year', d.key, d3.event);
+            });
         chart.selectAll('svg').data(d3data).enter().append('rect')
             .attr('class', 'bar total tooltip')
             .style('fill', '#EEEEEE')
