@@ -157,7 +157,8 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     return bibParser.getEntries();
                 } catch (err) {
                     console.error(err);
-                    alert('Could not load bibliography from local storage, loaded default instead: \n' + err.substring(0, 200));
+                    console.log(localStorage.bibtexString);
+                    alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
                 }
                 return null;
             }
