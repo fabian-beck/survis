@@ -375,16 +375,11 @@ define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], funct
         chart.selectAll('svg').data(d3data).enter().append('rect')
             .attr('class', 'bar invisible tooltip')
             .attr('fill-opacity', 0.0)
-            .style('fill', '#EEEEEE00')
-            //.style('stroke', 'black')
-            .attr('shape-rendering', 'crispEdges')
             .attr('x', function (d) {
                 return (d.key - minYear) * barWidth;
             })
             .attr('y', function (d) {
-
                 return 0;
-
             })
             .attr('width', barWidth)
             .attr('height', function (d) {
@@ -405,9 +400,7 @@ define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], funct
                 return (d.key - minYear) * barWidth;
             })
             .attr('y', function (d) {
-
                 return height - publicationHeight * d.value;
-
             })
             .attr('width', barWidth)
             .attr('height', function (d) {
