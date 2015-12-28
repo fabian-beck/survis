@@ -193,7 +193,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                         } else if (selector['type'] == 'year') {
                             similarity = computeYearSimilarity(entry, text);
                         } else if (selector['type'] == 'author') {
-                            similarity = computeAuthorSimilarity(entry, text);
+                            similarity = computeAuthorSimilarity(id, text);
                         } else if (selector['type'] == 'entity') {
                             if (!selector['tokenized_text']) {
                                 var searchEntry = bib.entries[text];
@@ -336,9 +336,9 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
             return totalSimilarity;
         },
 
-        getActiveTags: function () {
+        getActiveTags: function (field) {
             var activeTags = {};
-            $.each(this.getSelectorsOfType('tag'), function (i, selector) {
+            $.each(this.getSelectorsOfType(field), function (i, selector) {
                 activeTags[selector['text']] = selector['inverted'] ? 'inverted' : 'normal';
             });
             return activeTags;
@@ -416,15 +416,19 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
         return 0.0;
     }
 
-    function computeAuthorSimilarity(entry, text) {
-        if (!entry['author']) {
+    function computeAuthorSimilarity(id, text) {
+        if (!bib.entries[id]['author']) {
             return 0.0;
         }
-        text = text.toLowerCase();
-        if (entry['author'].toLowerCase().indexOf(text) >= 0) {
-            return 1.0;
-        }
-        return 0.0;
+        text = util.simplifyTag(text);
+        var similarity = 0.0;
+        $.each(bib.parsedEntries[id]['author'], function(i, author) {
+            if (text === util.simplifyTag(author)) {
+                similarity = 1.0;
+                return;
+            }
+        });
+        return similarity;
     }
 
     function computeClusterSimilarity(bib, id, text) {
@@ -471,7 +475,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
 
     function computeSeriesSimilarity(entry, text) {
         var series = entry["series"] ? entry["series"] : '';
-        if (series === text) {
+        if (util.simplifyTag(series) === util.simplifyTag(text)) {
             return 1.0;
         }
         return 0.0;

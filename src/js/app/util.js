@@ -207,6 +207,10 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                     return dict[b] - dict[a]
                 });
                 return keys;
+            },
+
+            simplifyTag: function(tag) {
+                return tag.toLowerCase().replace(/\W/g, '');
             }
         }
     }

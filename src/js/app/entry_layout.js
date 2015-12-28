@@ -83,11 +83,11 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     }
                 });
                 resultBodyDiv.find('.active').removeClass('active');
-                $.each(selectors.getActiveTags(selectors), function (tag) {
+                $.each(selectors.getActiveTags('keywords'), function (tag) {
                     resultBodyDiv.find('.tag[value="' + tag + '"]').addClass('active');
                 });
-                $.each(selectors.getSelectorsOfType('author'), function (i, selector) {
-                    var authorValue = selector['text'].replace(/\\/g, '\\\\');
+                $.each(selectors.getActiveTags('author'), function (tag) {
+                    var authorValue = util.simplifyTag(tag);
                     resultBodyDiv.find('.author[value="' + authorValue + '"]').addClass('active');
                 });
                 $('#show_more_entries').remove();
@@ -267,10 +267,10 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 if (authorSplit.length == 2) {
                     var authorDiv = $("<div>", {
                         class: "author",
-                        value: author
+                        value: util.simplifyTag(author)
                     }).appendTo(authorsDiv);
                     authorDiv.click(function (event) {
-                        window.toggleSelector('author', author, event);
+                        window.toggleSelector('author', util.simplifyTag(author), event);
                     });
                     $("<span>", {
                         class: "last_name",
@@ -284,10 +284,10 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     $.each(authorSplit, function (j, author2) {
                         authorDiv = $("<div>", {
                             class: "author",
-                            value: author2
+                            value: util.simplifyTag(author2)
                         }).appendTo(authorsDiv);
                         authorDiv.click(function (event) {
-                            window.toggleSelector('author', author2, event);
+                            window.toggleSelector('author', util.simplifyTag(author2), event);
                         });
                         $("<span>", {
                             class: "name",

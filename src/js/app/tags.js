@@ -3,6 +3,8 @@
  */
 define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, selectors, bib) {
 
+    var tagIDCache = {};
+
     return {
 
         /**
@@ -21,7 +23,6 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
 
     function updateTagCloud(options) {
         parseEntries(options);
-        var activeTags = selectors.getActiveTags();
         var tagCloudID = 'tag_cloud_' + options.field;
         var tagCloudDiv = $('#' + tagCloudID);
         if (tagCloudDiv.length == 0) {
@@ -30,31 +31,30 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         var containerDiv = tagCloudDiv.find('.tags-container');
         var tagFrequency = {};
         var tagFrequencySelector = {};
-        $.each(Object.keys(activeTags), function (i, tag) {
-            tagFrequency[tag] = 0;
-        });
         $.each(bib.filteredEntries, function (id, field) {
-            var tags = bib.parsedEntries[id][options.field];
-            $.each(tags, function (j, tag) {
-                if (tagFrequency[tag]) {
-                    tagFrequency[tag] += 1;
+            var parsedTags = bib.parsedEntries[id][options.field];
+            $.each(parsedTags, function (j, tag) {
+                var tagID = getTagID(tag, options.field);
+                if (tagFrequency[tagID]) {
+                    tagFrequency[tagID] += 1;
                 } else {
-                    tagFrequency[tag] = 1;
+                    tagFrequency[tagID] = 1;
                 }
             });
         });
         $.each(bib.filteredEntries, function (id, field) {
-            var tags = bib.parsedEntries[id][options.field];
-            $.each(tags, function (j, tag) {
-                if (!tagFrequencySelector[tag]) {
-                    tagFrequencySelector[tag] = [];
+            var parsedTags = bib.parsedEntries[id][options.field];
+            $.each(parsedTags, function (j, tag) {
+                var tagID = getTagID(tag, options.field);
+                if (!tagFrequencySelector[tagID]) {
+                    tagFrequencySelector[tagID] = [];
                 }
                 $.each(selectors.getSelectors(), function (i, selector) {
                     if (selector && !selector['lock']) {
-                        if (!tagFrequencySelector[tag][i]) {
-                            tagFrequencySelector[tag][i] = 0;
+                        if (!tagFrequencySelector[tagID][i]) {
+                            tagFrequencySelector[tagID][i] = 0;
                         }
-                        tagFrequencySelector[tag][i] += bib.entrySelectorSimilarities[id][i] / tagFrequency[tag];
+                        tagFrequencySelector[tagID][i] += bib.entrySelectorSimilarities[id][i] / tagFrequency[tagID];
                     }
                 });
             });
@@ -63,28 +63,30 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         if (options.field === 'keywords') {
             $.each(bib.tagCategories, function (categoryName, category) {
                 var tagDivsCategory = [];
-                $.each(tagFrequency, function (tag, frequency) {
+                $.each(tagFrequency, function (tagID, frequency) {
+                    var tag = getTag(tagID, options.field);
                     if (tag.lastIndexOf((categoryName + ":"), 0) == 0) {
                         if (tag.indexOf('?') < 0) {
                             bib.keywordFrequencies[tag] = frequency;
                         }
-                        var tagDiv = createTag(tag, options, frequency, activeTags, tagFrequencySelector);
+                        var tagDiv = createTag(tag, options, frequency, tagFrequencySelector);
                         if (tagDiv) {
                             tagDivsCategory.push(tagDiv);
                         }
-                        usedCategoryTags.push(tag);
+                        usedCategoryTags.push(tagID);
                     }
                 });
                 appendTagDivs(categoryName, category['description'], tagDivsCategory, containerDiv);
             });
         }
         var tagDivs = [];
-        $.each(tagFrequency, function (tag, frequency) {
-            if (usedCategoryTags.indexOf(tag) < 0) {
+        $.each(tagFrequency, function (tagID, frequency) {
+            var tag = getTag(tagID, options.field);
+            if (usedCategoryTags.indexOf(tagID) < 0) {
                 if (options.field === 'keywords') {
-                    bib.keywordFrequencies[tag] = frequency;
+                    bib.keywordFrequencies[tagID] = frequency;
                 }
-                var tagDiv = createTag(tag, options, frequency, activeTags, tagFrequencySelector);
+                var tagDiv = createTag(tag, options, frequency, tagFrequencySelector);
                 if (tagDiv) {
                     tagDivs.push(tagDiv);
                 }
@@ -106,7 +108,8 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         });
     }
 
-    function createTag(tag, options, frequency, activeTags, tagFrequencySelector) {
+    function createTag(tag, options, frequency, tagFrequencySelector) {
+        var tagID = getTagID(tag, options.field);
         if (frequency < options.minTagFrequency) {
             return;
         }
@@ -122,10 +125,11 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         var sparklineDiv = $('<div>', {
             class: 'vis sparkline'
         }).prependTo(tagDiv);
-        selectors.vis(sparklineDiv, tagFrequencySelector[tag]);
-        if (activeTags[tag]) {
+        selectors.vis(sparklineDiv, tagFrequencySelector[tagID]);
+        var activeTags = selectors.getActiveTags(options.field);
+        if (activeTags[tagID]) {
             tagDiv.addClass("active");
-            if (activeTags[tag] == 'inverted') {
+            if (activeTags[tagID] === 'inverted') {
                 tagDiv.addClass('inverted');
             }
         }
@@ -134,7 +138,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
             text: frequency
         }).appendTo(tagDiv);
         tagDiv.click(function (event) {
-            window.toggleSelector(options.field, tag, event);
+            window.toggleSelector(options.field, getTagID(tag, options.field), event);
         });
         if (bib.authorizedTags[tag] || options.field != 'keywords') {
             tagDiv.addClass('authorized');
@@ -264,7 +268,6 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         return tagCloudDiv;
     }
 
-
     function filterTags(tagCloudDiv) {
         var filterText = tagCloudDiv.find('.tag_cloud_filter input').val().toLowerCase();
         tagCloudDiv.find('.tag').each(function (i, tagDiv) {
@@ -276,6 +279,28 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
                 tagDiv.show();
             }
         })
+    }
+
+    /**
+     * Transforms a tag into an ID
+     */
+    function getTagID(tag, field) {
+        if (field === 'keywords') {
+            return tag;
+        }
+        var tagID = util.simplifyTag(tag);
+        tagIDCache[tagID] = tag;
+        return tagID;
+    }
+
+    /**
+     * Looks up the tag for a tag ID
+     */
+    function getTag(tagID, field) {
+        if (field === 'keywords') {
+            return tagID;
+        }
+        return tagIDCache[tagID];
     }
 
 })
