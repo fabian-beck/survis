@@ -129,6 +129,9 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 createFooter(id, entry).appendTo(entryDiv);
                 bib.entryDivs[id] = entryDiv;
                 util.generateTooltips(bib.entryDivs[id]);
+                //entryDiv.click(function() {
+                //    bib.createCitation(id);
+                //})
             }
             return bib.entryDivs[id];
         }
@@ -240,7 +243,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             if (typeof bib.availablePdf != 'undefined' && bib.availablePdf.indexOf(id) >= 0 || entry['doi'] || entry['url']) {
                 return $("<a>", {
                     class: "title",
-                    text: util.latexToHtml(entry["title"]),
+                    html: util.latexToHtml(entry["title"]),
                     target: '_blank',
                     href: bib.availablePdf.indexOf(id) >= 0 ? pdfFile : (entry['doi'] ? 'http://dx.doi.org/' + entry['doi'] : entry['url'])
                 });

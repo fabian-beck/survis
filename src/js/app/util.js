@@ -9,6 +9,8 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                     return '';
                 }
                 latex = latex.replace(/{|}/g, '');
+                latex = latex.replace(/---/g, '&mdash;');
+                latex = latex.replace(/--/g, '&ndash;');
                 var encoding = {
                     "'": "acute",
                     "`": "grave",
