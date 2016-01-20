@@ -41,6 +41,61 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 return bibtex + "\n}";
             },
 
+            createCitation: function (id) {
+                var bib = this;
+                var citation = '';
+                if (bib.parsedEntries[id]['author']) {
+                    $.each(bib.parsedEntries[id]['author'], function (i, author) {
+                        authorSplit = author.split(', ')
+                        if (authorSplit.length == 2) {
+                            author = authorSplit[0] + ', ' + authorSplit[1].replace(/[^a-z -]/gi, '').replace(/\B\w*/g, '.').replace(/([A-Z])($|[ -])/g, '$1.');
+                        }
+                        if (i == bib.parsedEntries[id]['author'].length - 1) {
+                            citation += 'and ';
+                        }
+                        citation += util.latexToHtml(author)
+                        if (bib.parsedEntries[id]['author'].length > 2 || i > 0) {
+                             citation += ', ';
+                        } else {
+                            citation += ' ';
+                        }
+                    });
+                }
+                if (year = bib.entries[id]['year']) {
+                    citation += year + '. ';
+                }
+                if (title = bib.entries[id]['title']) {
+                    citation += util.latexToHtml(title) + '. ';
+                }
+                if (journal = bib.entries[id]['journal']) {
+                    citation += 'In <i>' + util.latexToHtml(journal) + '</i>';
+                    if (volume = bib.entries[id]['volume']) {
+                        citation += ' (Vol. ' + util.latexToHtml(volume);
+                        if (number = bib.entries[id]['number']) {
+                            citation += ', No. ' + util.latexToHtml(number);
+                        }
+                        if (pages = bib.entries[id]['pages']) {
+                            citation += ', pp. ' + util.latexToHtml(pages);
+                        }
+                        citation += ')';
+                    }
+                    citation += '. ';
+                }
+                if (booktitle = bib.entries[id]['booktitle']) {
+                    citation += 'In <i>' + util.latexToHtml(booktitle) + '</i>';
+                    if (pages = bib.entries[id]['pages']) {
+                        citation += ' (pp. ' + util.latexToHtml(pages) + ')';
+                    }
+                    citation += '. ';
+                }
+                if (doi = bib.entries[id]['doi']) {
+                    citation += 'DOI: <a href="http://dx.doi.org/'+doi+'">' + doi + '</a>. ';
+                } else if (url = bib.entries[id]['url']) {
+                    citation += 'URL: <a href="'+url+'">' + url + '</a>. ';
+                }
+                return citation.trim();
+            },
+
             createAllBibtex: function () {
                 var bib = this;
                 var bibtexString = '';

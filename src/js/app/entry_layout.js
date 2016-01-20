@@ -129,9 +129,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 createFooter(id, entry).appendTo(entryDiv);
                 bib.entryDivs[id] = entryDiv;
                 util.generateTooltips(bib.entryDivs[id]);
-                //entryDiv.click(function() {
-                //    bib.createCitation(id);
-                //})
             }
             return bib.entryDivs[id];
         }
@@ -483,11 +480,15 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
         function createBibtexDiv(id, entry, container) {
             var warnings = computeWarnings(entry);
             var bibtexEditor = null;
-
             var bibtexControl = $("<div>", {
                 class: "bibtex_control button tooltip",
                 text: 'BibTeX ',
                 title: 'show/hide BibTeX code'
+            }).appendTo(container);
+            var citationControl = $("<div>", {
+                class: "citation_control button tooltip",
+                text: 'Citation ',
+                title: 'show/hide Citation'
             }).appendTo(container);
             if (warnings.length > 0) {
                 $('<span>&nbsp;(' + warnings.length + '<span class="symbol">!</span>)</span>').appendTo(bibtexControl);
@@ -516,6 +517,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             container.append(bibtexWarningsDiv);
             bibtexControl.click(function () {
                 if (!bibtexEditor) {
+                    closeCitation(id);
                     var bibtexText = bib.createBibtex(id, entry);
                     bibtexEditor = CodeMirror(container.get(0), {
                         value: bibtexText,
@@ -523,9 +525,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         readOnly: !editable
                     });
                 } else {
-                    container.find('.CodeMirror').toggle();
-                    bib.entryDivs[id] = null;
-                    window.update();
+                    closeBibtex(id, container);
                 }
                 bibtexEditor.focus();
                 if (!editable) {
@@ -557,7 +557,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                 }
                                 break;
                             }
-                            //window.update();
                             bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
                         }
                         catch (err) {
@@ -572,6 +571,28 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     bibtexWarningsDiv.toggle()
                 }
             });
+            citationControl.click( function() {
+                if ($(bib.entryDivs[id]).find('.citation').length) {
+                    closeCitation(id);
+                } else {
+                    if (bibtexEditor) {
+                        closeBibtex(id, container);
+                    }
+                    var citation = bib.createCitation(id);
+                    var citationDiv = $('<div class="citation">' + citation + '</div>').appendTo(bib.entryDivs[id]);
+                    util.selectElementText(citationDiv.get(0));
+                }
+            });
+        }
+
+        function closeBibtex(id, container) {
+            container.find('.CodeMirror').toggle();
+            bib.entryDivs[id] = null;
+            window.update();
+        }
+
+        function closeCitation(id) {
+            $(bib.entryDivs[id]).find('.citation').remove();
         }
 
         function shortenText(s, length) {
