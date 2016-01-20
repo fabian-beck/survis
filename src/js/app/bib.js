@@ -48,9 +48,9 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     $.each(bib.parsedEntries[id]['author'], function (i, author) {
                         authorSplit = author.split(', ')
                         if (authorSplit.length == 2) {
-                            author = authorSplit[0] + ', ' + authorSplit[1].replace(/[^a-z -]/gi, '').replace(/\B\w*/g, '.').replace(/([A-Z])($|[ -])/g, '$1.');
+                            author = authorSplit[0] + ', ' + authorSplit[1].replace(/[^a-z -]/gi, '').replace(/\B\w*/g, '.').replace(/([A-Z])($|([ -]))/g, '$1.$3');
                         }
-                        if (i == bib.parsedEntries[id]['author'].length - 1) {
+                        if (i == bib.parsedEntries[id]['author'].length - 1 && i > 0) {
                             citation += 'and ';
                         }
                         citation += util.latexToHtml(author)
