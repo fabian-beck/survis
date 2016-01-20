@@ -291,7 +291,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         });
                         $("<span>", {
                             class: "name",
-                            text: author2
+                            html: util.latexToHtml(author2)
                         }).appendTo(authorDiv);
                     });
                 }
