@@ -200,37 +200,37 @@
 }
 
 .entry .bibtex_control {
-float: right;
+    float: right;
 }
 
 .entry .bibtex_control .symbol {
-font-size: 10pt;
-color: #CD9000;
+    font-size: 10pt;
+    color: #CD9000;
 }
 
 .entry .bibtex_warnings {
-font-size: 9pt;
-background: #fcefa1;
-margin: 0;
-padding: 2px;
-border: 1px solid silver;
-clear: both;
+    font-size: 9pt;
+    background: #fcefa1;
+    margin: 0 0 2px;
+    padding: 2px;
+    border: 1px solid silver;
+    clear: both;
 }
 
 .entry .bibtex_warnings .label {
-font-weight: bold;
-cursor: pointer;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .entry .bibtex_warnings ul {
-padding: 0;
-margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .entry .bibtex_warnings li {
-margin-left: 20px;
-list-style-type: square;
-cursor: pointer;
+    margin-left: 20px;
+    list-style-type: square;
+    cursor: pointer;
 }
 
 .entry .CodeMirror {
