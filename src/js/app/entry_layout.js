@@ -247,7 +247,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             } else {
                 return $("<div>", {
                     class: "title",
-                    text: util.latexToHtml(entry["title"])
+                    html: util.latexToHtml(entry["title"])
                 });
             }
         }
