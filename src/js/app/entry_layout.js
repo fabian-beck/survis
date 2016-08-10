@@ -1,5 +1,5 @@
-define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors', 'app/bib'],
-    function ($, jqueryui, CodeMirror, stex, util, selectors, bib) {
+define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors', 'app/bib', 'app/warnings'],
+    function ($, jqueryui, CodeMirror, stex, util, selectors, bib, warnings) {
 
         var maxAbstractLength = 300;
 
@@ -478,7 +478,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
         }
 
         function createBibtexDiv(id, entry, container) {
-            var warnings = bib.warnings[id] ? bib.warnings[id] : [];
             var bibtexEditor = null;
             var bibtexControl = $("<div>", {
                 class: "bibtex_control button tooltip",
@@ -490,8 +489,8 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 text: 'Citation ',
                 title: 'show/hide Citation'
             }).appendTo(container);
-            if (warnings.length > 0) {
-                $('<span>&nbsp;(' + warnings.length + '<span class="symbol">!</span>)</span>').appendTo(bibtexControl);
+            if (bib.warnings[id].length > 0) {
+                $('<span>&nbsp;(' + bib.warnings[id].length + '<span class="symbol">!</span>)</span>').appendTo(bibtexControl);
                 var bibtexWarningsDiv = $('<div>', {
                     class: 'bibtex_warnings'
                 });
@@ -504,7 +503,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     window.toggleSelector('warning', '', event);
                 });
                 var bibtexWarningsUL = $('<ul>').appendTo(bibtexWarningsDiv);
-                $.each(warnings, function () {
+                $.each(bib.warnings[id], function () {
                     var warningText = this;
                     var bibtexWarning = $('<li>', {
                         text: warningText
@@ -557,6 +556,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                 }
                                 break;
                             }
+                            bib.warnings[id] = warnings.computeWarnings(bib.entries[id], id);
                             bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
                         }
                         catch (err) {
@@ -567,7 +567,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         }
                     });
                 }
-                if (warnings.length > 0) {
+                if (bib.warnings[id].length > 0) {
                     bibtexWarningsDiv.toggle()
                 }
             });
