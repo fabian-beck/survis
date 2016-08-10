@@ -17,6 +17,7 @@ define(['jquery'], function ($) {
                 $.each(entry, function (field, value) {
                     computeEmptyFieldWarning(warningsList, field, value);
                     computeTitleCapitalizationWarning(warningsList, field, value);
+                    computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
                 });
             }
             return warningsList;
@@ -44,5 +45,27 @@ define(['jquery'], function ($) {
         }
     }
 
-})
+        function computeProtectedIdentifierCapitalizationWarning(warningsList, field, value) {
+            if (field === 'title') {
+                var capitalizationCorrect = true;
+                if (value.indexOf('{') < 0) {
+                    $.each(value.split(/[\s,:\-()]+/), function (i, word) {
+                        if (!word.startsWith('{')) {
+                            word = word.substring(1);
+                            if (word.length > 0 && word.toLowerCase() != word) {
+                                console.log(word);
+                                capitalizationCorrect = false;
+                            }
+                        }
+                    })
+                    if (!capitalizationCorrect) {
+                        warningsList.push('non-protected capitalization of indentifier in field "' + field + '"');
+                        console.log(value);
+                    }
+                }
+            }
+        }
+    }
+
+    )
 
