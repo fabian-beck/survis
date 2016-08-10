@@ -53,14 +53,12 @@ define(['jquery'], function ($) {
                         if (!word.startsWith('{')) {
                             word = word.substring(1);
                             if (word.length > 0 && word.toLowerCase() != word) {
-                                console.log(word);
                                 capitalizationCorrect = false;
                             }
                         }
                     })
                     if (!capitalizationCorrect) {
                         warningsList.push('non-protected capitalization of indentifier in field "' + field + '"');
-                        console.log(value);
                     }
                 }
             }
