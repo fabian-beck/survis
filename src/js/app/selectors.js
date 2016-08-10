@@ -459,7 +459,10 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
     }
 
     function computeWarningSimilarity(entry, text) {
-        var warnings = computeWarnings(entry);
+        var warnings = entry.warnings;
+        if (!warnings) {
+            return 0.0;
+        }
         var similarity = 0.0;
         if (text) {
             $.each(warnings, function () {

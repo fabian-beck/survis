@@ -5,6 +5,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
         if (!entries) {
             entries = generatedBib.entries;
         }
+        computeWarnings();
 
         return {
             entries: entries,
@@ -55,7 +56,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                         }
                         citation += util.latexToHtml(author)
                         if (bib.parsedEntries[id]['author'].length > 2 || i > 0) {
-                             citation += ', ';
+                            citation += ', ';
                         } else {
                             citation += ' ';
                         }
@@ -89,9 +90,9 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     citation += '. ';
                 }
                 if (doi = bib.entries[id]['doi']) {
-                    citation += 'DOI: <a href="http://dx.doi.org/'+doi+'">' + doi + '</a>. ';
+                    citation += 'DOI: <a href="http://dx.doi.org/' + doi + '">' + doi + '</a>. ';
                 } else if (url = bib.entries[id]['url']) {
-                    citation += 'URL: <a href="'+url+'">' + url + '</a>. ';
+                    citation += 'URL: <a href="' + url + '">' + url + '</a>. ';
                 }
                 return citation.trim();
             },
@@ -216,6 +217,19 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
                 }
                 return null;
+            }
+        }
+
+        function computeWarnings() {
+            if (editable) {
+                $.each(entries, function (id, entry) {
+                    entry.warnings = [];
+                    $.each(entry, function (field, value) {
+                        if (!value) {
+                            entry.warnings.push('empty field "' + field + '"');
+                        }
+                    });
+                });
             }
         }
 

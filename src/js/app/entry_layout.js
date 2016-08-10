@@ -478,7 +478,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
         }
 
         function createBibtexDiv(id, entry, container) {
-            var warnings = computeWarnings(entry);
+            var warnings = entry.warnings ? entry.warnings : [];
             var bibtexEditor = null;
             var bibtexControl = $("<div>", {
                 class: "bibtex_control button tooltip",
@@ -571,7 +571,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     bibtexWarningsDiv.toggle()
                 }
             });
-            citationControl.click( function() {
+            citationControl.click(function () {
                 if ($(bib.entryDivs[id]).find('.citation').length) {
                     closeCitation(id);
                 } else {
@@ -600,19 +600,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 return s.substring(0, length - 3) + '...';
             }
             return s;
-        }
-
-        function computeWarnings(entry) {
-            var warnings = [];
-            if (!editable) {
-                return warnings;
-            }
-            $.each(entry, function (field, value) {
-                if (!value) {
-                    warnings.push('empty field "' + field + '"');
-                }
-            });
-            return warnings;
         }
     });
 
