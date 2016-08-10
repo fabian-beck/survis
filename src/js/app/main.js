@@ -11,6 +11,7 @@ define(function (require) {
     var tags = require('app/tags');
     var cluster = require('app/cluster');
     var entryLayout = require('app/entry_layout');
+    var warnings = require('app/warnings');
 
     var references = require('app/references');
     

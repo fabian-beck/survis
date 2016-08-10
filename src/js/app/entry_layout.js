@@ -478,7 +478,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
         }
 
         function createBibtexDiv(id, entry, container) {
-            var warnings = entry.warnings ? entry.warnings : [];
+            var warnings = bib.warnings[id] ? bib.warnings[id] : [];
             var bibtexEditor = null;
             var bibtexControl = $("<div>", {
                 class: "bibtex_control button tooltip",

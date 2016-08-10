@@ -1,11 +1,10 @@
-define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
-    function ($, bibtexJS, fileSaver, CodeMirror, util, generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
+define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/warnings', 'app/util', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
+    function ($, bibtexJS, fileSaver, CodeMirror, warnings, util, generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
 
         var entries = readBibtex();
         if (!entries) {
             entries = generatedBib.entries;
         }
-        computeWarnings();
 
         return {
             entries: entries,
@@ -15,6 +14,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             tagCategories: tagCategories.tagCategories,
             authorizedTags: authorizedTags.authorizedTags,
             entryDivs: {},
+            warnings: warnings.computeAllWarnings(entries),
             nVisibleEntries: 20,
 
             downloadBibtex: function () {
@@ -185,6 +185,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                     });
                                 }
                             }
+                            bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey], entryKey);
                             update();
                         },
                         Cancel: function () {
@@ -217,19 +218,6 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
                 }
                 return null;
-            }
-        }
-
-        function computeWarnings() {
-            if (editable) {
-                $.each(entries, function (id, entry) {
-                    entry.warnings = [];
-                    $.each(entry, function (field, value) {
-                        if (!value) {
-                            entry.warnings.push('empty field "' + field + '"');
-                        }
-                    });
-                });
             }
         }
 

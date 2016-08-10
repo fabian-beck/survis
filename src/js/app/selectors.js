@@ -205,7 +205,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                             }
                             similarity = computeSearchSimilarity(id, entry, selector['tokenized_text']);
                         } else if (selector['type'] == 'warning') {
-                            similarity = computeWarningSimilarity(entry, text)
+                            similarity = computeWarningSimilarity(entry, id, text)
                         } else if (selector['type'] == 'series') {
                             similarity = computeSeriesSimilarity(entry, text);
                         } else if (selector['type'] == 'cluster') {
@@ -458,8 +458,8 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
         return 0.0;
     }
 
-    function computeWarningSimilarity(entry, text) {
-        var warnings = entry.warnings;
+    function computeWarningSimilarity(entry, id, text) {
+        var warnings = bib.warnings[id] ? bib.warnings[id] : [];
         if (!warnings) {
             return 0.0;
         }
