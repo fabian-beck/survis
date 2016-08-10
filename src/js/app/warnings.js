@@ -1,4 +1,5 @@
 define(['jquery'], function ($) {
+
     return {
 
         computeAllWarnings: function (entries) {
@@ -14,14 +15,34 @@ define(['jquery'], function ($) {
             var warningsList = [];
             if (editable) {
                 $.each(entry, function (field, value) {
-                    if (!value) {
-                        warningsList.push('empty field "' + field + '"');
-                    }
+                    computeEmptyFieldWarning(warningsList, field, value);
+                    computeTitleCapitalizationWarning(warningsList, field, value);
                 });
             }
             return warningsList;
         }
 
     }
+
+    function computeEmptyFieldWarning(warningsList, field, value) {
+        if (!value) {
+            warningsList.push('empty field "' + field + '"');
+        }
+    }
+
+    function computeTitleCapitalizationWarning(warningsList, field, value) {
+        if (field === 'booktitle' || field === 'journal') {
+            var capitalizationCorrect = true;
+            $.each(value.split(' '), function (i, word) {
+                if (word.length > 5 && word.toLowerCase() == word) {
+                    capitalizationCorrect = false;
+                }
+            })
+            if (!capitalizationCorrect) {
+                warningsList.push('capitalization in field "' + field + '"');
+            }
+        }
+    }
+
 })
 
