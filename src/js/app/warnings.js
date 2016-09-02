@@ -1,49 +1,50 @@
 define(['jquery'], function ($) {
 
-    return {
+        return {
 
-        computeAllWarnings: function (entries) {
-            var that = this;
-            var warnings = {};
-            $.each(entries, function (id, entry) {
-                warnings[id] = that.computeWarnings(entry, id);
-            });
-            return warnings;
-        },
-
-        computeWarnings: function (entry, id) {
-            var warningsList = [];
-            if (editable) {
-                $.each(entry, function (field, value) {
-                    computeEmptyFieldWarning(warningsList, field, value);
-                    computeTitleCapitalizationWarning(warningsList, field, value);
-                    computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
+            computeAllWarnings: function (entries) {
+                var that = this;
+                var warnings = {};
+                $.each(entries, function (id, entry) {
+                    warnings[id] = that.computeWarnings(entry, id);
                 });
-            }
-            return warningsList;
-        }
+                return warnings;
+            },
 
-    }
-
-    function computeEmptyFieldWarning(warningsList, field, value) {
-        if (!value) {
-            warningsList.push('empty field "' + field + '"');
-        }
-    }
-
-    function computeTitleCapitalizationWarning(warningsList, field, value) {
-        if (field === 'booktitle' || field === 'journal') {
-            var capitalizationCorrect = true;
-            $.each(value.split(' '), function (i, word) {
-                if (word.length > 5 && word.toLowerCase() == word) {
-                    capitalizationCorrect = false;
+            computeWarnings: function (entry, id) {
+                var warningsList = [];
+                if (editable) {
+                    $.each(entry, function (field, value) {
+                        computeEmptyFieldWarning(warningsList, field, value);
+                        computeTitleCapitalizationWarning(warningsList, field, value);
+                        computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
+                        computeFirstNameUnknown(warningsList, field, value);
+                    });
                 }
-            })
-            if (!capitalizationCorrect) {
-                warningsList.push('capitalization in field "' + field + '"');
+                return warningsList;
+            }
+
+        };
+
+        function computeEmptyFieldWarning(warningsList, field, value) {
+            if (!value) {
+                warningsList.push('empty field "' + field + '"');
             }
         }
-    }
+
+        function computeTitleCapitalizationWarning(warningsList, field, value) {
+            if (field === 'booktitle' || field === 'journal') {
+                var capitalizationCorrect = true;
+                $.each(value.split(' '), function (i, word) {
+                    if (word.length > 5 && word.toLowerCase() == word) {
+                        capitalizationCorrect = false;
+                    }
+                });
+                if (!capitalizationCorrect) {
+                    warningsList.push('capitalization in field "' + field + '"');
+                }
+            }
+        }
 
         function computeProtectedIdentifierCapitalizationWarning(warningsList, field, value) {
             if (field === 'title') {
@@ -56,14 +57,33 @@ define(['jquery'], function ($) {
                                 capitalizationCorrect = false;
                             }
                         }
-                    })
+                    });
                     if (!capitalizationCorrect) {
                         warningsList.push('non-protected capitalization of indentifier in field "' + field + '"');
                     }
                 }
             }
         }
-    }
 
-    )
+        function computeFirstNameUnknown(warningsList, field, value) {
+            if (field === 'author' || field === 'editor') {
+                var firstNameKnown = true;
+                $.each(value.split('and'), function (i, name) {
+                    var parsedName = name.trim().split(',');
+                    if (parsedName.length > 1) {
+                        var firstName = parsedName[1].trim().split(' ')[0].trim();
+                        if (firstName.indexOf('.') > 0 || firstName.length < 2) {
+                            firstNameKnown = false;
+                        }
+                    } else {
+                        firstNameKnown = false;
+                    }
+                });
+                if (!firstNameKnown) {
+                    warningsList.push('unknown or abbreviated first name in field "' + field + '"');
+                }
+            }
+        }
+    }
+);
 
