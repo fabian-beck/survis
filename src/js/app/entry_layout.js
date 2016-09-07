@@ -556,7 +556,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                 }
                                 break;
                             }
-                            bib.warnings[id] = warnings.computeWarnings(bib.entries[id], id);
+                            bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
                             bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
                         }
                         catch (err) {

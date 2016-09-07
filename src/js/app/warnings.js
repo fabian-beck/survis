@@ -6,12 +6,12 @@ define(['jquery'], function ($) {
                 var that = this;
                 var warnings = {};
                 $.each(entries, function (id, entry) {
-                    warnings[id] = that.computeWarnings(entry, id);
+                    warnings[id] = that.computeWarnings(entry);
                 });
                 return warnings;
             },
 
-            computeWarnings: function (entry, id) {
+            computeWarnings: function (entry) {
                 var warningsList = [];
                 if (editable) {
                     $.each(entry, function (field, value) {
@@ -19,6 +19,7 @@ define(['jquery'], function ($) {
                         computeTitleCapitalizationWarning(warningsList, field, value);
                         computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
                         computeFirstNameUnknown(warningsList, field, value);
+                        computeWholeFieldCapitalizationProtected(warningsList, field, value);
                     });
                 }
                 return warningsList;
@@ -82,6 +83,12 @@ define(['jquery'], function ($) {
                 if (!firstNameKnown) {
                     warningsList.push('unknown or abbreviated first name in field "' + field + '"');
                 }
+            }
+        }
+
+        function computeWholeFieldCapitalizationProtected(warningsList, field, value) {
+            if (value.indexOf('{') == 0 && value.lastIndexOf('}') == value.length - 1 && value.length > 10) {
+                warningsList.push('whole field "' + field + '" with protected capitalization');
             }
         }
     }

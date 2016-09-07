@@ -185,7 +185,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/warnings', 'app/u
                                     });
                                 }
                             }
-                            bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey], entryKey);
+                            bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
                             update();
                         },
                         Cancel: function () {
