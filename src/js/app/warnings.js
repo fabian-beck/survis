@@ -69,7 +69,7 @@ define(['jquery'], function ($) {
         function computeFirstNameUnknown(warningsList, field, value) {
             if (field === 'author' || field === 'editor') {
                 var firstNameKnown = true;
-                $.each(value.split('and'), function (i, name) {
+                $.each(value.split(' and '), function (i, name) {
                     var parsedName = name.trim().split(',');
                     if (parsedName.length > 1) {
                         var firstName = parsedName[1].trim().split(' ')[0].trim();
