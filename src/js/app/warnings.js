@@ -60,7 +60,7 @@ define(['jquery'], function ($) {
                         }
                     });
                     if (!capitalizationCorrect) {
-                        warningsList.push('non-protected capitalization of indentifier in field "' + field + '"');
+                        warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
                     }
                 }
             }

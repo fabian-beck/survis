@@ -263,7 +263,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             $(document).keydown(function (e) {
                 if ((e.which == '115' || e.which == '83') && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
-                    bib.saveBibToLocalStorage()
+                    bib.saveBibToLocalStorage();
                     return false;
                 }
                 return true;

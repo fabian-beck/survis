@@ -205,10 +205,9 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
 
             // based on: http://stackoverflow.com/questions/1069666/sorting-javascript-object-by-property-value
             sortDictKeysByValue: function (dict) {
-                keys = Object.keys(dict).sort(function (a, b) {
+                return Object.keys(dict).sort(function (a, b) {
                     return dict[b] - dict[a]
                 });
-                return keys;
             },
 
             simplifyTag: function(tag) {
