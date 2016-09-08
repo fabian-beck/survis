@@ -466,7 +466,11 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
         var similarity = 0.0;
         if (text) {
             $.each(warnings, function () {
-                if (util.latexToHtml(this) === util.latexToHtml(text)) {
+                var warningText = this;
+                if (warningText['type']) {
+                    warningText = warningText['type'];
+                }
+                if (util.latexToHtml(warningText) === util.latexToHtml(text)) {
                     similarity = 1.0;
                 }
             })

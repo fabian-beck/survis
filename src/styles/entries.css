@@ -227,10 +227,19 @@
     margin: 0;
 }
 
-.entry .bibtex_warnings li {
+.entry .bibtex_warnings ul li {
     margin-left: 20px;
     list-style-type: square;
     cursor: pointer;
+}
+
+.entry .bibtex_warnings ul li:hover {
+    background-color: #d2c68a;
+}
+
+.entry .bibtex_warnings ul ul li {
+    margin-left: 40px;
+    list-style-type: circle;
 }
 
 .entry .CodeMirror {

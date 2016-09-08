@@ -22,20 +22,20 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 window.saveAs(blob, 'reference.bib');
             },
 
-            createBibtex: function (id, field) {
-                var bibtex = "@" + field["type"] + "{" + id;
-                for (var fieldName in field) {
-                    if (fieldName == "type" || util.isFieldForbidden(fieldName)) {
+            createBibtex: function (id, entry) {
+                var bibtex = '@' + entry['type'] + '{' + id;
+                for (var fieldName in entry) {
+                    if (fieldName == 'type' || util.isFieldForbidden(fieldName)) {
                         continue;
                     }
-                    if (field.hasOwnProperty(fieldName)) {
-                        bibtex += ",\n  " + fieldName + " = {" + field[fieldName] + "}";
+                    if (entry.hasOwnProperty(fieldName)) {
+                        bibtex += ",\n  " + fieldName + " = {" + entry[fieldName] + "}";
                     }
                 }
                 if (typeof mandatoryFields != 'undefined' && mandatoryFields) {
-                    for (var i in mandatoryFields[field["type"]]) {
-                        if (!field.hasOwnProperty(mandatoryFields[field["type"]][i])) {
-                            bibtex += ",\n  " + mandatoryFields[field["type"]][i] + " = {}";
+                    for (var i in mandatoryFields[entry["type"]]) {
+                        if (!entry.hasOwnProperty(mandatoryFields[entry["type"]][i])) {
+                            bibtex += ",\n  " + mandatoryFields[entry["type"]][i] + " = {}";
                         }
                     }
                 }

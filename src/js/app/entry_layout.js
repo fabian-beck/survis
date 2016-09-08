@@ -1,5 +1,5 @@
-define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors', 'app/bib', 'app/warnings'],
-    function ($, jqueryui, CodeMirror, stex, util, selectors, bib, warnings) {
+define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors', 'app/bib'],
+    function ($, jqueryui, CodeMirror, stex, util, selectors, bib) {
 
         var maxAbstractLength = 300;
 
@@ -502,15 +502,29 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 bibtexWarningsLabel.click(function (event) {
                     window.toggleSelector('warning', '', event);
                 });
-                var bibtexWarningsUL = $('<ul>').appendTo(bibtexWarningsDiv);
+                var bibtexWarningsUl = $('<ul>').appendTo(bibtexWarningsDiv);
                 $.each(bib.warnings[id], function () {
                     var warningText = this;
-                    var bibtexWarning = $('<li>', {
+                    if (warningText['type']) {
+                        warningText = warningText['type'];
+                    }
+                    var bibtexWarningLi = $('<li>', {
                         text: warningText
-                    }).appendTo(bibtexWarningsUL);
-                    bibtexWarning.click(function (event) {
+                    }).appendTo(bibtexWarningsUl);
+                    bibtexWarningLi.click(function (event) {
                         window.toggleSelector('warning', warningText, event);
                     });
+                    if (this['fix']) {
+                        var fix = this['fix'];
+                        var bibtexWarningFixUl = $('<ul>').appendTo(bibtexWarningsUl);
+                        var bibtexWarningFixLi = $('<li>', {
+                            text: 'fix: '+fix['description']
+                        }).appendTo(bibtexWarningFixUl);
+                        bibtexWarningFixLi.click(function (event) {
+                            var bibtexText = bib.createBibtex(id, fix['function']());
+                            bibtexEditor.setValue(bibtexText);
+                        });
+                    }
                 });
             }
             container.append(bibtexWarningsDiv);
@@ -556,8 +570,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                 }
                                 break;
                             }
-                            bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
-                            bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
                         }
                         catch (err) {
                             $('<div>', {
@@ -565,6 +577,10 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                 class: 'error'
                             }).appendTo(bibtexStatusDiv);
                         }
+                        bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
+                        console.log(bib.entries[id]);
+                        bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
+                        console.log(bib.warnings[id]);
                     });
                 }
                 if (bib.warnings[id].length > 0) {

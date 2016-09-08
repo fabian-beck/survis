@@ -46,8 +46,16 @@ var warnings = (function () {
                 var expected = warnings.expectedFields[entry['type']];
                 if (expected) {
                     $.each(expected, function (i, field) {
-                        if (!entry[field]) {
-                            warningsList.push('missing field "' + field + '"');
+                        if (!entry[field] && entry[field] != '') {
+                            warningsList.push({
+                                type: 'missing field "' + field + '"',
+                                fix: {
+                                    description: 'add field', 'function': function () {
+                                        entry[field] = '';
+                                        return entry;
+                                    }
+                                }
+                            });
                         }
                     });
                 }
