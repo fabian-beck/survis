@@ -19,7 +19,6 @@ define(function (require) {
     //bib.referenceLists = require('data/generated/reference_lists').referenceLists;
     //references.readReferences();
 
-
     window.update = function (scrollToTop) {
         $('.tooltipstered').tooltipster('hide');
         selectors.updateSelectors();

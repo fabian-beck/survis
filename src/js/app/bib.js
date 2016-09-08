@@ -1,5 +1,5 @@
-define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/warnings', 'app/util', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
-    function ($, bibtexJS, fileSaver, CodeMirror, warnings, util, generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
+define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
+    function ($, bibtexJS, fileSaver, CodeMirror, util, generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
 
         var entries = readBibtex();
         if (!entries) {
