@@ -578,9 +578,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                             }).appendTo(bibtexStatusDiv);
                         }
                         bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
-                        console.log(bib.entries[id]);
                         bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
-                        console.log(bib.warnings[id]);
                     });
                 }
                 if (bib.warnings[id].length > 0) {

@@ -87,3 +87,31 @@ QUnit.test("Test computeTitleCapitalizationWarning()", function (assert) {
 
 });
 
+QUnit.test("Test computeProtectedIdentifierCapitalizationWarning()", function (assert) {
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning().length, 0, 'missing argument returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning().length, 0, 'empty entry returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({id: 'a'}).length, 0, 'entry without type returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        id: 'a',
+        type: 'a'
+    }).length, 0, 'typed entry without further fields returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'Bla in a Name'
+    }).length, 0, 'non-camel-case title field returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'Bla in a Special-Name'
+    }).length, 0, 'hyphenated capitalized word in title field returns empty list');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'Bla in a Name/Identifier'
+    }).length, 0, 'capitalized word with slash in title field returns empty list');
+
+});
+
+

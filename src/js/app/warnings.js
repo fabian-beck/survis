@@ -30,9 +30,9 @@ var warnings = (function () {
             if (editable) {
                 warningsList = warningsList.concat(warnings.computeMissingFieldWarning(entry));
                 warningsList = warningsList.concat(warnings.computeTitleCapitalizationWarning(entry));
+                warningsList = warningsList.concat(warnings.computeProtectedIdentifierCapitalizationWarning(entry));
                 $.each(entry, function (field, value) {
                     computeEmptyFieldWarning(warningsList, field, value);
-                    computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
                     computeFirstNameUnknown(warningsList, field, value);
                     computeWholeFieldCapitalizationProtected(warningsList, field, value);
                 });
@@ -75,7 +75,7 @@ var warnings = (function () {
                     var capitalizedValue = '';
                     $.each(value.split(' '), function (i, word) {
                         var capitalizedWord = word;
-                        if (!word.match(/\d.*/)){
+                        if (!word.match(/\d.*/)) {
                             if ((word.length >= 5 || i == 0) && word.toLowerCase() == word) {
                                 capitalizationCorrect = false;
                                 capitalizedWord = word.charAt(0).toUpperCase() + word.substring(1);
@@ -97,6 +97,33 @@ var warnings = (function () {
                 }
             });
             return warningsList;
+        },
+
+        computeProtectedIdentifierCapitalizationWarning: function (entry) {
+            if (!entry) {
+                return [];
+            }
+            var warningsList = [];
+            $.each(['title'], function (i, field) {
+                if (entry[field]) {
+                    var value = entry[field];
+                    var capitalizationCorrect = true;
+                    if (value.indexOf('{') < 0) {
+                        $.each(value.split(/[\s,:\-()\/]+/), function (i, word) {
+                            if (!word.startsWith('{')) {
+                                word = word.substring(1);
+                                if (word.length > 0 && word.toLowerCase() != word) {
+                                    capitalizationCorrect = false;
+                                }
+                            }
+                        });
+                        if (!capitalizationCorrect) {
+                            warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
+                        }
+                    }
+                }
+            });
+            return warningsList;
         }
 
     };
@@ -104,26 +131,6 @@ var warnings = (function () {
     function computeEmptyFieldWarning(warningsList, field, value) {
         if (!value) {
             warningsList.push('empty field "' + field + '"');
-        }
-    }
-
-
-    function computeProtectedIdentifierCapitalizationWarning(warningsList, field, value) {
-        if (field === 'title') {
-            var capitalizationCorrect = true;
-            if (value.indexOf('{') < 0) {
-                $.each(value.split(/[\s,:\-()]+/), function (i, word) {
-                    if (!word.startsWith('{')) {
-                        word = word.substring(1);
-                        if (word.length > 0 && word.toLowerCase() != word) {
-                            capitalizationCorrect = false;
-                        }
-                    }
-                });
-                if (!capitalizationCorrect) {
-                    warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
-                }
-            }
         }
     }
 
