@@ -72,7 +72,7 @@ var warnings = (function () {
                 if (entry[field]) {
                     var value = entry[field];
                     var capitalizationCorrect = true;
-                    var capitalizedValue = '';
+                    var correctedValue = '';
                     $.each(value.split(' '), function (i, word) {
                         var capitalizedWord = word;
                         if (!word.match(/\d.*/)) {
@@ -81,14 +81,14 @@ var warnings = (function () {
                                 capitalizedWord = word.charAt(0).toUpperCase() + word.substring(1);
                             }
                         }
-                        capitalizedValue += (capitalizedValue ? ' ' : '') + capitalizedWord;
+                        correctedValue += (correctedValue ? ' ' : '') + capitalizedWord;
                     });
                     if (!capitalizationCorrect) {
                         warningsList.push({
                             type: 'capitalization in field "' + field + '"',
                             fix: {
-                                description: 'Capitalize words', 'function': function () {
-                                    entry[field] = capitalizedValue;
+                                description: 'capitalize longer words', 'function': function () {
+                                    entry[field] = correctedValue;
                                     return entry;
                                 }
                             }
@@ -108,17 +108,29 @@ var warnings = (function () {
                 if (entry[field]) {
                     var value = entry[field];
                     var capitalizationCorrect = true;
+                    var correctedValue = value;
                     if (value.indexOf('{') < 0) {
                         $.each(value.split(/[\s,:\-()\/]+/), function (i, word) {
                             if (!word.startsWith('{')) {
-                                word = word.substring(1);
-                                if (word.length > 0 && word.toLowerCase() != word) {
+                                var subword = word.substring(1);
+                                if (subword.length > 0 && subword.toLowerCase() != subword) {
                                     capitalizationCorrect = false;
+                                    var re = new RegExp('\{?'+word+'\}?','g');
+                                    correctedValue = correctedValue.replace(re, '{'+word+'}');
                                 }
                             }
                         });
                         if (!capitalizationCorrect) {
-                            warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
+                            // warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
+                            warningsList.push({
+                                type: 'non-protected capitalization of identifier in field "' + field + '"',
+                                fix: {
+                                    description: 'protect identifiers', 'function': function () {
+                                        entry[field] = correctedValue;
+                                        return entry;
+                                    }
+                                }
+                            });
                         }
                     }
                 }

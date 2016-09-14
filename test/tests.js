@@ -112,6 +112,25 @@ QUnit.test("Test computeProtectedIdentifierCapitalizationWarning()", function (a
         title: 'Bla in a Name/Identifier'
     }).length, 0, 'capitalized word with slash in title field returns empty list');
 
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'Bla in a {SpecialName}'
+    }).length, 0, 'protected camel-case identifier in field title returns no warning');
+
+    assert.equal(warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'Bla in a SpecialName'
+    }).length, 1, 'non-protected camel-case identifier in field title returns one warning');
+
+    var fixedEntry = warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'BlaBlubb in a SpecialName'
+    })[0]['fix']['function']();
+    assert.equal(fixedEntry['title'], '{BlaBlubb} in a {SpecialName}', 'non-protected camel-case identifiers in field title returns a fix that, when applied, protects the identifiers');
+
+    fixedEntry = warnings.computeProtectedIdentifierCapitalizationWarning({
+        title: 'SpecialName in a SpecialName'
+    })[0]['fix']['function']();
+    assert.equal(fixedEntry['title'], '{SpecialName} in a {SpecialName}', 'non-protected camel-case identifiers (two times the same one) in field title returns a fix that, when applied, protects the identifiers');
+
+
 });
 
 
