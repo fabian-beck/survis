@@ -29,9 +29,9 @@ var warnings = (function () {
             var warningsList = [];
             if (editable) {
                 warningsList = warningsList.concat(warnings.computeMissingFieldWarning(entry));
+                warningsList = warningsList.concat(warnings.computeTitleCapitalizationWarning(entry));
                 $.each(entry, function (field, value) {
                     computeEmptyFieldWarning(warningsList, field, value);
-                    computeTitleCapitalizationWarning(warningsList, field, value);
                     computeProtectedIdentifierCapitalizationWarning(warningsList, field, value);
                     computeFirstNameUnknown(warningsList, field, value);
                     computeWholeFieldCapitalizationProtected(warningsList, field, value);
@@ -61,9 +61,45 @@ var warnings = (function () {
                 }
             }
             return warningsList;
+        },
+
+        computeTitleCapitalizationWarning: function (entry) {
+            if (!entry) {
+                return [];
+            }
+            var warningsList = [];
+            $.each(['booktitle', 'journal'], function (i, field) {
+                if (entry[field]) {
+                    var value = entry[field];
+                    var capitalizationCorrect = true;
+                    var capitalizedValue = '';
+                    $.each(value.split(' '), function (i, word) {
+                        var capitalizedWord = word;
+                        if (!word.match(/\d.*/)){
+                            if ((word.length >= 5 || i == 0) && word.toLowerCase() == word) {
+                                capitalizationCorrect = false;
+                                capitalizedWord = word.charAt(0).toUpperCase() + word.substring(1);
+                            }
+                        }
+                        capitalizedValue += (capitalizedValue ? ' ' : '') + capitalizedWord;
+                    });
+                    if (!capitalizationCorrect) {
+                        warningsList.push({
+                            type: 'capitalization in field "' + field + '"',
+                            fix: {
+                                description: 'Capitalize words', 'function': function () {
+                                    entry[field] = capitalizedValue;
+                                    return entry;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+            return warningsList;
         }
 
-    }
+    };
 
     function computeEmptyFieldWarning(warningsList, field, value) {
         if (!value) {
@@ -71,19 +107,6 @@ var warnings = (function () {
         }
     }
 
-    function computeTitleCapitalizationWarning(warningsList, field, value) {
-        if (field === 'booktitle' || field === 'journal') {
-            var capitalizationCorrect = true;
-            $.each(value.split(' '), function (i, word) {
-                if (word.length > 5 && word.toLowerCase() == word) {
-                    capitalizationCorrect = false;
-                }
-            });
-            if (!capitalizationCorrect) {
-                warningsList.push('capitalization in field "' + field + '"');
-            }
-        }
-    }
 
     function computeProtectedIdentifierCapitalizationWarning(warningsList, field, value) {
         if (field === 'title') {
@@ -131,4 +154,5 @@ var warnings = (function () {
     }
 
 
-})();
+})
+();
