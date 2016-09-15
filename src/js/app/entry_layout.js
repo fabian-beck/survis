@@ -580,7 +580,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
                     });
                 }
-                if (bib.warnings[id].length > 0) {
+                if (bib.warnings[id] && bib.warnings[id].length > 0) {
                     bibtexWarningsDiv.toggle()
                 }
             });
