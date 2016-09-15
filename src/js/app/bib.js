@@ -70,6 +70,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     citation += util.latexToHtml(title) + '. ';
                 }
                 var journal = bib.entries[id]['journal'];
+                var pages = bib.entries[id]['pages'];
                 if (journal) {
                     citation += 'In <i>' + util.latexToHtml(journal) + '</i>';
                     var volume = bib.entries[id]['volume'];
@@ -79,7 +80,6 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                         if (number) {
                             citation += ', No. ' + util.latexToHtml(number);
                         }
-                        var pages = bib.entries[id]['pages'];
                         if (pages) {
                             citation += ', pp. ' + util.latexToHtml(pages);
                         }
@@ -90,7 +90,6 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 var booktitle = bib.entries[id]['booktitle'];
                 if (booktitle) {
                     citation += 'In <i>' + util.latexToHtml(booktitle) + '</i>';
-                    var pages = bib.entries[id]['pages'];
                     if (pages) {
                         citation += ' (pp. ' + util.latexToHtml(pages) + ')';
                     }
@@ -152,11 +151,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     bibtexStatusDiv.empty();
                     try {
                         var bibtexText = bibtexEditor.getValue();
-                        var bibtexEntries = bib.parse(bibtexText);
-                        $('<div>', {
-                            html: Object.keys(bibtexEntries).length === 0 ? 'No entries' : util.objectToString(bibtexEntries),
-                            class: 'info'
-                        }).appendTo(bibtexStatusDiv);
+                        bib.parse(bibtexText);
                     }
                     catch (err) {
                         $('<div>', {
