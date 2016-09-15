@@ -489,7 +489,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 text: 'Citation ',
                 title: 'show/hide Citation'
             }).appendTo(container);
-            if (bib.warnings[id].length > 0) {
+            if (bib.warnings[id] && bib.warnings[id].length > 0) {
                 $('<span>&nbsp;(' + bib.warnings[id].length + '<span class="symbol">!</span>)</span>').appendTo(bibtexControl);
                 var bibtexWarningsDiv = $('<div>', {
                     class: 'bibtex_warnings'
@@ -520,7 +520,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         var bibtexWarningFixLi = $('<li>', {
                             text: 'fix: '+fix['description']
                         }).appendTo(bibtexWarningFixUl);
-                        bibtexWarningFixLi.click(function (event) {
+                        bibtexWarningFixLi.click(function () {
                             var bibtexText = bib.createBibtex(id, fix['function']());
                             bibtexEditor.setValue(bibtexText);
                         });
