@@ -145,7 +145,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 }).appendTo(addEntriesDiv);
                 bibtexEditor.on('change', function (bibtexEditor) {
                     bibtexStatusDiv.empty();
-                    var addButton = $('#add_entry_button');
+                    var addButton = $('.add_entry_button');
                     var addButtonTextDiv = addButton.find('.ui-button-text');
                     try {
                         var bibtexText = bibtexEditor.getValue();
@@ -175,7 +175,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     buttons: {
                         'Add': {
                             text: 'add',
-                            id: 'add_entry_button',
+                            class: 'add_entry_button',
                             disabled: true,
                             click: function () {
                                 var bibtexText = bibtexEditor.getValue();
