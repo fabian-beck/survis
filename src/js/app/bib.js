@@ -140,61 +140,75 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 var bibtexEditor = CodeMirror(addEntriesDiv.get(0), {
                     lineWrapping: true
                 });
-                $('<span>', {
-                    text: 'BibTeX parsing result:',
-                    class: 'label'
-                }).appendTo(addEntriesDiv);
                 var bibtexStatusDiv = $('<div>', {
                     class: 'bibtex_status'
                 }).appendTo(addEntriesDiv);
                 bibtexEditor.on('change', function (bibtexEditor) {
                     bibtexStatusDiv.empty();
+                    var addButton = $('#add_entry_button');
+                    var addButtonTextDiv = addButton.find('.ui-button-text');
                     try {
                         var bibtexText = bibtexEditor.getValue();
-                        bib.parse(bibtexText);
+                        var bibtexEntries = bib.parse(bibtexText);
+                        var nEntries = Object.keys(bibtexEntries).length;
+                        if (nEntries > 0) {
+                            addButtonTextDiv.text(
+                                'add (' + nEntries + (nEntries > 1 ? ' entries)' : ' entry)')
+                            );
+                            addButton.button('enable');
+                        } else {
+                            addButtonTextDiv.text('add');
+                            addButton.button('disable');
+                        }
                     }
                     catch (err) {
                         $('<div>', {
                             text: err,
                             class: 'error'
                         }).appendTo(bibtexStatusDiv);
+                        addButton.button('disable');
                     }
                 });
                 addEntriesDiv.dialog({
                     minWidth: 832,
                     modal: true,
                     buttons: {
-                        "Add": function () {
-                            var bibtexText = bibtexEditor.getValue();
-                            addEntriesDiv.dialog('close');
-                            if (bibtexText != null) {
-                                var bibtexEntries = bib.parse(bibtexText);
-                                for (var entryKey in bibtexEntries) {
-                                    var bibtexEntry = bibtexEntries[entryKey];
-                                    if (bib.entries[entryKey]) {
-                                        alert('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
-                                    } else {
-                                        bib.entries[entryKey] = {};
-                                        for (var key in bibtexEntry) {
-                                            var keyLower = key.toLowerCase();
-                                            bib.entries[entryKey][keyLower] = bibtexEntry[key];
-                                        }
-                                        var mandatoryFields = ['author', 'year', 'title', 'abstract', 'doi', 'series'];
-                                        $.each(mandatoryFields, function (i, field) {
-                                            if (!bib.entries[entryKey][field]) {
-                                                bib.entries[entryKey][field] = '';
+                        'Add': {
+                            text: 'add',
+                            id: 'add_entry_button',
+                            disabled: true,
+                            click: function () {
+                                var bibtexText = bibtexEditor.getValue();
+                                addEntriesDiv.dialog('close');
+                                if (bibtexText != null) {
+                                    var bibtexEntries = bib.parse(bibtexText);
+                                    for (var entryKey in bibtexEntries) {
+                                        var bibtexEntry = bibtexEntries[entryKey];
+                                        if (bib.entries[entryKey]) {
+                                            alert('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
+                                        } else {
+                                            bib.entries[entryKey] = {};
+                                            for (var key in bibtexEntry) {
+                                                var keyLower = key.toLowerCase();
+                                                bib.entries[entryKey][keyLower] = bibtexEntry[key];
                                             }
-                                        });
-                                        bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
+                                            var mandatoryFields = ['author', 'year', 'title', 'abstract', 'doi', 'series'];
+                                            $.each(mandatoryFields, function (i, field) {
+                                                if (!bib.entries[entryKey][field]) {
+                                                    bib.entries[entryKey][field] = '';
+                                                }
+                                            });
+                                            bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
+                                        }
                                     }
                                 }
+                                if (Object.keys(bibtexEntries).length == 1) {
+                                    window.toggleSelector('search', Object.keys(bibtexEntries)[0]);
+                                }
+                                update();
                             }
-                            if (Object.keys(bibtexEntries).length == 1) {
-                                window.toggleSelector('search', Object.keys(bibtexEntries)[0]);
-                            }
-                            update();
                         },
-                        Cancel: function () {
+                        cancel: function () {
                             $(this).dialog("close");
                         }
                     }
