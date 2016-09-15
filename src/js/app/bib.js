@@ -173,25 +173,22 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                     var bibtexEntry = bibtexEntries[entryKey];
                                     if (bib.entries[entryKey]) {
                                         alert('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
-                                        continue;
-                                    }
-                                    bib.entries[entryKey] = {};
-                                    for (var key in bibtexEntry) {
-                                        var keyLower = key.toLowerCase();
-                                        bib.entries[entryKey][keyLower] = bibtexEntry[key];
-                                    }
-                                    var mandatoryFields = ['author', 'year', 'title', 'abstract', 'doi', 'series'];
-                                    $.each(mandatoryFields, function (i, field) {
-                                        if (!bib.entries[entryKey][field]) {
-                                            bib.entries[entryKey][field] = '';
+                                    } else {
+                                        bib.entries[entryKey] = {};
+                                        for (var key in bibtexEntry) {
+                                            var keyLower = key.toLowerCase();
+                                            bib.entries[entryKey][keyLower] = bibtexEntry[key];
                                         }
-                                    });
-                                    bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
+                                        var mandatoryFields = ['author', 'year', 'title', 'abstract', 'doi', 'series'];
+                                        $.each(mandatoryFields, function (i, field) {
+                                            if (!bib.entries[entryKey][field]) {
+                                                bib.entries[entryKey][field] = '';
+                                            }
+                                        });
+                                        bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
+                                    }
                                 }
                             }
-                            console.log(bibtexEntries);
-                            console.log(Object.keys(bibtexEntries).length);
-                            console.log(Object.keys(bibtexEntries)[0]);
                             if (Object.keys(bibtexEntries).length == 1) {
                                 window.toggleSelector('search', Object.keys(bibtexEntries)[0]);
                             }
