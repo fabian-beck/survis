@@ -187,9 +187,10 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                             bib.entries[entryKey][field] = '';
                                         }
                                     });
+                                    bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
                                 }
                             }
-                            bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
+
                             update();
                         },
                         Cancel: function () {
