@@ -175,7 +175,6 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                         alert('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
                                         continue;
                                     }
-                                    window.toggleSelector('search', entryKey);
                                     bib.entries[entryKey] = {};
                                     for (var key in bibtexEntry) {
                                         var keyLower = key.toLowerCase();
@@ -190,7 +189,12 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                     bib.warnings[entryKey] = warnings.computeWarnings(bib.entries[entryKey]);
                                 }
                             }
-
+                            console.log(bibtexEntries);
+                            console.log(Object.keys(bibtexEntries).length);
+                            console.log(Object.keys(bibtexEntries)[0]);
+                            if (Object.keys(bibtexEntries).length == 1) {
+                                window.toggleSelector('search', Object.keys(bibtexEntries)[0]);
+                            }
                             update();
                         },
                         Cancel: function () {
