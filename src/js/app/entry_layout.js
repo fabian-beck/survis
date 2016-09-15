@@ -555,7 +555,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         try {
                             var bibtexText = bibtexEditor.getValue();
                             var bibtexEntries = bib.parse(bibtexText);
-                            for (var parsedID in bibtexEntries) {
+                            $.each(bibtexEntries, function(parsedID){
                                 var bibtexEntry = bibtexEntries[parsedID];
                                 if (id != parsedID) {
                                     $('<div>', {
@@ -568,8 +568,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                                     var keyLower = key.toLowerCase();
                                     bib.entries[id][keyLower] = bibtexEntry[key];
                                 }
-                                break;
-                            }
+                            });
                         }
                         catch (err) {
                             $('<div>', {
