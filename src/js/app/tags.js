@@ -31,7 +31,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         var containerDiv = tagCloudDiv.find('.tags-container');
         var tagFrequency = {};
         var tagFrequencySelector = {};
-        $.each(bib.filteredEntries, function (id, field) {
+        $.each(bib.filteredEntries, function (id) {
             var parsedTags = bib.parsedEntries[id][options.field];
             $.each(parsedTags, function (j, tag) {
                 var tagID = getTagID(tag, options.field);
@@ -42,7 +42,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
                 }
             });
         });
-        $.each(bib.filteredEntries, function (id, field) {
+        $.each(bib.filteredEntries, function (id) {
             var parsedTags = bib.parsedEntries[id][options.field];
             $.each(parsedTags, function (j, tag) {
                 var tagID = getTagID(tag, options.field);
@@ -104,7 +104,19 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
             if (!bib.parsedEntries[id]) {
                 bib.parsedEntries[id] = {};
             }
-            bib.parsedEntries[id][options.field] = util.parseField(entry[options.field], options.field, bib.tagCategories);
+            if (options.field === 'warning') {
+                bib.parsedEntries[id][options.field] = [];
+                if (bib.warnings[id]) {
+                    $.each(bib.warnings[id], function (i, warning) {
+                        var warningType = warning['type'] ? warning['type'] : warning;
+                        bib.parsedEntries[id][options.field].push(warningType);
+                    });
+                }
+            } else {
+                bib.parsedEntries[id][options.field] = util.parseField(
+                    entry[options.field], options.field, bib.tagCategories
+                );
+            }
         });
     }
 
@@ -223,7 +235,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
             class: 'button dec small',
             text: '-'
         }).appendTo(tagOccurrenceDiv);
-        buttonDec.click(function (event) {
+        buttonDec.click(function () {
             if (options.minTagFrequency > 1) {
                 options.minTagFrequency--;
                 frequencySpan.text(options.minTagFrequency);
@@ -238,7 +250,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
             class: 'button inc small',
             text: '+'
         }).appendTo(tagOccurrenceDiv);
-        buttonInc.click(function (event) {
+        buttonInc.click(function () {
             options.minTagFrequency++;
             frequencySpan.text(options.minTagFrequency);
             window.updateTags();
@@ -285,7 +297,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
      * Transforms a tag into an ID
      */
     function getTagID(tag, field) {
-        if (field === 'keywords') {
+        if (field === 'keywords' || field === 'warning') {
             return tag;
         }
         var tagID = util.simplifyTag(tag);
@@ -297,7 +309,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
      * Looks up the tag for a tag ID
      */
     function getTag(tagID, field) {
-        if (field === 'keywords') {
+        if (field === 'keywords' || field === 'warning') {
             return tagID;
         }
         return tagIDCache[tagID];
