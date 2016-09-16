@@ -192,7 +192,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                                 var keyLower = key.toLowerCase();
                                                 bib.entries[entryKey][keyLower] = bibtexEntry[key];
                                             }
-                                            var mandatoryFields = ['author', 'year', 'title', 'abstract', 'doi', 'series'];
+                                            var mandatoryFields = ['author', 'year', 'title'];
                                             $.each(mandatoryFields, function (i, field) {
                                                 if (!bib.entries[entryKey][field]) {
                                                     bib.entries[entryKey][field] = '';
