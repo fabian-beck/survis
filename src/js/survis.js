@@ -12,6 +12,7 @@ var warnings = (function () {
             proceedings: ['editor', 'publisher', 'title', 'year'],
             phdthesis: ['author', 'school', 'title', 'year'],
             mastersthesis: ['author', 'school', 'title', 'year'],
+            bachelorsthesis: ['author', 'school', 'title', 'year'],
             electronic: ['author', 'title', 'url', 'year'],
             misc: ['author', 'howpublished', 'title', 'year']
         },
