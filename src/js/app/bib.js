@@ -221,6 +221,52 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 bibParser.setInput(bibtexText);
                 bibParser.bibtex();
                 return bibParser.getEntries();
+            },
+
+            renameKeyword: function () {
+                var bib = this;
+                var renameQuery = prompt('Please enter the keyword that should be renamed, followed by "->" ' +
+                    'and one or more comma separated new names of the keyword.',
+                    'keyword_old->keyword_new, keyword_new2');
+                if (renameQuery) {
+                    if (renameQuery.indexOf("->") < 0) {
+                        alert('Wrong format of rename query: please use "->" ' +
+                            'to separate the old from the new name of the keyword');
+                        return;
+                    }
+                    var keywords = $.map(renameQuery.split('->'), $.trim);
+                    if (!keywords[0]) {
+                        alert('Wrong format of rename query: please specify the keyword you want to rename.');
+                        return;
+                    }
+                    if (!keywords[1]) {
+                        alert('Wrong format of rename query: please specify the new name of the keyword.');
+                        return;
+                    }
+                    var newKeywords = $.map(keywords[1].split(','), $.trim);
+                    var renameCount = 0;
+                    var deleteCount = 0;
+                    $.each(bib.filteredEntries, function (id, entry) {
+                        var keywordPos = $.inArray(keywords[0], bib.parsedEntries[id]['keywords']);
+                        if (keywordPos >= 0) {
+                            renameCount++;
+                            var keywordList = [].concat(newKeywords);
+                            var keywordListParsed = [].concat(newKeywords);
+                            $.each(bib.parsedEntries[id]['keywords'], function (i, keyword) {
+                                if (!(keyword === keywords[0]) && $.inArray(keyword, newKeywords) < 0) {
+                                    keywordListParsed.push(keyword);
+                                    if (keyword.indexOf('?') < 0) {
+                                        keywordList.push(keyword);
+                                    }
+                                }
+                            });
+                            bib.entries[id]['keywords'] = keywordList.join(', ');
+                            bib.parsedEntries[id]['keywords'] = keywordListParsed;
+                        }
+                    });
+                    update(false);
+                    alert('Renamed keywords of ' + renameCount + ' entries. ');
+                }
             }
         };
 
