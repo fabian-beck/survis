@@ -518,7 +518,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         var fix = this['fix'];
                         var bibtexWarningFixUl = $('<ul>').appendTo(bibtexWarningsUl);
                         var bibtexWarningFixLi = $('<li>', {
-                            text: 'fix: '+fix['description']
+                            text: 'fix: ' + fix['description']
                         }).appendTo(bibtexWarningFixUl);
                         bibtexWarningFixLi.click(function () {
                             var bibtexText = bib.createBibtex(id, fix['function']());
@@ -547,6 +547,23 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         ch: bibtexEditor.getLine(bibtexEditor.lastLine()).length
                     });
                 } else {
+                    var bibtexAddFieldForm = $('<form>', {
+                        class: 'bibtex_add_field'
+                    }).appendTo(container);
+                    $('<span>', {
+                        text: 'add field with value: '
+                    }).appendTo(bibtexAddFieldForm);
+                    var bibtexAddFieldTextInput = $('<input>', {
+                        type: 'text'
+                    }).appendTo(bibtexAddFieldForm);
+                    bibtexAddFieldForm.submit(function (event) {
+                        var inputText = bibtexAddFieldTextInput.val();
+                        var bibtexText = bibtexEditor.getValue();
+                        var newBibtexText = addField(bibtexText, inputText)
+                        bibtexEditor.setValue(newBibtexText);
+                        bibtexAddFieldTextInput.val('');
+                        event.preventDefault();
+                    });
                     var bibtexStatusDiv = $('<div>', {
                         class: 'bibtex_status'
                     }).appendTo(container);
@@ -555,7 +572,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         try {
                             var bibtexText = bibtexEditor.getValue();
                             var bibtexEntries = bib.parse(bibtexText);
-                            $.each(bibtexEntries, function(parsedID){
+                            $.each(bibtexEntries, function (parsedID) {
                                 var bibtexEntry = bibtexEntries[parsedID];
                                 if (id != parsedID) {
                                     $('<div>', {
@@ -613,6 +630,29 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 return s.substring(0, length - 3) + '...';
             }
             return s;
+        }
+
+        function addField(bibtexText, inputText) {
+            var fieldType = '';
+            var inputTextLower = inputText.toLowerCase();
+            if (inputTextLower.indexOf('10.') == 0) {
+                fieldType = 'doi';
+            } else if (inputTextLower.indexOf('proceedings of') >= 0 || inputTextLower.indexOf('international') >= 0) {
+                fieldType = 'booktitle';
+            } else if (inputTextLower.match(/\d+ ?--? ?\d+/)) {
+                fieldType = 'pages';
+            } else if (inputTextLower.length > 200) {
+                fieldType = 'abstract';
+            } else {
+                fieldType = prompt('Could not automatically detect field type. Please specify:');
+            }
+            var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';
+            var posClosingBracket = bibtexText.lastIndexOf('}');
+            if (bibtexText[posClosingBracket-1] === '\n') {
+                posClosingBracket--;
+            }
+            return [bibtexText.slice(0, posClosingBracket),
+                newFieldText, bibtexText.slice(posClosingBracket)].join('');
         }
     });
 

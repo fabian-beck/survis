@@ -242,6 +242,11 @@
     list-style-type: circle;
 }
 
+.entry .bibtex_add_field  {
+    font-size: 9pt;
+    margin: 2px;
+}
+
 .entry .CodeMirror {
     margin: 0 0 2px;
 }
