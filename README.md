@@ -59,8 +59,4 @@ Please contact me (fabian.beck@visus.uni-stuttgart.de) if you know other collect
 
 Fabian Beck
 
-VISUS, University of Stuttgart
-
-fabian.beck@visus.uni-stuttgart.de
-
 http://research.fbeck.com
