@@ -19,7 +19,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
 
             downloadBibtex: function () {
                 var blob = new Blob([this.createAllBibtex()]);
-                window.saveAs(blob, 'reference.bib');
+                window.saveAs(blob, 'references.bib');
             },
 
             createBibtex: function (id, entry) {
