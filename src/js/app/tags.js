@@ -186,6 +186,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
     }
 
     function appendTagDivs(name, title, tagDivs, element) {
+
         tagDivs = tagDivs.sort(function (a, b) {
             var nA = parseInt(a.attr('value'));
             var nB = parseInt(b.attr('value'));
@@ -193,7 +194,10 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
                 return 1;
             else if (nA > nB)
                 return -1;
-            return 0;
+            else{
+                // return 0;
+                return a.children()[1].innerText.localeCompare(b.children()[1].innerText);
+            }
         });
         var categoryDiv = $('<div>', {
             class: 'tag_category'
