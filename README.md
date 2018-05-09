@@ -23,7 +23,7 @@ Supplemental data is contained in 'src/data/':
 
 Please do not edit the files in 'src/data/generated/' because they are created automatically. 
 
-After completing your changes, just run 'update_data.py' with Python 3. Reload SurVis in the browser to see the changed bibliography. The script will continue to check for updates on the bib file until you stop it.
+After completing your changes, just run 'update_data.py' with Python 3. Reload SurVis in the browser to see the changed bibliography. The script will continue to check for updates on the bib file until you stop it. It requires the python modules `python-bibtexparser` and `watchdog`. Use the supplied conda environment definition file to install these: `conda env create -f environment.yml`.
 
 If the edit mode is activated, BibTeX entries can be modified in the browser, but are not stored in the 'bib' directory. To make those changes persistent, use 'download BibTex' in SurVis and copy the BibTeX data to your bib file in the 'bib' directory. You can also use the features to save and load the data from local storage of the browser; be careful, however, these features are still experimental.
 

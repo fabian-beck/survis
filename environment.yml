@@ -1,0 +1,4 @@
+name: SurVis
+dependencies:
+  - bibtexparser
+  - watchdog
