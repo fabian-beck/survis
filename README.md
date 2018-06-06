@@ -52,6 +52,7 @@ Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Disseminati
 * Visual Approaches for Analyzing Scientific Literature and Patents - http://ieg.ifs.tuwien.ac.at/~federico/LiPatVis/
 * Visualizing High-Dimensional Data - http://www.sci.utah.edu/~shusenl/highDimSurvey/website/
 * Visualization of Cultural Heritage Collection Data - https://danubevislab.github.io/collectionvis/
+* Survey of Visual Summaries - http://graphics.cs.wisc.edu/Vis/vis_summaries/
 
 Please contact me (fabian.beck@paluno.uni-due.de) if you know other collections using SurVis.
 
