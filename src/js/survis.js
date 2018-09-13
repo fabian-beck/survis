@@ -168,7 +168,7 @@ var warnings = (function () {
     }
 
     function computeWholeFieldCapitalizationProtected(warningsList, field, value) {
-        if (value.indexOf('{') == 0 && value.lastIndexOf('}') == value.length - 1 && value.length > 10 && (value.split("{").length - 1 == 1) )  {
+        if (value.indexOf('{') === 0 && value.lastIndexOf('}') === value.length - 1 && value.length > 10 && (value.split("{").length - 1 === 1) )  {
             warningsList.push('whole field "' + field + '" with protected capitalization');
         }
     }
