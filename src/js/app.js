@@ -16,7 +16,6 @@ requirejs.config({
         data: dataDir2,
         jquery: 'jquery-1.11.3.min',
         jqueryui: 'jquery-ui.min',
-        jquery_layout: 'jquery.layout-latest.min',
         codemirror: 'codemirror',
         stex: 'stex',
         d3: 'd3.v3.min'
@@ -25,7 +24,7 @@ requirejs.config({
         bibtex_js: {
             deps: ['jquery']
         },
-        'jquery.layout': {
+        'jquery_layout': {
             deps: ['jquery', 'jqueryui']
         },
         'jquery.tooltipster': {
