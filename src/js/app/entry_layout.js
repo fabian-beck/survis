@@ -162,6 +162,13 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     text: 'PDF'
                 }).appendTo(linksDiv);
             }
+            if (entry['video']) {
+                $('<a>', {
+                    href: entry['video'],
+                    target: '_blank',
+                    text: 'Video'
+                }).appendTo(linksDiv);
+            }
             if (entry['doi']) {
                 $('<a>', {
                     href: 'http://dx.doi.org/' + entry['doi'],
