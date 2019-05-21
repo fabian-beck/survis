@@ -46,7 +46,6 @@ Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Disseminati
 * Visualizing Group Structures in Graphs - http://groups-in-graphs.corinna-vehlow.com/
 * Performance Visualization - http://idav.ucdavis.edu/~ki/STAR/
 * Visualization for Software Reuse - http://www.cos.ufrj.br/~schots/survis_reuse/
-* Set Visualization - http://www.cvast.tuwien.ac.at/~alsallakh/SetViz/literature/www/index.html
 * Sparklines - http://sparklines-literature.fbeck.com/
 * Survey of Surveys - http://sos.swansea.ac.uk/
 * Visual Approaches for Analyzing Scientific Literature and Patents - http://ieg.ifs.tuwien.ac.at/~federico/LiPatVis/
