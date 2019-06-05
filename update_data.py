@@ -68,6 +68,7 @@ def listAvailablePdf():
         if file.endswith(".pdf"):
             s += "\"" + file.replace(".pdf", "") + "\","
             count += 1
+            create_thumbnail(file)
     if count > 0:
         s = s[:len(s) - 1]
     s += "]});"
@@ -86,6 +87,28 @@ def listAvailableImg():
         s = s[:len(s) - 1]
     s += "]});"
     fOut.write(s)
+
+def create_thumbnail(file):
+    pdf_path = os.path.join(PAPERS_DIR, file)
+    thumbnail_path = os.path.join(PAPERS_IMG_DIR, file.replace(".pdf", ".png"))
+
+    if os.path.isfile(thumbnail_path):
+        print(f"Skipping thumbnail generation for existing file {thumbnail_path}")
+    else:
+        # check whether the pdf2image module is installed
+        import importlib
+        pdf2image_spec = importlib.find_loader("pdf2image")
+        if pdf2image_spec is not None:
+            print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
+            import tempfile
+            from pdf2image import convert_from_path
+
+            with tempfile.TemporaryDirectory() as path:
+                pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
+                pages[0].save(thumbnail_path)
+                print("Done.")
+        else:
+            print("Missing module for thumbnail generation: pdf2image")
 
 
 def update():
