@@ -19,7 +19,7 @@ AVAILABLE_IMG_FILE = os.path.join(GENERATED_DIR, "available_img.js")
 # Boolean that controls Thumbnail Generation.
 # To enable this feature, please install pdf2image.
 # See: https://github.com/Belval/pdf2image
-CREATE_THUMBNAILS = True
+CREATE_THUMBNAILS = False
 if CREATE_THUMBNAILS:
     import tempfile
     from pdf2image import convert_from_path
