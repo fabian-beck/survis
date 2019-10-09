@@ -16,6 +16,14 @@ BIB_JS_FILE = os.path.join(GENERATED_DIR, "bib.js")
 AVAILABLE_PDF_FILE = os.path.join(GENERATED_DIR, "available_pdf.js")
 AVAILABLE_IMG_FILE = os.path.join(GENERATED_DIR, "available_img.js")
 
+# Boolean that controls Thumbnail Generation.
+# To enable this feature, please install pdf2image.
+# See: https://github.com/Belval/pdf2image
+CREATE_THUMBNAILS = True
+if CREATE_THUMBNAILS:
+    import tempfile
+    from pdf2image import convert_from_path
+
 
 def parseBibtex(bibFile):
     parsedData = {}
@@ -68,7 +76,8 @@ def listAvailablePdf():
         if file.endswith(".pdf"):
             s += "\"" + file.replace(".pdf", "") + "\","
             count += 1
-            create_thumbnail(file)
+            if CREATE_THUMBNAILS:
+                create_thumbnail(file)
     if count > 0:
         s = s[:len(s) - 1]
     s += "]});"
@@ -88,6 +97,7 @@ def listAvailableImg():
     s += "]});"
     fOut.write(s)
 
+
 def create_thumbnail(file):
     pdf_path = os.path.join(PAPERS_DIR, file)
     thumbnail_path = os.path.join(PAPERS_IMG_DIR, file.replace(".pdf", ".png"))
@@ -95,20 +105,11 @@ def create_thumbnail(file):
     if os.path.isfile(thumbnail_path):
         print(f"Skipping thumbnail generation for existing file {thumbnail_path}")
     else:
-        # check whether the pdf2image module is installed
-        import importlib
-        pdf2image_spec = importlib.find_loader("pdf2image")
-        if pdf2image_spec is not None:
-            print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
-            import tempfile
-            from pdf2image import convert_from_path
-
-            with tempfile.TemporaryDirectory() as path:
-                pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
-                pages[0].save(thumbnail_path)
-                print("Done.")
-        else:
-            print("Missing module for thumbnail generation: pdf2image")
+        print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
+        with tempfile.TemporaryDirectory() as path:
+            pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
+            pages[0].save(thumbnail_path)
+            print("Done.")
 
 
 def update():
