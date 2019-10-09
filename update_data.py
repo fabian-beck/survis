@@ -24,6 +24,8 @@ def parseBibtex(bibFile):
         currentId = ""
         for line in fIn:
             line = line.strip("\n").strip("\r")
+            if line.startswith("@Comment"):
+                continue
             if line.startswith("@"):
                 currentId = line.split("{")[1].rstrip(",\n")
                 currentType = line.split("{")[0].strip("@ ")
