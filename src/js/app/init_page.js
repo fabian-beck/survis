@@ -223,11 +223,15 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
 
             menuDiv.append($('<div id="export_bibtex" class="button tooltip" title="download selected publications as a BibTeX file"><span class="symbol">B</span>download BibTeX</div>'));
             if (editable) {
-                menuDiv.append($('<div id="add_entry" class="button tooltip" title="add a new publication to collection"><span class="symbol">+</span>add entries</div>'));
+                if (electron) {
+                    menuDiv.append($('<div id="save" class="button tooltip" title="save"><span class="symbol">D</span>save</div>'));
+                } else {
+                    menuDiv.append($('<div id="add_entry" class="button tooltip" title="add a new publication to collection"><span class="symbol">+</span>add entries</div>'));
+                    menuDiv.append($('<div id="save" class="button tooltip" title="save literature collection to the local storage of your browser"><span class="symbol">D</span>save to local storage</div>'));
+                    menuDiv.append($('<a href="index.html?loadFromLocalStorage=true"><div id="load_local" class="button tooltip" title="load literature collection from the local storage of your browser"><span class="symbol">R</span>load from local storage</div></a>'));
+                    menuDiv.append($('<a href="index.html"><div id="load_default" class="button tooltip" title="load the original literature collection from the server"><span class="symbol">R</span>load default</div></a>'))
+                }
                 menuDiv.append($('<div id="rename_keyword" class="button tooltip" title="rename a keyword for all entries"><span class="symbol">V</span>rename keyword</div>'));
-                menuDiv.append($('<div id="save" class="button tooltip" title="save literature collection to the local storage of your browser"><span class="symbol">D</span>save to local storage</div>'));
-                menuDiv.append($('<a href="index.html?loadFromLocalStorage=true"><div id="load_local" class="button tooltip" title="load literature collection from the local storage of your browser"><span class="symbol">R</span>load from local storage</div></a>'));
-                menuDiv.append($('<a href="index.html"><div id="load_default" class="button tooltip" title="load the original literature collection from the server"><span class="symbol">R</span>load default</div></a>'))
             }
             if (extraPages) {
                 var extraPagesDiv = ($('<div id="extra_pages_list">')).appendTo(footer);
@@ -297,6 +301,10 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
 
             $('#rename_keyword').click(function () {
                 bib.renameKeyword();
+            });
+
+            $('#save').click(function () {
+                bib.saveBibToFile();
             });
         }
 
