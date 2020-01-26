@@ -166,7 +166,8 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                 switch (field) {
                     case 'keywords':
                         var tags = [];
-                        $.each(fieldString.split(','), function (i, tag) {
+                        const splitter = fieldString.indexOf(',') < 0?';':',';
+                        $.each(fieldString.split(splitter), function (i, tag) {
                             tag = $.trim(tag.split("\\").join("")).toLowerCase();
                             if ($.inArray(tag, tags) == -1) {
                                 tags.push(tag);
