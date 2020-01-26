@@ -124,6 +124,12 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 return bibtexString;
             },
 
+            saveBibToFile: function() {
+                nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex();
+                const ipc = nodeRequire('electron').ipcRenderer;
+                ipc.send('saveFile');
+            },
+
             saveBibToLocalStorage: function () {
                 if (editable) {
                     localStorage.bibtexString = this.createAllBibtex();
@@ -272,18 +278,30 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
 
         function readBibtex() {
             var bibParser = new BibtexParser();
-            var loadFromLocalStorage = util.getUrlParameter('loadFromLocalStorage') === 'true';
-            if (editable && loadFromLocalStorage && localStorage.bibtexString) {
+            if (electron) {
                 try {
-                    bibParser.setInput(localStorage.bibtexString);
+                    bibParser.setInput(nodeRequire('electron').remote.getGlobal('sharedObject').bibData);
                     bibParser.bibtex();
                     return bibParser.getEntries();
                 } catch (err) {
                     console.error(err);
-                    console.log(localStorage.bibtexString);
-                    alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
+                    alert('Could not load bibliography: \n\n' + err.substring(0, 200));
                 }
                 return null;
+            } else {
+                var loadFromLocalStorage = util.getUrlParameter('loadFromLocalStorage') === 'true';
+                if (editable && loadFromLocalStorage && localStorage.bibtexString) {
+                    try {
+                        bibParser.setInput(localStorage.bibtexString);
+                        bibParser.bibtex();
+                        return bibParser.getEntries();
+                    } catch (err) {
+                        console.error(err);
+                        console.log(localStorage.bibtexString);
+                        alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
+                    }
+                    return null;
+                }
             }
         }
 
