@@ -246,14 +246,6 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 });
             }
             footer.append(menuDiv);
-
-            function openAbout() {
-                var about = $('#about');
-                about.empty();
-                about.append($('<iframe width="800" height="600">').attr('src', about)).dialog({
-                    minWidth: 832
-                });
-            }
         }
 
         function addActions() {

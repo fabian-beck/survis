@@ -25,10 +25,11 @@ function createWindow() {
             { name: 'Literature file (BibTeX)', extensions: ['bib', 'txt'] }
         ]
     }).then(result => {
+        win.fileName = result.filePaths[0];
         // https://stackoverflow.com/questions/43722450/electron-function-to-read-a-local-file-fs-not-reading 
-        fs.readFile(result.filePaths[0], 'utf-8', (err, data) => {
+        fs.readFile(win.fileName, 'utf-8', (err, data) => {
             if (err) {
-                console.log("An error ocurred reading the file :" + err.message);
+                dialog.showErrorBox("Error reading file", err.message)
                 return;
             }
             global.sharedObject = {
@@ -39,7 +40,7 @@ function createWindow() {
         });
 
     }).catch(err => {
-        console.log(err)
+        dialog.showErrorBox("Error reading file", err.message);
     })
 
     // Emitted when the window is closed.
@@ -84,8 +85,8 @@ app.on('activate', () => {
 const ipc = require('electron').ipcMain;
 ipc.on('saveFile', (event, messages) => {
     try {
-        fs.writeFileSync(fileName, global.sharedObject.bibData, 'utf-8');
-    } catch (e) {
-        console.log('Failed to save the file: ' + e.message);
+        fs.writeFileSync(win.fileName, global.sharedObject.bibData, 'utf-8');
+    } catch (err) {
+        dialog.showErrorBox("Error saving file", err.message);
     }
 });

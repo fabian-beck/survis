@@ -231,10 +231,20 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
 
             renameKeyword: function () {
                 var bib = this;
-                var renameQuery = prompt('Please enter the keyword that should be renamed, followed by "->" ' +
-                    'and one or more comma separated new names of the keyword.',
-                    'keyword_old->keyword_new, keyword_new2');
-                if (renameQuery) {
+                const promptContent = $('<div>');
+                $(`<div>Please enter the keyword that should be renamed, followed by "->" and one or 
+                    more comma separated new names of the keyword.'</div>`)
+                    .appendTo(promptContent);
+                const renameForm = $(` 
+                        <form id="rename">
+                            <input type="text" id="renameQuery" value="keyword_old->keyword_new, keyword_new2">
+                            <input type="submit" value="rename">
+                        </form>`)
+                    .appendTo(promptContent);
+                renameForm.submit(function (event) {
+                    event.preventDefault();
+                    const renameQuery = $('#renameQuery').val();
+                    console.log(renameQuery);
                     if (renameQuery.indexOf("->") < 0) {
                         alert('Wrong format of rename query: please use "->" ' +
                             'to separate the old from the new name of the keyword');
@@ -272,7 +282,8 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     });
                     update(false);
                     alert('Renamed keywords of ' + renameCount + ' entries. ');
-                }
+                });
+                util.openPrompt(promptContent, "Rename keyword");
             }
         };
 
