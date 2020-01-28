@@ -1,13 +1,11 @@
 // Based on: https://www.electronjs.org/docs/tutorial/first-app
 
-const { app, BrowserWindow, shell } = require('electron')
+const { app, BrowserWindow, shell, dialog } = require('electron')
 const fs = require('fs');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
-
-const fileName = '../bib/references.bib';
 
 function createWindow() {
     // Create the browser window.
@@ -21,23 +19,28 @@ function createWindow() {
     })
     win.maximize();
 
-    // https://stackoverflow.com/questions/43722450/electron-function-to-read-a-local-file-fs-not-reading 
-    fs.readFile(fileName, 'utf-8', (err, data) => {
-        if (err) {
-            console.log("An error ocurred reading the file :" + err.message);
-            return;
-        }
-        global.sharedObject = {
-            bibData: data
-        }
-        
-    });
+    dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: [
+            { name: 'Literature file (BibTeX)', extensions: ['bib', 'txt'] }
+        ]
+    }).then(result => {
+        // https://stackoverflow.com/questions/43722450/electron-function-to-read-a-local-file-fs-not-reading 
+        fs.readFile(result.filePaths[0], 'utf-8', (err, data) => {
+            if (err) {
+                console.log("An error ocurred reading the file :" + err.message);
+                return;
+            }
+            global.sharedObject = {
+                bibData: data
+            }
+            win.loadFile('index-electron.html')
+            //win.webContents.openDevTools()
+        });
 
-    // and load the index.html of the app.
-    win.loadFile('index-electron.html')
-
-    // Open the DevTools.
-    //win.webContents.openDevTools()
+    }).catch(err => {
+        console.log(err)
+    })
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -82,7 +85,7 @@ const ipc = require('electron').ipcMain;
 ipc.on('saveFile', (event, messages) => {
     try {
         fs.writeFileSync(fileName, global.sharedObject.bibData, 'utf-8');
-    } catch(e) {
+    } catch (e) {
         console.log('Failed to save the file: ' + e.message);
     }
 });
