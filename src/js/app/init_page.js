@@ -97,7 +97,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 }
                 titleDiv.append(paperDiv);
             }
-            titleDiv.append($('<a href="https://github.com/fabian-beck/survis"><img title="SurVis ' + window.surVisVersion + '" src="img/survis_small.png"/></a>'));
+            titleDiv.append($(`<a href="https://github.com/fabian-beck/survis"><img title="SurVis ${window.surVisVersion}" src="${stylesDir}img/survis_small.png"/></a>`));
             headerDiv.append(titleDiv);
             $('<form id="search"> <input type="search" placeholder="search ..."/> <div class="button" id="search_button">search </div> </form>').appendTo(headerDiv);
             headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [Esc]">clear</div><div style="clear: both;"></div></div>'));
