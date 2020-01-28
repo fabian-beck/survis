@@ -1,12 +1,12 @@
 # SurVis as an Electron Desktop App
 
-## Init npm, install electron
-https://www.electronjs.org/docs/tutorial/first-app 
+## Install electron
 
 ```
-npm init
 npm install --save-dev electron
 ```
+
+More information: https://www.electronjs.org/docs/tutorial/first-app 
 
 ## Run electron app
 ```
