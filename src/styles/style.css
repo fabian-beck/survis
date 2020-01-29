@@ -373,6 +373,10 @@ a:visited {
     font-size: 14pt;
 }
 
+#add_entry {
+    margin-left: 50px;
+}
+
 .CodeMirror {
     margin-top: 2px;
     margin-bottom: 2px;

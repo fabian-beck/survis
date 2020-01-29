@@ -18,7 +18,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             nVisibleEntries: 20,
 
             downloadBibtex: function () {
-                var blob = new Blob([this.createAllBibtex()]);
+                var blob = new Blob([this.createAllBibtex(true)]);
                 window.saveAs(blob, 'references.bib');
             },
 
@@ -105,10 +105,11 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 return citation.trim();
             },
 
-            createAllBibtex: function () {
+            createAllBibtex: function (filtered) {
                 var bib = this;
                 var bibtexString = '';
-                $.each(bib.filteredEntries, function (id, entry) {
+                const selectedEntries = filtered ? bib.filteredEntries : bib.entries;
+                $.each(selectedEntries, function (id, entry) {
                     var currentBibtex = "";
                     if (bib.entryDivs[id]) {
                         bib.entryDivs[id].find(".CodeMirror-code").children().each(function () {
@@ -125,14 +126,14 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             },
 
             saveBibToFile: function() {
-                nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex();
+                nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
                 const ipc = nodeRequire('electron').ipcRenderer;
                 ipc.send('saveFile');
             },
 
             saveBibToLocalStorage: function () {
                 if (editable) {
-                    localStorage.bibtexString = this.createAllBibtex();
+                    localStorage.bibtexString = this.createAllBibtex(false);
                 }
             },
 
