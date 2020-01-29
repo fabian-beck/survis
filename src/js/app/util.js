@@ -166,7 +166,8 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                 switch (field) {
                     case 'keywords':
                         var tags = [];
-                        $.each(fieldString.split(','), function (i, tag) {
+                        const splitter = fieldString.indexOf(',') < 0?';':',';
+                        $.each(fieldString.split(splitter), function (i, tag) {
                             tag = $.trim(tag.split("\\").join("")).toLowerCase();
                             if ($.inArray(tag, tags) == -1) {
                                 tags.push(tag);
@@ -212,6 +213,23 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
 
             simplifyTag: function(tag) {
                 return tag.toLowerCase().replace(/\W/g, '');
+            },
+            
+            openPrompt: function(contentDiv, title) {
+                $('#prompt').remove();
+                const prompt = $('<div>', {
+                    id: 'prompt',
+                    title: title
+                }).appendTo($('body'));
+                contentDiv.appendTo(prompt);
+                prompt.dialog({
+                    minWidth: 832
+                });
+            },
+
+            notify: function (message) {
+                const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));  
+                notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
             }
         }
     }

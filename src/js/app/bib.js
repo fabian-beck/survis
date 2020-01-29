@@ -18,7 +18,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             nVisibleEntries: 20,
 
             downloadBibtex: function () {
-                var blob = new Blob([this.createAllBibtex()]);
+                var blob = new Blob([this.createAllBibtex(true)]);
                 window.saveAs(blob, 'references.bib');
             },
 
@@ -105,10 +105,11 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 return citation.trim();
             },
 
-            createAllBibtex: function () {
+            createAllBibtex: function (filtered) {
                 var bib = this;
                 var bibtexString = '';
-                $.each(bib.filteredEntries, function (id, entry) {
+                const selectedEntries = filtered ? bib.filteredEntries : bib.entries;
+                $.each(selectedEntries, function (id, entry) {
                     var currentBibtex = "";
                     if (bib.entryDivs[id]) {
                         bib.entryDivs[id].find(".CodeMirror-code").children().each(function () {
@@ -124,9 +125,16 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 return bibtexString;
             },
 
+            saveBibToFile: function() {
+                nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
+                const ipc = nodeRequire('electron').ipcRenderer;
+                ipc.send('saveFile');
+                util.notify('file saved');
+            },
+
             saveBibToLocalStorage: function () {
                 if (editable) {
-                    localStorage.bibtexString = this.createAllBibtex();
+                    localStorage.bibtexString = this.createAllBibtex(false);
                 }
             },
 
@@ -225,10 +233,20 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
 
             renameKeyword: function () {
                 var bib = this;
-                var renameQuery = prompt('Please enter the keyword that should be renamed, followed by "->" ' +
-                    'and one or more comma separated new names of the keyword.',
-                    'keyword_old->keyword_new, keyword_new2');
-                if (renameQuery) {
+                const promptContent = $('<div>');
+                $(`<div>Please enter the keyword that should be renamed, followed by "->" and one or 
+                    more comma separated new names of the keyword.'</div>`)
+                    .appendTo(promptContent);
+                const renameForm = $(` 
+                        <form id="rename">
+                            <input type="text" id="renameQuery" value="keyword_old->keyword_new, keyword_new2">
+                            <input type="submit" value="rename">
+                        </form>`)
+                    .appendTo(promptContent);
+                renameForm.submit(function (event) {
+                    event.preventDefault();
+                    const renameQuery = $('#renameQuery').val();
+                    console.log(renameQuery);
                     if (renameQuery.indexOf("->") < 0) {
                         alert('Wrong format of rename query: please use "->" ' +
                             'to separate the old from the new name of the keyword');
@@ -266,24 +284,37 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     });
                     update(false);
                     alert('Renamed keywords of ' + renameCount + ' entries. ');
-                }
+                });
+                util.openPrompt(promptContent, "Rename keyword");
             }
         };
 
         function readBibtex() {
             var bibParser = new BibtexParser();
-            var loadFromLocalStorage = util.getUrlParameter('loadFromLocalStorage') === 'true';
-            if (editable && loadFromLocalStorage && localStorage.bibtexString) {
+            if (electron) {
                 try {
-                    bibParser.setInput(localStorage.bibtexString);
+                    bibParser.setInput(nodeRequire('electron').remote.getGlobal('sharedObject').bibData);
                     bibParser.bibtex();
                     return bibParser.getEntries();
                 } catch (err) {
                     console.error(err);
-                    console.log(localStorage.bibtexString);
-                    alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
+                    alert('Could not load bibliography: \n\n' + err.substring(0, 200));
                 }
                 return null;
+            } else {
+                var loadFromLocalStorage = util.getUrlParameter('loadFromLocalStorage') === 'true';
+                if (editable && loadFromLocalStorage && localStorage.bibtexString) {
+                    try {
+                        bibParser.setInput(localStorage.bibtexString);
+                        bibParser.bibtex();
+                        return bibParser.getEntries();
+                    } catch (err) {
+                        console.error(err);
+                        console.log(localStorage.bibtexString);
+                        alert('Could not load bibliography from local storage, loaded default instead (see console for details and locally stored bibliography): \n\n' + err.substring(0, 200));
+                    }
+                    return null;
+                }
             }
         }
 

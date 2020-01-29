@@ -1,0 +1,14 @@
+{
+  "name": "survis-electron",
+  "version": "0.1.0",
+  "description": "Literature browser SurVis as an electron desktop app",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Fabian Beck",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^7.1.10"
+  }
+}

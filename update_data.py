@@ -16,6 +16,14 @@ BIB_JS_FILE = os.path.join(GENERATED_DIR, "bib.js")
 AVAILABLE_PDF_FILE = os.path.join(GENERATED_DIR, "available_pdf.js")
 AVAILABLE_IMG_FILE = os.path.join(GENERATED_DIR, "available_img.js")
 
+# Boolean that controls Thumbnail Generation.
+# To enable this feature, please install pdf2image.
+# See: https://github.com/Belval/pdf2image
+CREATE_THUMBNAILS = False
+if CREATE_THUMBNAILS:
+    import tempfile
+    from pdf2image import convert_from_path
+
 
 def parseBibtex(bibFile):
     parsedData = {}
@@ -24,6 +32,8 @@ def parseBibtex(bibFile):
         currentId = ""
         for line in fIn:
             line = line.strip("\n").strip("\r")
+            if line.startswith("@Comment"):
+                continue
             if line.startswith("@"):
                 currentId = line.split("{")[1].rstrip(",\n")
                 currentType = line.split("{")[0].strip("@ ")
@@ -68,6 +78,8 @@ def listAvailablePdf():
         if file.endswith(".pdf"):
             s += "\"" + file.replace(".pdf", "") + "\","
             count += 1
+            if CREATE_THUMBNAILS:
+                create_thumbnail(file)
     if count > 0:
         s = s[:len(s) - 1]
     s += "]});"
@@ -86,6 +98,20 @@ def listAvailableImg():
         s = s[:len(s) - 1]
     s += "]});"
     fOut.write(s)
+
+
+def create_thumbnail(file):
+    pdf_path = os.path.join(PAPERS_DIR, file)
+    thumbnail_path = os.path.join(PAPERS_IMG_DIR, file.replace(".pdf", ".png"))
+
+    if os.path.isfile(thumbnail_path):
+        print(f"Skipping thumbnail generation for existing file {thumbnail_path}")
+    else:
+        print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
+        with tempfile.TemporaryDirectory() as path:
+            pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
+            pages[0].save(thumbnail_path)
+            print("Done.")
 
 
 def update():

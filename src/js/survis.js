@@ -1,3 +1,5 @@
+var electron = typeof nodeRequire !== 'undefined';
+
 var warnings = (function () {
 
     return {

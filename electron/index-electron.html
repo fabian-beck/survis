@@ -1,0 +1,21 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- Rename required to not conflict with JQuery and RequireJS: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron -->  
+    <script>
+        window.nodeRequire = require;
+        delete window.require;
+        delete window.exports;
+        delete window.module;
+    </script>
+    <script type="text/javascript" src="properties.js"></script>
+    <script type="text/javascript" src="../src/js/survis.js"></script>
+    <script data-main="../src/js/app.js" src="../src/js/require.js"></script>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<body>
+</body>
+
+</html>

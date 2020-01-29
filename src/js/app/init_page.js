@@ -35,6 +35,9 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 id: 'control',
                 class: 'ui-layout-west'
             }).appendTo(body);
+            $('<div>', {
+                id: 'notifications'
+            }).appendTo(body);
         }
 
         function loadAllCSS() {
@@ -97,10 +100,10 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 }
                 titleDiv.append(paperDiv);
             }
-            titleDiv.append($('<a href="https://github.com/fabian-beck/survis"><img title="SurVis ' + window.surVisVersion + '" src="img/survis_small.png"/></a>'));
+            titleDiv.append($(`<a href="https://github.com/fabian-beck/survis"><img title="SurVis ${window.surVisVersion}" src="${stylesDir}img/survis_small.png"/></a>`));
             headerDiv.append(titleDiv);
             $('<form id="search"> <input type="search" placeholder="search ..."/> <div class="button" id="search_button">search </div> </form>').appendTo(headerDiv);
-            headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [Esc]">clear</div><div style="clear: both;"></div></div>'));
+            headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [esc]">clear</div><div style="clear: both;"></div></div>'));
         }
 
         function initControl() {
@@ -220,14 +223,20 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
         function initFooter() {
             var footer = $('#footer');
             var menuDiv = ($('<div id="menu">'));
-
-            menuDiv.append($('<div id="export_bibtex" class="button tooltip" title="download selected publications as a BibTeX file"><span class="symbol">B</span>download BibTeX</div>'));
+            if (!electron) {
+                menuDiv.append($('<div id="export_bibtex" class="button tooltip" title="download selected publications as a BibTeX file"><span class="symbol">B</span>download BibTeX</div>'));
+            }
             if (editable) {
+                if (electron) {
+                    menuDiv.append($('<div id="save_file" class="button tooltip" title="save changes in current file [ctrl + s]"><span class="symbol">D</span>save</div>'));
+                    menuDiv.append($('<div id="export_bibtex" class="button tooltip" title="export in new file (restricted to filtered entries)"><span class="symbol">B</span>export</div>'));
+                } else {
+                    menuDiv.append($('<div id="save" class="button tooltip" title="save literature collection to the local storage of your browser"><span class="symbol">D</span>save to local storage</div>'));
+                    menuDiv.append($('<a href="index.html?loadFromLocalStorage=true"><div id="load_local" class="button tooltip" title="load literature collection from the local storage of your browser"><span class="symbol">R</span>load from local storage</div></a>'));
+                    menuDiv.append($('<a href="index.html"><div id="load_default" class="button tooltip" title="load the original literature collection from the server"><span class="symbol">R</span>load default</div></a>'))
+                }
                 menuDiv.append($('<div id="add_entry" class="button tooltip" title="add a new publication to collection"><span class="symbol">+</span>add entries</div>'));
                 menuDiv.append($('<div id="rename_keyword" class="button tooltip" title="rename a keyword for all entries"><span class="symbol">V</span>rename keyword</div>'));
-                menuDiv.append($('<div id="save" class="button tooltip" title="save literature collection to the local storage of your browser"><span class="symbol">D</span>save to local storage</div>'));
-                menuDiv.append($('<a href="index.html?loadFromLocalStorage=true"><div id="load_local" class="button tooltip" title="load literature collection from the local storage of your browser"><span class="symbol">R</span>load from local storage</div></a>'));
-                menuDiv.append($('<a href="index.html"><div id="load_default" class="button tooltip" title="load the original literature collection from the server"><span class="symbol">R</span>load default</div></a>'))
             }
             if (extraPages) {
                 var extraPagesDiv = ($('<div id="extra_pages_list">')).appendTo(footer);
@@ -242,14 +251,6 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 });
             }
             footer.append(menuDiv);
-
-            function openAbout() {
-                var about = $('#about');
-                about.empty();
-                about.append($('<iframe width="800" height="600">').attr('src', about)).dialog({
-                    minWidth: 832
-                });
-            }
         }
 
         function addActions() {
@@ -264,7 +265,11 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             $(document).keydown(function (e) {
                 if ((e.which == '115' || e.which == '83') && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
-                    bib.saveBibToLocalStorage();
+                    if (electron) {
+                        bib.saveBibToFile();
+                    } else {
+                        bib.saveBibToLocalStorage();
+                    }
                     return false;
                 }
                 return true;
@@ -297,6 +302,10 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
 
             $('#rename_keyword').click(function () {
                 bib.renameKeyword();
+            });
+
+            $('#save_file').click(function () {
+                bib.saveBibToFile();
             });
         }
 
