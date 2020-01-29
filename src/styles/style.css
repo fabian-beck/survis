@@ -1,3 +1,8 @@
+:root {
+    --warningBgColor: #fcefa1;
+    --lightBorder: 1px solid silver;
+  }
+
 html {
     margin: 0;
     padding: 0;
@@ -42,7 +47,7 @@ a:visited {
 }
 
 .button {
-    border: 1px solid silver;
+    border: var(--lightBorder);
     display: inline-block;
     margin: 5px 5px;
     padding: 2px 5px;
@@ -311,7 +316,7 @@ a:visited {
 
 #result_header {
     padding: 5px;
-    border-bottom: 1px solid silver;
+    border-bottom: var(--lightBorder);
     overflow: auto;
 }
 
@@ -380,7 +385,7 @@ a:visited {
 .CodeMirror {
     margin-top: 2px;
     margin-bottom: 2px;
-    border: 1px solid silver;
+    border: var(--lightBorder);
     font-size: 8pt;
     height: 300px;
     clear: both;
@@ -391,7 +396,7 @@ a:visited {
 }
 
 .bibtex_status .info {
-    border: 1px solid silver;
+    border: var(--lightBorder);
     background: #f7f7f7;
     margin: 5px 0;
     padding: 5px;
@@ -404,4 +409,15 @@ a:visited {
     padding: 5px;
 }
 
+#notifications {
+    position: absolute;
+    bottom:5;
+    right:5;
+}
 
+#notifications div {
+    background: var(--warningBgColor);
+    border: var(--lightBorder);
+    padding: 2px;
+    margin: 5px;
+}

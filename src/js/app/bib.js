@@ -129,6 +129,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
                 const ipc = nodeRequire('electron').ipcRenderer;
                 ipc.send('saveFile');
+                util.notify('file saved');
             },
 
             saveBibToLocalStorage: function () {

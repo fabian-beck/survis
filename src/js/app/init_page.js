@@ -35,6 +35,9 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 id: 'control',
                 class: 'ui-layout-west'
             }).appendTo(body);
+            $('<div>', {
+                id: 'notifications'
+            }).appendTo(body);
         }
 
         function loadAllCSS() {

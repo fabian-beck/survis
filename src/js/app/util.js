@@ -225,6 +225,11 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                 prompt.dialog({
                     minWidth: 832
                 });
+            },
+
+            notify: function (message) {
+                const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));  
+                notificationDiv.fadeIn('fast').delay(3000).fadeOut('fast');
             }
         }
     }
