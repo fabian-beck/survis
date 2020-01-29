@@ -103,7 +103,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             titleDiv.append($(`<a href="https://github.com/fabian-beck/survis"><img title="SurVis ${window.surVisVersion}" src="${stylesDir}img/survis_small.png"/></a>`));
             headerDiv.append(titleDiv);
             $('<form id="search"> <input type="search" placeholder="search ..."/> <div class="button" id="search_button">search </div> </form>').appendTo(headerDiv);
-            headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [Esc]">clear</div><div style="clear: both;"></div></div>'));
+            headerDiv.append($('<div id="selectors_container"><div class="label">Selectors</div><div id="selectors"></div><div id="clear_selectors" class="button tooltip" title="clear selectors [esc]">clear</div><div style="clear: both;"></div></div>'));
         }
 
         function initControl() {
@@ -228,7 +228,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             }
             if (editable) {
                 if (electron) {
-                    menuDiv.append($('<div id="save_file" class="button tooltip" title="save changes in current file"><span class="symbol">D</span>save</div>'));
+                    menuDiv.append($('<div id="save_file" class="button tooltip" title="save changes in current file [ctrl + s]"><span class="symbol">D</span>save</div>'));
                     menuDiv.append($('<div id="export_bibtex" class="button tooltip" title="export in new file (restricted to filtered entries)"><span class="symbol">B</span>export</div>'));
                 } else {
                     menuDiv.append($('<div id="save" class="button tooltip" title="save literature collection to the local storage of your browser"><span class="symbol">D</span>save to local storage</div>'));
@@ -265,7 +265,11 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             $(document).keydown(function (e) {
                 if ((e.which == '115' || e.which == '83') && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
-                    bib.saveBibToLocalStorage();
+                    if (electron) {
+                        bib.saveBibToFile();
+                    } else {
+                        bib.saveBibToLocalStorage();
+                    }
                     return false;
                 }
                 return true;
