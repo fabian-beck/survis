@@ -651,7 +651,8 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             } else if (inputTextLower.length > 200) {
                 fieldType = 'abstract';
             } else {
-                fieldType = prompt('Could not automatically detect field type. Please specify:');
+                util.notify('Could not automatically detect field type. Added as "undefined", please change manually.');
+                fieldType = 'undefined';
             }
             var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';
             var posClosingBracket = bibtexText.lastIndexOf('}');

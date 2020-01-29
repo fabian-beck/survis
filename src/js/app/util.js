@@ -229,7 +229,7 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
 
             notify: function (message) {
                 const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));  
-                notificationDiv.fadeIn('fast').delay(3000).fadeOut('fast');
+                notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
             }
         }
     }
