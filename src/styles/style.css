@@ -384,6 +384,14 @@ a:visited {
     margin-left: 50px;
 }
 
+#rename_form {
+    margin-top: 10px;
+}
+
+#rename_query {
+    width: 500px;
+}
+
 .CodeMirror {
     margin-top: 2px;
     margin-bottom: 2px;

@@ -348,7 +348,8 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             }).appendTo($('body'));
             extraPage.attr('title', pageName);
             extraPage.append($('<iframe width="800" height="600">').attr('src', pageSrc)).dialog({
-                minWidth: 832
+                minWidth: 832,
+                modal: true
             });
         }
 

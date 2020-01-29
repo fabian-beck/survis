@@ -214,18 +214,6 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
             simplifyTag: function(tag) {
                 return tag.toLowerCase().replace(/\W/g, '');
             },
-            
-            openPrompt: function(contentDiv, title) {
-                $('#prompt').remove();
-                const prompt = $('<div>', {
-                    id: 'prompt',
-                    title: title
-                }).appendTo($('body'));
-                contentDiv.appendTo(prompt);
-                prompt.dialog({
-                    minWidth: 832
-                });
-            },
 
             notify: function (message) {
                 const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));  

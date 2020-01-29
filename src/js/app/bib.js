@@ -233,19 +233,22 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
 
             renameKeyword: function () {
                 var bib = this;
-                const promptContent = $('<div>');
+                const renameDiv = $('<div>', {
+                    id: 'rename',
+                    title: "Rename keyword"
+                });
                 $(`<div>Please enter the keyword that should be renamed, followed by "->" and one or 
-                    more comma separated new names of the keyword.'</div>`)
-                    .appendTo(promptContent);
+                    more comma-separated new names of the keyword.'</div>`)
+                    .appendTo(renameDiv);
                 const renameForm = $(` 
-                        <form id="rename">
-                            <input type="text" id="renameQuery" value="keyword_old->keyword_new, keyword_new2">
+                        <form id="rename_form">
+                            <input type="text" id="rename_query" value="keyword_old->keyword_new, keyword_new2">
                             <input type="submit" value="rename">
                         </form>`)
-                    .appendTo(promptContent);
+                    .appendTo(renameDiv);
                 renameForm.submit(function (event) {
                     event.preventDefault();
-                    const renameQuery = $('#renameQuery').val();
+                    const renameQuery = $('#rename_query').val();
                     console.log(renameQuery);
                     if (renameQuery.indexOf("->") < 0) {
                         util.notify('Wrong format of rename query: please use "->" ' +
@@ -263,7 +266,6 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     }
                     var newKeywords = $.map(keywords[1].split(','), $.trim);
                     var renameCount = 0;
-                    var deleteCount = 0;
                     $.each(bib.filteredEntries, function (id, entry) {
                         var keywordPos = $.inArray(keywords[0], bib.parsedEntries[id]['keywords']);
                         if (keywordPos >= 0) {
@@ -285,7 +287,10 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     update(false);
                     util.notify('Renamed keywords of ' + renameCount + ' entries. ');
                 });
-                util.openPrompt(promptContent, "Rename keyword");
+                renameDiv.dialog({
+                    minWidth: 832,
+                    modal: true
+                });
             }
         };
 
