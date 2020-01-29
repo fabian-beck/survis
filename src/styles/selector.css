@@ -31,7 +31,7 @@
     min-width: 27px;
     min-height: 27px;
     border: 2px solid white;
-    box-shadow: 1px 1px 5px #AAAAAA;
+    box-shadow: var(--defaultShadow);
 }
 
 #selectors_container .selector.inverted .text {

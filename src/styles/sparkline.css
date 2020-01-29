@@ -59,7 +59,7 @@
 	border-radius: 7px;
 	color: white;
 	border: 2px solid white;
-	box-shadow: 1px 1px 5px #AAAAAA;
+	box-shadow: var(--defaultShadow);
 	position: absolute;
 	top: 160px;
 	left: 4px;
