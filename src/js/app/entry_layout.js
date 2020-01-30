@@ -641,15 +641,21 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
 
         function addField(bibtexText, inputText) {
             var fieldType = '';
+            inputText = inputText.trim();
             var inputTextLower = inputText.toLowerCase();
             if (inputTextLower.indexOf('10.') == 0) {
                 fieldType = 'doi';
-            } else if (inputTextLower.indexOf('proceedings of') >= 0 || inputTextLower.indexOf('international') >= 0) {
-                fieldType = 'booktitle';
-            } else if (inputTextLower.match(/\d+ ?--? ?\d+/)) {
-                fieldType = 'pages';
             } else if (inputTextLower.length > 200) {
                 fieldType = 'abstract';
+            } else if (inputTextLower.indexOf('http') === 0) {
+                fieldType = 'url';
+            } else if (inputTextLower.match(/\d+ ?--? ?\d+/)) {
+                fieldType = 'pages';
+            } else if (inputTextLower.indexOf('proceedings of') >= 0 || inputTextLower.indexOf('international') >= 0) {
+                fieldType = 'booktitle';
+            }            
+            if (fieldType) {
+                util.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
                 util.notify('Could not automatically detect field type. Added as "undefined", please change manually.');
                 fieldType = 'undefined';
