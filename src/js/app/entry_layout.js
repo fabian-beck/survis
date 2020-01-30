@@ -193,13 +193,6 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                 target: '_blank',
                 text: 'Google'
             }).appendTo(linksDiv);
-            if (entry['citeulike-article-id']) {
-                $('<a>', {
-                    href: 'http://www.citeulike.org/user/fbeck/article/' + entry['citeulike-article-id'],
-                    target: '_blank',
-                    text: 'CiteULike'
-                }).appendTo(linksDiv);
-            }
             return linksDiv;
         }
 
