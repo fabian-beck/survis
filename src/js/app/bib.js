@@ -11,7 +11,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             availablePdf: availaiblePdf.availablePdf,
             availableImg: availableImg.availableImg,
             stopwords: stopwords.stopwords,
-            tagCategories: tagCategories.tagCategories,
+            tagCategories: electron?generateTagCategoriesFromKeywords(entries):tagCategories.tagCategories,
             authorizedTags: authorizedTags.authorizedTags,
             entryDivs: {},
             warnings: warnings.computeAllWarnings(entries),
@@ -321,6 +321,21 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     return null;
                 }
             }
+        }
+
+        function generateTagCategoriesFromKeywords(entries) {
+            const tagCategories = {};
+            Object.keys(entries).forEach(id => {
+                util.parseField(entries[id].keywords, 'keywords', tagCategories).forEach(keyword => { 
+                    if (keyword.indexOf(':') > 0) {
+                        const category = keyword.split(':')[0];
+                        if (!tagCategories[category]) {
+                            tagCategories[category] = {};
+                        }
+                    }
+                });
+            });
+            return tagCategories;
         }
 
     });
