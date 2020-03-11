@@ -121,7 +121,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                     class: 'entry type_' + entry['type'],
                     id: id
                 });
-                var pdfFile = dataDir + 'papers_pdf/' + id + '.pdf';
+                var pdfFile = dataDir + 'papers_pdf/' + id + '.pd<f';
                 if (typeof bib.availableImg != 'undefined' && bib.availableImg.indexOf(id) >= 0) {
                     createImgDiv(id, pdfFile).appendTo(entryDiv);
                 }
@@ -563,38 +563,13 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
                         bibtexEditor.setValue(newBibtexText);
                         bibtexAddFieldTextInput.val('');
                         event.preventDefault();
+                        updateEntryBasedOnBibtex(id, bibtexEditor);
                     });
-                    var bibtexStatusDiv = $('<div>', {
+                    $('<div>', {
                         class: 'bibtex_status'
                     }).appendTo(container);
                     bibtexEditor.on('change', function (bibtexEditor) {
-                        bibtexStatusDiv.empty();
-                        try {
-                            var bibtexText = bibtexEditor.getValue();
-                            var bibtexEntries = bib.parse(bibtexText);
-                            $.each(bibtexEntries, function (parsedID) {
-                                var bibtexEntry = bibtexEntries[parsedID];
-                                if (id != parsedID) {
-                                    $('<div>', {
-                                        text: 'Changed ID of entry will only be applied after save and refresh.',
-                                        class: 'info'
-                                    }).appendTo(bibtexStatusDiv);
-                                }
-                                bib.entries[id] = {};
-                                for (var key in bibtexEntry) {
-                                    var keyLower = key.toLowerCase();
-                                    bib.entries[id][keyLower] = bibtexEntry[key];
-                                }
-                            });
-                        }
-                        catch (err) {
-                            $('<div>', {
-                                text: err,
-                                class: 'error'
-                            }).appendTo(bibtexStatusDiv);
-                        }
-                        bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
-                        bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
+                        updateEntryBasedOnBibtex(id, bibtexEditor);
                     });
                 }
                 if (bib.warnings[id] && bib.warnings[id].length > 0) {
@@ -636,7 +611,7 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             var fieldType = '';
             inputText = inputText.trim();
             var inputTextLower = inputText.toLowerCase();
-            if (inputTextLower.indexOf('10.') == 0) {
+            if (inputTextLower.indexOf('10.') === 0) {
                 fieldType = 'doi';
             } else if (inputTextLower.length > 200) {
                 fieldType = 'abstract';
@@ -650,8 +625,8 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             if (fieldType) {
                 util.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
-                util.notify('Could not automatically detect field type. Added as "undefined", please change manually.');
-                fieldType = 'undefined';
+                util.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.');
+                fieldType = 'unknown';
             }
             var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';
             var posClosingBracket = bibtexText.lastIndexOf('}');
@@ -660,6 +635,37 @@ define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors',
             }
             return [bibtexText.slice(0, posClosingBracket),
                 newFieldText, bibtexText.slice(posClosingBracket)].join('');
+        }
+
+        function updateEntryBasedOnBibtex(id, bibtexEditor) {
+            const bibtexStatusDiv = bib.entryDivs[id].find('.bibtex_status');
+            bibtexStatusDiv.empty();
+            try {
+                var bibtexText = bibtexEditor.getValue();
+                var bibtexEntries = bib.parse(bibtexText);
+                $.each(bibtexEntries, function (parsedID) {
+                    var bibtexEntry = bibtexEntries[parsedID];
+                    if (id != parsedID) {
+                        $('<div>', {
+                            text: 'Changed ID of entry will only be applied after save and refresh.',
+                            class: 'info'
+                        }).appendTo(bibtexStatusDiv);
+                    }
+                    bib.entries[id] = {};
+                    for (var key in bibtexEntry) {
+                        var keyLower = key.toLowerCase();
+                        bib.entries[id][keyLower] = bibtexEntry[key];
+                    }
+                });
+            }
+            catch (err) {
+                $('<div>', {
+                    text: err,
+                    class: 'error'
+                }).appendTo(bibtexStatusDiv);
+            }
+            bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
+            bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
         }
     });
 
