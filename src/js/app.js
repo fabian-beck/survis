@@ -17,7 +17,6 @@ requirejs.config({
         jquery: 'jquery-1.11.3.min',
         jqueryui: 'jquery-ui.min',
         codemirror: 'codemirror',
-        stex: 'stex',
         d3: 'd3.v3.min'
     },
     shim: {

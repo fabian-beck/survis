@@ -1,5 +1,5 @@
-define(['jquery', 'jqueryui', 'codemirror', 'stex', 'app/util', 'app/selectors', 'app/bib'],
-    function ($, jqueryui, CodeMirror, stex, util, selectors, bib) {
+define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
+    function ($, CodeMirror, util, selectors, bib) {
 
         var maxAbstractLength = 300;
 
