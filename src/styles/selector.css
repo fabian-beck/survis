@@ -11,6 +11,10 @@
     overflow: auto;
 }
 
+.electron #selectors_container {
+    margin-top: 0;
+}
+
 #selectors_container .label {
     font-size: 12pt;
     float: left;

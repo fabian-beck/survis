@@ -78,27 +78,31 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             var titleDiv = $('<div>', {
                 id: 'title'
             });
-            titleDiv.append($('<h1>', {
-                text: title
-            }));
-            if (paper) {
-                var paperDiv = $('<div id="paper">' + paper.html + '</div>');
-                if (paper.id) {
-                    var showPaperButton = $('<div>', {
-                        class: 'button',
-                        text: 'select'
-                    });
-                    showPaperButton.click(function (event) {
-                        toggleSelector('search', paper.id, event);
-                        if (showPaperButton.text() == 'select') {
-                            showPaperButton.text('deselect');
-                        } else {
-                            showPaperButton.text('select');
-                        }
-                    });
-                    paperDiv.append(showPaperButton)
+            if (!electron) {
+                titleDiv.append($('<h1>', {
+                    text: title
+                }));
+                if (paper) {
+                    var paperDiv = $('<div id="paper">' + paper.html + '</div>');
+                    if (paper.id) {
+                        var showPaperButton = $('<div>', {
+                            class: 'button',
+                            text: 'select'
+                        });
+                        showPaperButton.click(function (event) {
+                            toggleSelector('search', paper.id, event);
+                            if (showPaperButton.text() == 'select') {
+                                showPaperButton.text('deselect');
+                            } else {
+                                showPaperButton.text('select');
+                            }
+                        });
+                        paperDiv.append(showPaperButton)
+                    }
+                    titleDiv.append(paperDiv);
                 }
-                titleDiv.append(paperDiv);
+            } else {
+                headerDiv.addClass('electron');
             }
             titleDiv.append($(`<a href="https://github.com/fabian-beck/survis"><img title="SurVis ${window.surVisVersion}" src="${stylesDir}img/survis_small.png"/></a>`));
             headerDiv.append(titleDiv);
@@ -336,7 +340,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             layout.sizePane('south', 42);
 
             window.adaptHeaderSize = function () {
-                var height = $('#selectors_container').height() + 70;
+                var height = $('#selectors_container').height() + (electron?20:70);
                 layout.sizePane('north', height);
             }
         }

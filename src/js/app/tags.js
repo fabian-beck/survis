@@ -221,7 +221,6 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
             const incrementAtNPublications = [20, 50, 200, 1000];
             const n = Object.keys(bib.entries).length;
             let i = 0;
-            console.log(n);
             while (incrementAtNPublications[i] <= n && i < incrementAtNPublications.length) {
                 i++;
             }

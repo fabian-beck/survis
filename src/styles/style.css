@@ -89,6 +89,12 @@ a:visited {
     overflow: auto;
 }
 
+.electron #title {
+    border-width: 0;
+    float: left;
+    width: 100px;
+}
+
 #title h1 {
     float: left;
     margin: 0 0;
@@ -101,6 +107,10 @@ a:visited {
 
 #title img {
     float: right;
+}
+
+.electron #title img {
+    float: left;
 }
 
 #paper {
