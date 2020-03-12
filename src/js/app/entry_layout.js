@@ -557,12 +557,12 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                         type: 'text'
                     }).appendTo(bibtexAddFieldForm);
                     bibtexAddFieldForm.submit(function (event) {
+                        event.preventDefault();
                         var inputText = bibtexAddFieldTextInput.val();
                         var bibtexText = bibtexEditor.getValue();
                         var newBibtexText = addField(bibtexText, inputText)
                         bibtexEditor.setValue(newBibtexText);
                         bibtexAddFieldTextInput.val('');
-                        event.preventDefault();
                         updateEntryBasedOnBibtex(id, bibtexEditor);
                     });
                     $('<div>', {
@@ -621,7 +621,21 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 fieldType = 'pages';
             } else if (inputTextLower.indexOf('proceedings of') >= 0 || inputTextLower.indexOf('international') >= 0) {
                 fieldType = 'booktitle';
-            }            
+            } else {
+                Object.keys(bib.entries).some(id => {
+                    if (bib.entries[id].series === inputText) {
+                        fieldType = 'series';
+                        return true;
+                    } else if (bib.entries[id].publisher === inputText) {
+                        fieldType = 'publisher';
+                        return true;
+                    }
+                    return false;
+                })
+                if (!fieldType && inputText.toUpperCase() === inputText) {
+                    fieldType = 'series';
+                }
+            }     
             if (fieldType) {
                 util.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
