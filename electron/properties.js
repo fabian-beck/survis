@@ -32,15 +32,12 @@ var stylesDir = '../src/styles/';
 var tagCloudOptions = [{
     field: 'keywords',
     title: 'Keywords',
-    minTagFrequency: 1
 }, {
     field: 'author',
     title: 'Authors',
-    minTagFrequency: 1
 }, {
     field: 'series',
     title: 'Series',
-    minTagFrequency: 1
 }];
 
 /**

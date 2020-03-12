@@ -11,7 +11,6 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
          * Updates all tag clouds
          */
         updateTagClouds: function () {
-            var tags = this;
             bib.keywordFrequencies = {};
             $('#tag_clouds').find('.tags-container').empty();
             $.each(tagCloudOptions, function () {
@@ -218,6 +217,16 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
     }
 
     function initTagCloudDiv(options) {
+        if (electron) {
+            const incrementAtNPublications = [20, 50, 200, 1000];
+            const n = Object.keys(bib.entries).length;
+            let i = 0;
+            console.log(n);
+            while (incrementAtNPublications[i] <= n && i < incrementAtNPublications.length) {
+                i++;
+            }
+            options.minTagFrequency = i+1;
+        }
         var id = 'tag_cloud_' + options.field;
         var tagCloudDiv = $(id);
         if (tagCloudDiv.length == 0) {
