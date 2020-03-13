@@ -617,6 +617,8 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 fieldType = 'abstract';
             } else if (inputTextLower.indexOf('http') === 0) {
                 fieldType = 'url';
+            } else if (inputTextLower.match(/\d\d\d\d-\d\d-\d\d/)) {
+                fieldType = 'date';
             } else if (inputTextLower.match(/\d+ ?--? ?\d+/)) {
                 fieldType = 'pages';
             } else if (inputTextLower.indexOf('proceedings of') >= 0 || inputTextLower.indexOf('international') >= 0) {
