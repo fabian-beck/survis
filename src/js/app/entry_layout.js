@@ -521,8 +521,10 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                             text: 'fix: ' + fix['description']
                         }).appendTo(bibtexWarningFixUl);
                         bibtexWarningFixLi.click(function () {
-                            var bibtexText = bib.createBibtex(id, fix['function']());
-                            bibtexEditor.setValue(bibtexText);
+                            fix['function'](function (entry) { 
+                                bibtexEditor.setValue(bib.createBibtex(id, entry))
+                            });
+                            //bibtexEditor.setValue(bibtexText);
                         });
                     }
                 });
@@ -639,9 +641,9 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 }
             }     
             if (fieldType) {
-                util.notify(`Automatically detected field type: "${fieldType}".`);
+                util2.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
-                util.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.');
+                util2.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.');
                 fieldType = 'unknown';
             }
             var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';

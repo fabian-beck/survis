@@ -1,6 +1,6 @@
-var electron = typeof nodeRequire !== 'undefined';
+const electron = typeof nodeRequire !== 'undefined';
 
-var warnings = (function () {
+const warnings = (function () {
 
     return {
 
@@ -35,7 +35,6 @@ var warnings = (function () {
                 warningsList = warningsList.concat(warnings.computeTitleCapitalizationWarning(entry));
                 warningsList = warningsList.concat(warnings.computeProtectedIdentifierCapitalizationWarning(entry));
                 $.each(entry, function (field, value) {
-                    computeEmptyFieldWarning(warningsList, field, value);
                     computeFirstNameUnknown(warningsList, field, value);
                     computeWholeFieldCapitalizationProtected(warningsList, field, value);
                 });
@@ -49,13 +48,35 @@ var warnings = (function () {
                 var expected = warnings.expectedFields[entry['type']];
                 if (expected) {
                     $.each(expected, function (i, field) {
-                        if (!entry[field] && entry[field] != '') {
+                        if (!entry[field] || entry[field].trim() === '') {
                             warningsList.push({
-                                type: 'missing field "' + field + '"',
+                                type: `missing or empty field '${field}'`,
                                 fix: {
-                                    description: 'add field', 'function': function () {
-                                        entry[field] = '';
-                                        return entry;
+                                    description: 'try to load from DBLP', 'function': function (onFix) {
+                                        const titleSearchString = entry.title.replace(/\W+/g, ' ');
+                                        fetch(`https://dblp.org/search/publ/api?q=${titleSearchString}&format=json`).then(response => {
+                                            return response.json()
+                                        }).then(data => {
+                                            if (!data.result.hits.hit) {
+                                                util2.notify('Could not find a publication with this title on DBLP.');
+                                            } else {
+                                                const result = data.result.hits.hit[0].info;
+                                                util2.notify(`Paper found on DBLP titled '${result.title}'`);
+                                                let value = result[field];
+                                                if (!value) {
+                                                    util2.notify(`However, field '${field}' not available in the DBLP record.`)
+                                                } else {
+                                                    if (field === 'pages') {
+                                                        value = value.replace('-', '--');
+                                                    }
+                                                    entry[field] = value;
+                                                    util2.notify(`Updated field '${field}' with value '${value}'.`)
+                                                    onFix(entry);
+                                                }
+                                            }
+                                        }).catch(error => {
+                                            console.log(error);
+                                        });
                                     }
                                 }
                             });
@@ -90,9 +111,9 @@ var warnings = (function () {
                         warningsList.push({
                             type: 'capitalization in field "' + field + '"',
                             fix: {
-                                description: 'capitalize longer words', 'function': function () {
+                                description: 'capitalize longer words', 'function': function (onFix) {
                                     entry[field] = correctedValue;
-                                    return entry;
+                                    onFix(entry);
                                 }
                             }
                         });
@@ -124,13 +145,12 @@ var warnings = (function () {
                             }
                         });
                         if (!capitalizationCorrect) {
-                            // warningsList.push('non-protected capitalization of identifier in field "' + field + '"');
                             warningsList.push({
                                 type: 'non-protected capitalization of identifier in field "' + field + '"',
                                 fix: {
-                                    description: 'protect identifiers', 'function': function () {
+                                    description: 'protect identifiers', 'function': function (onFix) {
                                         entry[field] = correctedValue;
-                                        return entry;
+                                        onFix(entry);
                                     }
                                 }
                             });
@@ -142,12 +162,6 @@ var warnings = (function () {
         }
 
     };
-
-    function computeEmptyFieldWarning(warningsList, field, value) {
-        if (!value) {
-            warningsList.push('empty field "' + field + '"');
-        }
-    }
 
     function computeFirstNameUnknown(warningsList, field, value) {
         if (field === 'author' || field === 'editor') {
@@ -176,5 +190,14 @@ var warnings = (function () {
     }
 
 
-})
-();
+})();
+
+const util2 = (function () {
+    return {
+        notify: function (message) {
+            const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));
+            notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
+        }
+    }
+
+})();

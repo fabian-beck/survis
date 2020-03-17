@@ -215,10 +215,6 @@ define(['jquery', 'jquery.tooltipster'], function ($, tooltipster) {
                 return tag.toLowerCase().replace(/\W/g, '');
             },
 
-            notify: function (message) {
-                const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));  
-                notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
-            }
         }
     }
 )
