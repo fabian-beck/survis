@@ -129,7 +129,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
                 const ipc = nodeRequire('electron').ipcRenderer;
                 ipc.send('saveFile');
-                util2.notify('File saved.');
+                notifications.notify('File saved.');
             },
 
             saveBibToLocalStorage: function () {
@@ -193,7 +193,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                                     for (var entryKey in bibtexEntries) {
                                         var bibtexEntry = bibtexEntries[entryKey];
                                         if (bib.entries[entryKey]) {
-                                            util2.notify('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
+                                            notifications.notify('Entry with ID "' + entryKey + '" already exists and cannot be added to the database.');
                                         } else {
                                             bib.entries[entryKey] = {};
                                             for (var key in bibtexEntry) {
@@ -251,17 +251,17 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     const renameQuery = $('#rename_query').val();
                     console.log(renameQuery);
                     if (renameQuery.indexOf("->") < 0) {
-                        util2.notify('Wrong format of rename query: please use "->" ' +
-                            'to separate the old from the new name of the keyword.');
+                        notifications.notify('Wrong format of rename query: please use "->" ' +
+                            'to separate the old from the new name of the keyword.', 'error');
                         return;
                     }
                     var keywords = $.map(renameQuery.split('->'), $.trim);
                     if (!keywords[0]) {
-                        util2.notify('Wrong format of rename query: please specify the keyword you want to rename.');
+                        notifications.notify('Wrong format of rename query: please specify the keyword you want to rename.', 'error');
                         return;
                     }
                     if (!keywords[1]) {
-                        util2.notify('Wrong format of rename query: please specify the new name of the keyword.');
+                        notifications.notify('Wrong format of rename query: please specify the new name of the keyword.', 'error');
                         return;
                     }
                     var newKeywords = $.map(keywords[1].split(','), $.trim);
@@ -285,7 +285,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                         }
                     });
                     update(false);
-                    util2.notify('Renamed keywords of ' + renameCount + ' entries. ');
+                    notifications.notify('Renamed keywords of ' + renameCount + ' entries. ');
                 });
                 renameDiv.dialog({
                     minWidth: 832,

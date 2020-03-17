@@ -153,7 +153,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
             }
             var selector = this.nextFreeSelector();
             if (!selector) {
-                util2.notify('The maximum number of selectors that can be active at the same time is ' + this.nSelectors + '. Please close at least one selector before activating another.');
+                notifications.notify('The maximum number of selectors that can be active at the same time is ' + this.nSelectors + '. Please close at least one selector before activating another.', 'error');
                 return;
             }
             selector['type'] = type;

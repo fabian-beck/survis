@@ -641,9 +641,9 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 }
             }     
             if (fieldType) {
-                util2.notify(`Automatically detected field type: "${fieldType}".`);
+                notifications.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
-                util2.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.');
+                notifications.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.', 'error');
                 fieldType = 'unknown';
             }
             var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';

@@ -1,6 +1,8 @@
 :root {
     --warningBgColor: #fcefa1;
+    --errorBgColor: #fef1ec;
     --lightBorder: 1px solid silver;
+    --errorBorder: 1px solid #b46464;
     --defaultShadow: 1px 1px 5px #AAAAAA;
     --fontSmall: 10pt;
   }
@@ -423,8 +425,8 @@ a:visited {
 }
 
 .bibtex_status .error {
-    border: 1px solid #aa1111;
-    background: #fef1ec;
+    border: var(--errorBorder);
+    background: var(--errorBgColor); 
     margin: 5px 0;
     padding: 5px;
 }
@@ -444,4 +446,9 @@ a:visited {
     z-index: 1000;
     box-shadow: var(--defaultShadow);
     font-size: var(--fontSmall);
+}
+
+#notifications div.error {
+    background: var(--errorBgColor);
+    border: var(--errorBorder);
 }

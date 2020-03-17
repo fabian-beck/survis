@@ -58,19 +58,19 @@ const warnings = (function () {
                                             return response.json()
                                         }).then(data => {
                                             if (!data.result.hits.hit) {
-                                                util2.notify('Could not find a publication with this title on DBLP.');
+                                                notifications.notify('Could not find a publication with this title on DBLP.', 'error');
                                             } else {
                                                 const result = data.result.hits.hit[0].info;
-                                                util2.notify(`Paper found on DBLP titled '${result.title}'`);
+                                                notifications.notify(`Paper found on DBLP titled '${result.title}'`);
                                                 let value = result[field];
                                                 if (!value) {
-                                                    util2.notify(`However, field '${field}' not available in the DBLP record.`)
+                                                    notifications.notify(`However, field '${field}' not available in the DBLP record.`, 'error')
                                                 } else {
                                                     if (field === 'pages') {
                                                         value = value.replace('-', '--');
                                                     }
                                                     entry[field] = value;
-                                                    util2.notify(`Updated field '${field}' with value '${value}'.`)
+                                                    notifications.notify(`Updated field '${field}' with value '${value}'.`)
                                                     onFix(entry);
                                                 }
                                             }
@@ -192,12 +192,11 @@ const warnings = (function () {
 
 })();
 
-const util2 = (function () {
+const notifications = (function () {
     return {
-        notify: function (message) {
-            const notificationDiv = $(`<div>${message}</div>`).appendTo($('#notifications'));
+        notify: function (message, type) {
+            const notificationDiv = $(`<div ${type ? `class="${type}"` : ''}>${message}</div>`).appendTo($('#notifications'));
             notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
         }
     }
-
 })();

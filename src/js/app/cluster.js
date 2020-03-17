@@ -12,7 +12,7 @@ define(['jquery', 'app/util', 'figue', 'app/selectors', 'app/bib'], function ($,
             var clusterAuthor = $('#author_checkbox').is(':checked');
 
             if (!clusterKeywords && !clusterAuthor) {
-                util2.notify('Please select at least one of the clustering criteria checkboxes.');
+                notifications.notify('Please select at least one of the clustering criteria checkboxes.', 'error');
                 return;
             }
 
