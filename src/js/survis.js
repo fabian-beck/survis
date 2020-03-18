@@ -2,11 +2,18 @@ const electron = typeof nodeRequire !== 'undefined';
 
 const warnings = (function () {
 
+    const fieldCrossRefMap = {
+        doi: function (result) { return result.DOI },
+        journal: function (result) { return result['container-title'][0] },
+        pages: function (result) { return result.page},
+        title: function (result) { return result.title[0] }
+    }
+
     return {
 
         expectedFields: {
-            inproceedings: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year', 'doi'],
-            article: ['author', 'journal', 'number', 'pages', 'title', 'volume', 'year', 'doi'],
+            inproceedings: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year', 'doi', 'abstract'],
+            article: ['author', 'journal', 'number', 'pages', 'title', 'volume', 'year', 'doi', 'abstract'],
             techreport: ['author', 'institution', 'title', 'year'],
             incollection: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year'],
             book: ['author', 'publisher', 'title', 'year'],
@@ -52,19 +59,19 @@ const warnings = (function () {
                             warningsList.push({
                                 type: `missing or empty field '${field}'`,
                                 fix: {
-                                    description: 'try to load from DBLP', 'function': function (onFix) {
-                                        const titleSearchString = entry.title.replace(/\W+/g, ' ');
-                                        fetch(`https://dblp.org/search/publ/api?q=${titleSearchString}&format=json`).then(response => {
+                                    description: 'try to load from CrossRef', 'function': function (onFix) {
+                                        const titleSearchString = (entry.doi ? `/${entry.doi}` : `?query=${entry.title.replace(/\W+/g, '+')}`);
+                                        fetch(`https://api.crossref.org/works${titleSearchString}`).then(response => {
                                             return response.json()
                                         }).then(data => {
-                                            if (!data.result.hits.hit) {
-                                                notifications.notify('Could not find a publication with this title on DBLP.', 'error');
+                                            if (!data.message) {
+                                                notifications.notify(`Could not find a publication with this ${(entry.doi? 'DOI' : 'title')} on CrossRef.`, 'error');
                                             } else {
-                                                const result = data.result.hits.hit[0].info;
-                                                notifications.notify(`Paper found on DBLP titled '${result.title}'`);
-                                                let value = result[field];
+                                                const result = (entry.doi ? data.message : data.message.items[0]);
+                                                notifications.notify(`Paper found on CrossRef titled '${result.title}'`);
+                                                let value = (fieldCrossRefMap[field] ? fieldCrossRefMap[field](result) : result[field]);
                                                 if (!value) {
-                                                    notifications.notify(`However, field '${field}' not available in the DBLP record.`, 'error')
+                                                    notifications.notify(`However, field '${field}' not available in the CrossRef record.`, 'error')
                                                 } else {
                                                     if (field === 'pages') {
                                                         value = value.replace('-', '--');

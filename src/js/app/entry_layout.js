@@ -184,14 +184,19 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 }).appendTo(linksDiv);
             }
             $('<a>', {
-                href: 'http://scholar.google.de/scholar?hl=en&q=' + encodeURIComponent(entry['title']),
+                href: 'http://scholar.google.de/scholar?hl=en&q=' + encodeURIComponent(entry.title),
                 target: '_blank',
                 text: 'Google Scholar'
             }).appendTo(linksDiv);
             $('<a>', {
-                href: 'https://www.google.de/search?q=' + encodeURIComponent(entry['title']),
+                href: 'https://www.google.de/search?q=' + encodeURIComponent(entry.title),
                 target: '_blank',
                 text: 'Google'
+            }).appendTo(linksDiv);
+            $('<a>', {
+                href: 'https://search.crossref.org/?q=' + (entry.doi ? entry.doi : encodeURIComponent(entry.title)),
+                target: '_blank',
+                text: 'CrossRef'
             }).appendTo(linksDiv);
             return linksDiv;
         }
