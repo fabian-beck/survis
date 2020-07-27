@@ -146,7 +146,7 @@ const tags = (function () {
             text: frequency
         }).appendTo(tagDiv);
         tagDiv.click(function (event) {
-            window.toggleSelector(options.field, getTagID(tag, options.field), event);
+            selectors.toggleSelector(options.field, getTagID(tag, options.field), event);
         });
         if (bib.authorizedTags[tag] || options.field != 'keywords') {
             tagDiv.addClass('authorized');
@@ -248,7 +248,7 @@ const tags = (function () {
             if (options.minTagFrequency > 1) {
                 options.minTagFrequency--;
                 frequencySpan.text(options.minTagFrequency);
-                window.updateTags();
+                page.updateTags();
             }
         });
         if (options.minTagFrequency < 1) {
@@ -262,7 +262,7 @@ const tags = (function () {
         buttonInc.click(function () {
             options.minTagFrequency++;
             frequencySpan.text(options.minTagFrequency);
-            window.updateTags();
+            page.updateTags();
         });
 
         var tagCloudFilterForm = $('<form>', {

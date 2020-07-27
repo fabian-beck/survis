@@ -76,18 +76,18 @@ const selectors = (function() {
                 var i = parseInt($(this).parent().parent().attr('id').substring(8));
                 selectors.getSelectors()[i]['inverted'] = !selectors.getSelectors()[i]['inverted'];
                 $(this).toggleClass('inverted');
-                window.updateShowPart();
+                page.updateShowPart();
             });
             $('.selector .lock').click(function () {
                 var i = parseInt($(this).parent().parent().attr('id').substring(8));
                 selectors.getSelectors()[i]['lock'] = !selectors.getSelectors()[i]['lock'];
                 $(this).toggleClass('locked');
-                window.updateShowPart();
+                page.updateShowPart();
             });
             $('.selector .remove').click(function (event) {
                 var i = parseInt($(this).parent().parent().attr('id').substring(8));
                 selectors.getSelectors()[i] = null;
-                window.updateShowPart();
+                page.updateShowPart();
             });
             this.computeEntrySelectorSimilarities();
             this.applyFilter();
@@ -140,6 +140,11 @@ const selectors = (function() {
             return 0;
         },
 
+        resetSelectors: function () {
+            selectors.selectors = {};
+            page.updateShowPart();
+        },
+
         toggleSelector: function (type, text, event) {
             if (!typeSymbols[type]) {
                 type = 'search';
@@ -147,7 +152,7 @@ const selectors = (function() {
             for (var i = 0; i < this.nSelectors; i++) {
                 if (this.selectors[i] && this.selectors[i]['type'] == type && this.selectors[i]['text'] == text) {
                     this.selectors[i] = null;
-                    window.updateShowPart();
+                    page.updateShowPart();
                     return;
                 }
             }
@@ -161,7 +166,7 @@ const selectors = (function() {
             selector['inverted'] = false;
             selector['lock'] = event && event.ctrlKey;
             selector['count'] = 0;
-            window.updateShowPart();
+            page.updateShowPart();
         },
 
         nextFreeSelector: function () {

@@ -61,7 +61,7 @@ const entryLayout = (function () {
                                     text: clusterID
                                 }).appendTo(clustersDiv);
                                 clusterDiv.click(function (event) {
-                                    window.toggleSelector('cluster', clusterID, event);
+                                    selectors.toggleSelector('cluster', clusterID, event);
                                 });
                             })
                         }
@@ -98,7 +98,7 @@ const entryLayout = (function () {
                     text: 'show more'
                 }).appendTo(resultBodyDiv);
                 showMoreDiv.click(function () {
-                    window.updateShowMore();
+                    page.updateShowMore();
                 });
                 var showAllDiv = $('<div>', {
                     id: 'show_all_entries',
@@ -106,7 +106,7 @@ const entryLayout = (function () {
                     text: 'show all'
                 }).appendTo(resultBodyDiv);
                 showAllDiv.click(function () {
-                    window.updateShowAll();
+                    page.updateShowAll();
                 });
             }
         }
@@ -228,14 +228,14 @@ const entryLayout = (function () {
             text: latexUtil.latexToHtml(series)
         }).appendTo(entryHeaderDiv);
         seriesDiv.click(function (event) {
-            window.toggleSelector('series', series, event);
+            selectors.toggleSelector('series', series, event);
         });
         var yearDiv = $('<div>', {
             class: 'year',
             text: '(' + entry['year'] + ')'
         }).appendTo(entryHeaderDiv);
         yearDiv.click(function (event) {
-            window.toggleSelector('year', entry['year'], event);
+            selectors.toggleSelector('year', entry['year'], event);
         });
         return entryHeaderDiv;
     }
@@ -274,7 +274,7 @@ const entryLayout = (function () {
                     value: tagUtil.simplifyTag(author)
                 }).appendTo(authorsDiv);
                 authorDiv.click(function (event) {
-                    window.toggleSelector('author', tagUtil.simplifyTag(author), event);
+                    selectors.toggleSelector('author', tagUtil.simplifyTag(author), event);
                 });
                 $("<span>", {
                     class: "last_name",
@@ -291,7 +291,7 @@ const entryLayout = (function () {
                         value: tagUtil.simplifyTag(author2)
                     }).appendTo(authorsDiv);
                     authorDiv.click(function (event) {
-                        window.toggleSelector('author', tagUtil.simplifyTag(author2), event);
+                        selectors.toggleSelector('author', tagUtil.simplifyTag(author2), event);
                     });
                     $("<span>", {
                         class: "name",
@@ -353,7 +353,7 @@ const entryLayout = (function () {
                     tagDiv.prepend(tagCategorySpan);
                 }
                 tagDiv.click(function (event) {
-                    window.toggleSelector('keywords', tag, event);
+                    selectors.toggleSelector('keywords', tag, event);
                 });
             });
             return tagListSpan;
@@ -434,7 +434,7 @@ const entryLayout = (function () {
             title: 'add a selector for retrieving similar publications based on keywords, title, abstract, and authors'
         });
         selectSimilarDiv.click(function (event) {
-            window.toggleSelector('entity', id, event)
+            selectors.toggleSelector('entity', id, event)
         });
 
         footerContainerDiv.append(selectSimilarDiv);
@@ -450,7 +450,7 @@ const entryLayout = (function () {
                     class: 'citation_outgoing_frequency'
                 }).appendTo(selectCitationsOutgoingDiv);
                 selectCitationsOutgoingDiv.click(function (event) {
-                    window.toggleSelector('citations_outgoing', id, event)
+                    selectors.toggleSelector('citations_outgoing', id, event)
                 });
                 footerContainerDiv.append(selectCitationsOutgoingDiv);
             }
@@ -464,7 +464,7 @@ const entryLayout = (function () {
                     class: 'citation_incoming_frequency'
                 }).appendTo(selectCitationsIncomingDiv);
                 selectCitationsIncomingDiv.click(function (event) {
-                    window.toggleSelector('citations_incoming', id, event)
+                    selectors.toggleSelector('citations_incoming', id, event)
                 });
                 footerContainerDiv.append(selectCitationsIncomingDiv);
             }
@@ -517,7 +517,7 @@ const entryLayout = (function () {
                 class: 'label'
             }).appendTo(bibtexWarningsDiv);
             bibtexWarningsLabel.click(function (event) {
-                window.toggleSelector('warning', '', event);
+                selectors.toggleSelector('warning', '', event);
             });
             var bibtexWarningsUl = $('<ul>').appendTo(bibtexWarningsDiv);
             $.each(bib.warnings[id], function () {
@@ -529,7 +529,7 @@ const entryLayout = (function () {
                     text: warningText
                 }).appendTo(bibtexWarningsUl);
                 bibtexWarningLi.click(function (event) {
-                    window.toggleSelector('warning', warningText, event);
+                    selectors.toggleSelector('warning', warningText, event);
                 });
                 if (this['fix']) {
                     var fix = this['fix'];
@@ -612,7 +612,7 @@ const entryLayout = (function () {
     function closeBibtex(id, container) {
         container.find('.CodeMirror').toggle();
         bib.entryDivs[id] = null;
-        window.update();
+        page.update();
     }
 
     function closeCitation(id) {

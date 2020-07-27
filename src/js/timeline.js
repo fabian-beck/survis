@@ -598,7 +598,7 @@ const timeline = (function () {
             buttonDec.click(function (event) {
                 if (citations.minCitationCount > 1) {
                     citations.minCitationCount--;
-                    window.updateTimeline();
+                    page.updateTimeline();
                 }
             });
             if (citations.minCitationCount < 1) {
@@ -613,7 +613,7 @@ const timeline = (function () {
             }).appendTo(citationOccurrenceDiv);
             buttonInc.click(function (event) {
                 citations.minCitationCount++;
-                window.updateTimeline();
+                page.updateTimeline();
             });
         }
     }

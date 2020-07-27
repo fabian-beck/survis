@@ -1,10 +1,7 @@
-var dataDir2 = dataDir
-if (dataDir.indexOf(':') < 0) {
-    dataDir2 = '../../' + dataDir;
-}
+
 
 requirejs.config({
-    //By default load any module IDs from js/lib
+    /*//By default load any module IDs from js/lib
     baseUrl: jsDir + 'lib',
     //except, if the module ID starts with "app",
     //load it from the js/app directory. paths
@@ -29,8 +26,8 @@ requirejs.config({
         'jquery.tooltipster': {
             deps: ['jquery']
         }
-    }
+    }*/
 });
 
 // Start the main app logic.
-requirejs(['app/main']);
+//requirejs(['app/main']);

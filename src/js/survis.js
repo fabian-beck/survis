@@ -1,4 +1,18 @@
-const electron = typeof nodeRequire !== 'undefined';
+window.surVisVersion = '0.1.0';
+
+$(window).resize(function () {
+    if (page.adaptHeaderSize) {
+        page.adaptHeaderSize();
+    }
+});
+
+$(document).ready(function () {
+    page.init();
+    page.update(true);
+    selectors.readQueryFromUrl();
+});
+
+const electron = typeof require !== 'undefined';
 
 const warnings = (function () {
 

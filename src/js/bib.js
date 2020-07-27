@@ -125,8 +125,8 @@ const bib = (function () {
         },
 
         saveBibToFile: function () {
-            nodeRequire('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
-            const ipc = nodeRequire('electron').ipcRenderer;
+            require('electron').remote.getGlobal('sharedObject').bibData = this.createAllBibtex(false);
+            const ipc = require('electron').ipcRenderer;
             ipc.send('saveFile');
             notifications.notify('File saved.');
         },
@@ -210,7 +210,7 @@ const bib = (function () {
                                 }
                             }
                             if (Object.keys(bibtexEntries).length == 1) {
-                                window.toggleSelector('search', Object.keys(bibtexEntries)[0]);
+                                selectors.toggleSelector('search', Object.keys(bibtexEntries)[0]);
                             }
                             update();
                         }
@@ -297,7 +297,7 @@ const bib = (function () {
         var bibParser = new BibtexParser();
         if (electron) {
             try {
-                bibParser.setInput(nodeRequire('electron').remote.getGlobal('sharedObject').bibData);
+                bibParser.setInput(require('electron').remote.getGlobal('sharedObject').bibData);
                 bibParser.bibtex();
                 return bibParser.getEntries();
             } catch (err) {

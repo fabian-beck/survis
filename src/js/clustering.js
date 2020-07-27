@@ -189,7 +189,7 @@ const clustering = (function() {
                     });
                     closeButton.click(function () {
                         delete bib.clusters[clusteringName];
-                        window.update();
+                        page.update();
                     });
 
                     var termDocumentFrequency = {};
@@ -252,7 +252,7 @@ const clustering = (function() {
                             }).appendTo(termsDiv);
                         }
                         clusterDiv.click(function (event) {
-                            window.toggleSelector('cluster', clusterName, event);
+                            selectors.toggleSelector('cluster', clusterName, event);
                         });
 
                         var tooltipDiv = $('<div>');

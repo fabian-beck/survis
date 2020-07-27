@@ -12,6 +12,41 @@ const page = (function () {
             addActions();
             applyLayout();
             tooltips.generateTooltips($('body'));
+        },
+        update: function (scrollToTop) {
+            $('.tooltipstered').tooltipster('hide');
+            selectors.updateSelectors();
+            references.updateReferences();
+            stats.updateStats();
+            tags.updateTagClouds();
+            clustering.updateClusters();
+            entryLayout.updateEntryList();
+            timeline.updateTimeline();
+            if (scrollToTop) {
+                $('#result_body').scrollTop(0);
+            }
+            page.adaptHeaderSize();
+        },
+        updateShowAll: function () {
+            bib.nVisibleEntries = 999999999;
+            page.update(false);
+        },   
+        updateShowMore: function () {
+            bib.nVisibleEntries += 20;
+            page.update(false);
+        },
+        updateShowPart: function () {
+            bib.nVisibleEntries = 20;
+            page.update(true);
+        },
+        updateTags: function () {
+            tags.updateTagClouds();
+        },
+        updateTimeline: function () {
+            timeline.updateTimeline();
+        },
+        updateTimelineLayout: function () {
+            timeline.updateTimeline(true);
         }
     };
 
@@ -116,7 +151,7 @@ const page = (function () {
         var timelineHeading = $('<h2><span class="symbol">/</span>Timeline</h2>').appendTo(timelineContainerDiv);
         timelineHeading.click(function () {
             uiUtil.toggleControl(timelineHeading);
-            window.updateTimeline();
+            page.updateTimeline();
         });
         $('<div>', {
             id: 'timeline',
@@ -132,7 +167,7 @@ const page = (function () {
         var clusterHeading = $('<h2><span class="symbol">/</span>Clusters</h2>').appendTo(clustersDiv);
         clusterHeading.click(function () {
             uiUtil.toggleControl(clusterHeading);
-            window.updateTimeline();
+            page.updateTimeline();
         });
         $('<div>', {
             id: 'clusterings',
@@ -201,7 +236,7 @@ const page = (function () {
         }).appendTo(clusteringControls);
         createClusteringButton.click(function () {
             clustering.createClustering();
-            window.update();
+            page.update();
         });
     }
 
@@ -259,7 +294,7 @@ const page = (function () {
         $(document).keyup(function (e) {
             // esc
             if (e.keyCode == 27) {
-                window.resetSelectors();
+                selectors.resetSelectors();
             }
         });
 
@@ -278,16 +313,16 @@ const page = (function () {
         });
 
         $('#clear_selectors').click(function () {
-            window.resetSelectors();
+            selectors.resetSelectors();
         });
 
         $('#search').submit(function () {
-            window.submitSearch();
+            submitSearch();
             return false;
         });
 
         $('#search_button').click(function () {
-            window.submitSearch();
+            submitSearch();
         });
 
         $('#export_bibtex').click(function () {
@@ -311,6 +346,15 @@ const page = (function () {
         });
     }
 
+    function submitSearch() {
+        var searchInput = $('#search').find('input');
+        var searchString = searchInput.val();
+        if (searchString) {
+            selectors.toggleSelector('search', searchString);
+            searchInput.val('');
+        }
+    };
+
     function applyLayout() {
         var layout = $('body').layout({
             applyDefaultStyles: true,
@@ -323,8 +367,8 @@ const page = (function () {
             },
             west: {
                 onresize: function () {
-                    if (window.updateTimelineLayout) {
-                        window.updateTimelineLayout();
+                    if (page.updateTimelineLayout) {
+                        page.updateTimelineLayout();
                     }
                 }
             }
@@ -332,12 +376,9 @@ const page = (function () {
         layout.allowOverflow('north');
         layout.sizePane('west', $(window).width() * 0.44);
 
-        // prevent Firefox layout bug
-        //console.log($('#header').height());
-        //layout.sizePane('north', $('#header').height());
         layout.sizePane('south', 42);
 
-        window.adaptHeaderSize = function () {
+        page.adaptHeaderSize = function () {
             var height = $('#selectors_container').height() + (electron ? 20 : 70);
             layout.sizePane('north', height);
         }

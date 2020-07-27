@@ -2,13 +2,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <!-- Rename required to not conflict with JQuery and RequireJS: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron -->
-    <script>
-        window.nodeRequire = require;
-        delete window.require;
-        delete window.exports;
-        delete window.module;
-    </script>
+
     <script type="text/javascript" src="../src/js/lib/bibtex_js.js"></script>
     <script type="text/javascript" src="../src/js/lib/FileSaver.js"></script>
     <script type="text/javascript" src="../src/js/lib/codemirror.js"></script>
@@ -16,7 +10,7 @@
     <script type="text/javascript" src="../src/js/lib/jquery.tooltipster.js"></script>
     <script type="text/javascript" src="../src/js/lib/jquery_layout.js"></script>
     <script type="text/javascript" src="../src/js/lib/figue.js"></script>
-    <script type="text/javascript" src="../src/js/lib/d3.v3.min.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
     
     <script type="text/javascript" src="../src/data/search_stopwords.js"></script>
     <script type="text/javascript" src="../src/data/tag_categories.js"></script>
@@ -34,8 +28,6 @@
     <script type="text/javascript" src="../src/js/page.js"></script>
     <script type="text/javascript" src="../src/js/entry_layout.js"></script>
     <script type="text/javascript" src="../src/js/timeline.js"></script>
-    
-    <script data-main="../src/js/app.js" src="../src/js/require.js"></script>
 
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
