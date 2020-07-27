@@ -1,4 +1,4 @@
-define(['jquery', 'd3', 'jquery.tooltipster', 'app/bib', 'app/selectors'], function ($, d3, tooltipster, bib, selectors) {
+define(['jquery', 'd3', 'jquery.tooltipster', 'app/selectors'], function ($, d3, tooltipster, selectors) {
 
     var d3data;
     var d3referenceCount;

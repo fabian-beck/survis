@@ -1,4 +1,4 @@
-define(['jquery', 'figue', 'app/selectors', 'app/bib'], function ($, figue, selectors, bib) {
+define(['jquery', 'figue', 'app/selectors'], function ($, figue, selectors) {
 
     var clusteringCount = 0;
 

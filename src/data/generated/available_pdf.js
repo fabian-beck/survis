@@ -1,1 +1,1 @@
-define({availablePdf: ["zhang2007ml","bernard2017vial","bernardtowards","hohman2018visual"]});
+const availablePdf = [];

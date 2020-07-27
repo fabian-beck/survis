@@ -1,5 +1,5 @@
-define(['jquery', 'jquery_layout', 'app/cluster', 'app/bib'],
-    function ($, layout,  cluster, bib) {
+define(['jquery', 'jquery_layout', 'app/cluster'],
+    function ($, layout,  cluster) {
 
         return {
             init: function () {

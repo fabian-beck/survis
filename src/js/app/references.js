@@ -1,4 +1,4 @@
-define(['jquery', 'app/bib'], function ($, bib) {
+define(['jquery'], function ($) {
 
     var minSimilarity = 0.8;
     var minReferenceLength = 20;

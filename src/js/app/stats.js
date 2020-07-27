@@ -1,4 +1,4 @@
-define(['jquery', 'app/selectors', 'app/bib'], function ($, selectors, bib) {
+define(['jquery', 'app/selectors'], function ($, selectors) {
         return {
 
             updateStats: function () {

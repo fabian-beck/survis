@@ -1,7 +1,7 @@
 /**
  * Creates and updates all tag clouds
  */
-define(['jquery', 'app/selectors', 'app/bib'], function ($, selectors, bib) {
+define(['jquery', 'app/selectors'], function ($, selectors) {
 
     var tagIDCache = {};
 

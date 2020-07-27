@@ -63,16 +63,16 @@ def parseBibtex(bibFile):
 
 def writeJSON(parsedData):
     with codecs.open(BIB_JS_FILE, "w", "utf-8-sig") as fOut:
-        fOut.write("define({ entries : ")
+        fOut.write("const generatedBibEntries = ")
         fOut.write(json.dumps(parsedData, sort_keys=True, indent=4, separators=(',', ': ')))
-        fOut.write("});")
+        fOut.write(";")
         fOut.close()
 
 
 def listAvailablePdf():
     # papersDirWin = papersDir.replace("/", "\\")
     fOut = open(AVAILABLE_PDF_FILE, "w")
-    s = "define({availablePdf: ["
+    s = "const availablePdf = ["
     count = 0
     for file in os.listdir(PAPERS_DIR):
         if file.endswith(".pdf"):
@@ -82,13 +82,13 @@ def listAvailablePdf():
                 create_thumbnail(file)
     if count > 0:
         s = s[:len(s) - 1]
-    s += "]});"
+    s += "];"
     fOut.write(s)
 
 
 def listAvailableImg():
     fOut = open(AVAILABLE_IMG_FILE, "w")
-    s = "define({ availableImg: ["
+    s = "const availableImg = ["
     count = 0
     for file in os.listdir(PAPERS_IMG_DIR):
         if file.endswith(".png"):
@@ -96,22 +96,22 @@ def listAvailableImg():
             count += 1
     if count > 0:
         s = s[:len(s) - 1]
-    s += "]});"
+    s += "];"
     fOut.write(s)
 
 
-def create_thumbnail(file):
-    pdf_path = os.path.join(PAPERS_DIR, file)
-    thumbnail_path = os.path.join(PAPERS_IMG_DIR, file.replace(".pdf", ".png"))
-
-    if os.path.isfile(thumbnail_path):
-        print(f"Skipping thumbnail generation for existing file {thumbnail_path}")
-    else:
-        print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
-        with tempfile.TemporaryDirectory() as path:
-            pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
-            pages[0].save(thumbnail_path)
-            print("Done.")
+#def create_thumbnail(file):
+#    pdf_path = os.path.join(PAPERS_DIR, file)
+#    thumbnail_path = os.path.join(PAPERS_IMG_DIR, file.replace(".pdf", ".png"))
+#
+#    if os.path.isfile(thumbnail_path):
+#        print(f"Skipping thumbnail generation for existing file {thumbnail_path}")
+#    else:
+#        print(f"Generate thumbnail for {file} and save it to {thumbnail_path}")
+#        with tempfile.TemporaryDirectory() as path:
+#            pages = convert_from_path(pdf_path, 72, output_folder=path, last_page=1, fmt="png")
+#            pages[0].save(thumbnail_path)
+#            print("Done.")
 
 
 def update():

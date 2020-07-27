@@ -4,7 +4,6 @@ define(function (require) {
 
     var $ = require('jquery');
 
-    var bib = require('app/bib');
     var selectors = require('app/selectors');
     var stats = require('app/stats');
     var timeline = require('app/timeline');
