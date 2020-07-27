@@ -1,5 +1,5 @@
-define(['jquery', 'codemirror', 'app/selectors'],
-    function ($, CodeMirror,  selectors) {
+define([],
+    function () {
 
         var maxAbstractLength = 300;
 

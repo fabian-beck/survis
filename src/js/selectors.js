@@ -1,4 +1,4 @@
-define(['jquery'], function ($) {
+const selectors = (function() {
 
     var tokenSearchSimilarityCache = {};
 
@@ -422,7 +422,7 @@ define(['jquery'], function ($) {
         }
         text = tagUtil.simplifyTag(text);
         var similarity = 0.0;
-        $.each(bib.parsedEntries[id]['author'], function(i, author) {
+        $.each(bib.parsedEntries[id]['author'], function (i, author) {
             if (text === tagUtil.simplifyTag(author)) {
                 similarity = 1.0;
                 return;
@@ -488,4 +488,4 @@ define(['jquery'], function ($) {
         return 0.0;
     }
 
-});
+})();

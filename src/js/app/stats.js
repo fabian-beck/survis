@@ -1,4 +1,4 @@
-define(['jquery', 'app/selectors'], function ($, selectors) {
+define([], function () {
         return {
 
             updateStats: function () {

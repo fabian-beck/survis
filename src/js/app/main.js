@@ -3,8 +3,8 @@ define(function (require) {
     window.surVisVersion = '0.1.0';
 
     var $ = require('jquery');
+    var tooltipster = require('jquery.tooltipster');
 
-    var selectors = require('app/selectors');
     var stats = require('app/stats');
     var timeline = require('app/timeline');
     var tags = require('app/tags');
