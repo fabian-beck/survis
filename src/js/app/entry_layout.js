@@ -1,5 +1,5 @@
-define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
-    function ($, CodeMirror, util, selectors, bib) {
+define(['jquery', 'codemirror', 'app/selectors', 'app/bib'],
+    function ($, CodeMirror,  selectors, bib) {
 
         var maxAbstractLength = 300;
 
@@ -87,7 +87,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                     resultBodyDiv.find('.tag[value="' + tag + '"]').addClass('active');
                 });
                 $.each(selectors.getActiveTags('author'), function (tag) {
-                    var authorValue = util.simplifyTag(tag);
+                    var authorValue = tagUtil.simplifyTag(tag);
                     resultBodyDiv.find('.author[value="' + authorValue + '"]').addClass('active');
                 });
                 $('#show_more_entries').remove();
@@ -128,7 +128,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 createEntryMainDiv(id).appendTo(entryDiv);
                 createFooter(id, entry).appendTo(entryDiv);
                 bib.entryDivs[id] = entryDiv;
-                util.generateTooltips(bib.entryDivs[id]);
+                tooltips.generateTooltips(bib.entryDivs[id]);
             }
             return bib.entryDivs[id];
         }
@@ -208,13 +208,13 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
             var sparklineDiv = $('<div>', {
                 class: 'vis sparkline'
             }).appendTo(entryHeaderDiv);
-            sparklineDiv.tooltipster({'content': $('<div>')});
+            sparklineDiv.tooltipster({ 'content': $('<div>') });
             var idDiv = $('<div>', {
                 class: 'id',
                 text: id
             }).appendTo(entryHeaderDiv);
             idDiv.click(function () {
-                util.selectElementText(this);
+                selectElementText(this);
             });
             var series = entry['series'];
             if (!series) {
@@ -226,7 +226,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
             }
             var seriesDiv = $('<div>', {
                 class: 'series',
-                text: util.latexToHtml(series)
+                text: latexUtil.latexToHtml(series)
             }).appendTo(entryHeaderDiv);
             seriesDiv.click(function (event) {
                 window.toggleSelector('series', series, event);
@@ -245,14 +245,14 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
             if (typeof bib.availablePdf != 'undefined' && bib.availablePdf.indexOf(id) >= 0 || entry['doi'] || entry['url']) {
                 return $("<a>", {
                     class: "title",
-                    html: util.latexToHtml(entry["title"]),
+                    html: latexUtil.latexToHtml(entry["title"]),
                     target: '_blank',
                     href: bib.availablePdf.indexOf(id) >= 0 ? pdfFile : (entry['doi'] ? 'http://dx.doi.org/' + entry['doi'] : entry['url'])
                 });
             } else {
                 return $("<div>", {
                     class: "title",
-                    html: util.latexToHtml(entry["title"])
+                    html: latexUtil.latexToHtml(entry["title"])
                 });
             }
         }
@@ -272,31 +272,31 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 if (authorSplit.length == 2) {
                     var authorDiv = $("<div>", {
                         class: "author",
-                        value: util.simplifyTag(author)
+                        value: tagUtil.simplifyTag(author)
                     }).appendTo(authorsDiv);
                     authorDiv.click(function (event) {
-                        window.toggleSelector('author', util.simplifyTag(author), event);
+                        window.toggleSelector('author', tagUtil.simplifyTag(author), event);
                     });
                     $("<span>", {
                         class: "last_name",
-                        html: util.latexToHtml(authorSplit[0])
+                        html: latexUtil.latexToHtml(authorSplit[0])
                     }).appendTo(authorDiv);
                     $("<span>", {
                         class: "first_name",
-                        html: ", " + util.latexToHtml(authorSplit[1])
+                        html: ", " + latexUtil.latexToHtml(authorSplit[1])
                     }).appendTo(authorDiv);
                 } else {
                     $.each(authorSplit, function (j, author2) {
                         authorDiv = $("<div>", {
                             class: "author",
-                            value: util.simplifyTag(author2)
+                            value: tagUtil.simplifyTag(author2)
                         }).appendTo(authorsDiv);
                         authorDiv.click(function (event) {
-                            window.toggleSelector('author', util.simplifyTag(author2), event);
+                            window.toggleSelector('author', tagUtil.simplifyTag(author2), event);
                         });
                         $("<span>", {
                             class: "name",
-                            html: util.latexToHtml(author2)
+                            html: latexUtil.latexToHtml(author2)
                         }).appendTo(authorDiv);
                     });
                 }
@@ -306,10 +306,10 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
 
         function createAbstract(text, shorten) {
             if (text) {
-                text = util.latexToHtml(text);
+                text = latexUtil.latexToHtml(text);
                 var abstractDiv = $("<div>", {
-                    class: 'abstract' + ( shorten ? ' collapsed' : ''),
-                    text: ( shorten ? shortenText(text, maxAbstractLength) : text),
+                    class: 'abstract' + (shorten ? ' collapsed' : ''),
+                    text: (shorten ? shortenText(text, maxAbstractLength) : text),
                     value: text
                 });
                 if (shorten && text.length != abstractDiv.text().length) {
@@ -360,6 +360,19 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 return tagListSpan;
             }
 
+            // based on: http://stackoverflow.com/questions/1069666/sorting-javascript-object-by-property-value
+            function sortDictKeysByValue(dict) {
+                return Object.keys(dict).sort(function (a, b) {
+                    return dict[b] - dict[a]
+                });
+            }
+
+            //http://stackoverflow.com/questions/2118560/jquery-form-submission-stopping-page-refresh-only-works-in-newest-browsers
+            function stopEvent(event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
             var tagsDiv = $("<div>", {
                 class: "tags"
             });
@@ -378,7 +391,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                             class: 'tag_input'
                         }).appendTo(addTagForm);
                         addTagInput.autocomplete({
-                            source: util.sortDictKeysByValue(bib.keywordFrequencies),
+                            source: sortDictKeysByValue(bib.keywordFrequencies),
                             sortResults: false
                         });
                     }
@@ -386,12 +399,12 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                     addTagInput.focus();
                 });
                 addTagForm.submit(function (event) {
-                    util.stopEvent(event);
+                    stopEvent(event);
                     var tagText = addTagInput.val();
                     addTagInput.val('');
                     var prevKeywords = bib.entries[id]['keywords'] ? bib.entries[id]['keywords'] + ', ' : '';
                     bib.entries[id]['keywords'] = prevKeywords + tagText;
-                    bib.parsedEntries[id]['keywords'] = util.parseField(bib.entries[id]['keywords'], 'keywords', bib.tagCategories);
+                    bib.parsedEntries[id]['keywords'] = bibUtil.parseField(bib.entries[id]['keywords'], 'keywords', bib.tagCategories);
                     $(this).parent('.tags').find('.tag_list').replaceWith(createTagList(id));
                 });
             }
@@ -526,7 +539,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                             text: 'fix: ' + fix['description']
                         }).appendTo(bibtexWarningFixUl);
                         bibtexWarningFixLi.click(function () {
-                            fix['function'](function (entry) { 
+                            fix['function'](function (entry) {
                                 bibtexEditor.setValue(bib.createBibtex(id, entry))
                             });
                             //bibtexEditor.setValue(bibtexText);
@@ -549,7 +562,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 }
                 bibtexEditor.focus();
                 if (!editable) {
-                    bibtexEditor.setSelection({line: 0, ch: 0}, {
+                    bibtexEditor.setSelection({ line: 0, ch: 0 }, {
                         line: bibtexEditor.lastLine(),
                         ch: bibtexEditor.getLine(bibtexEditor.lastLine()).length
                     });
@@ -592,7 +605,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                     }
                     var citation = bib.createCitation(id);
                     var citationDiv = $('<div class="citation">' + citation + '</div>').appendTo(bib.entryDivs[id]);
-                    util.selectElementText(citationDiv.get(0));
+                    selectElementText(citationDiv.get(0));
                 }
             });
         }
@@ -644,7 +657,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
                 if (!fieldType && inputText.toUpperCase() === inputText) {
                     fieldType = 'series';
                 }
-            }     
+            }
             if (fieldType) {
                 notifications.notify(`Automatically detected field type: "${fieldType}".`);
             } else {
@@ -653,7 +666,7 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
             }
             var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';
             var posClosingBracket = bibtexText.lastIndexOf('}');
-            if (bibtexText[posClosingBracket-1] === '\n') {
+            if (bibtexText[posClosingBracket - 1] === '\n') {
                 posClosingBracket--;
             }
             return [bibtexText.slice(0, posClosingBracket),
@@ -689,6 +702,23 @@ define(['jquery', 'codemirror', 'app/util', 'app/selectors', 'app/bib'],
             }
             bib.entryDivs[id].find('.entry_main').replaceWith(createEntryMainDiv(id));
             bib.warnings[id] = warnings.computeWarnings(bib.entries[id]);
+        }
+
+        // http://stackoverflow.com/questions/985272/jquery-selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
+        function selectElementText(el, win) {
+            win = win || window;
+            var doc = win.document, sel, range;
+            if (win.getSelection && doc.createRange) {
+                sel = win.getSelection();
+                range = doc.createRange();
+                range.selectNodeContents(el);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (doc.body.createTextRange) {
+                range = doc.body.createTextRange();
+                range.moveToElementText(el);
+                range.select();
+            }
         }
     });
 

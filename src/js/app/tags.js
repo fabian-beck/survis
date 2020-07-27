@@ -1,7 +1,7 @@
 /**
  * Creates and updates all tag clouds
  */
-define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, selectors, bib) {
+define(['jquery', 'app/selectors', 'app/bib'], function ($, selectors, bib) {
 
     var tagIDCache = {};
 
@@ -112,7 +112,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
                     });
                 }
             } else {
-                bib.parsedEntries[id][options.field] = util.parseField(
+                bib.parsedEntries[id][options.field] = bibUtil.parseField(
                     entry[options.field], options.field, bib.tagCategories
                 );
             }
@@ -124,14 +124,14 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         if (frequency < options.minTagFrequency) {
             return;
         }
-        var frequencyClass = util.getFrequencyClass(frequency);
+        var frequencyClass = tagUtil.getFrequencyClass(frequency);
         var tagDiv = $('<div>', {
             class: 'tag ' + frequencyClass,
             value: frequency
         });
         $('<span>', {
             class: 'text',
-            html: util.latexToHtml(tag.substring(tag.indexOf(":") + 1))
+            html: latexUtil.latexToHtml(tag.substring(tag.indexOf(":") + 1))
         }).appendTo(tagDiv);
         var sparklineDiv = $('<div>', {
             class: 'vis sparkline'
@@ -157,7 +157,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         tagDiv.mouseover(function () {
             if (!tagDiv.hasClass('tooltipstered')) {
                 var tooltipDiv = $('<div>');
-                $('<h3><span class="label">' + options.field + ': </span>' + util.latexToHtml(tag) + '</h3>').appendTo(tooltipDiv);
+                $('<h3><span class="label">' + options.field + ': </span>' + latexUtil.latexToHtml(tag) + '</h3>').appendTo(tooltipDiv);
                 $('<div><span class="label"># publications: </span>' + frequency + '</div>').appendTo(tooltipDiv);
                 if (bib.authorizedTags[tag] || options.field != 'keywords') {
                     if (bib.authorizedTags[tag]) {
@@ -282,7 +282,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
 
         var h2Div = $('<h2><span class="symbol">/</span>' + options.title + '</h2>').appendTo(tagCloudDiv);
         h2Div.click(function () {
-            util.toggleControl(h2Div);
+            uiUtil.toggleControl(h2Div);
         });
 
         tagCloudDiv.append($('<div>', {
@@ -312,7 +312,7 @@ define(['jquery', 'app/util', 'app/selectors', 'app/bib'], function ($, util, se
         if (field === 'keywords' || field === 'warning') {
             return tag;
         }
-        var tagID = util.simplifyTag(tag);
+        var tagID = tagUtil.simplifyTag(tag);
         tagIDCache[tagID] = tag;
         return tagID;
     }

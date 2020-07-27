@@ -1,5 +1,5 @@
-define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
-    function ($, layout, util, cluster, bib) {
+define(['jquery', 'jquery_layout', 'app/cluster', 'app/bib'],
+    function ($, layout,  cluster, bib) {
 
         return {
             init: function () {
@@ -12,7 +12,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
                 initFooter();
                 addActions();
                 applyLayout();
-                util.generateTooltips($('body'));
+                tooltips.generateTooltips($('body'));
             }
         };
 
@@ -117,7 +117,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             }).appendTo(controlDiv);
             var timelineHeading = $('<h2><span class="symbol">/</span>Timeline</h2>').appendTo(timelineContainerDiv);
             timelineHeading.click(function () {
-                util.toggleControl(timelineHeading);
+                uiUtil.toggleControl(timelineHeading);
                 window.updateTimeline();
             });
             $('<div>', {
@@ -133,7 +133,7 @@ define(['jquery', 'jquery_layout', 'app/util', 'app/cluster', 'app/bib'],
             }).appendTo(controlDiv);
             var clusterHeading = $('<h2><span class="symbol">/</span>Clusters</h2>').appendTo(clustersDiv);
             clusterHeading.click(function () {
-                util.toggleControl(clusterHeading);
+                uiUtil.toggleControl(clusterHeading);
                 window.updateTimeline();
             });
             $('<div>', {

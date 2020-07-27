@@ -1,4 +1,4 @@
-define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
+define(['jquery', 'app/bib'], function ($, bib) {
 
     var tokenSearchSimilarityCache = {};
 
@@ -37,7 +37,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                     var lockedClass = (selector['lock'] ? ' locked' : '');
                     selectorDiv.addClass(lockedClass);
                     var text = '';
-                    text = util.latexToHtml(selector['text']);
+                    text = latexUtil.latexToHtml(selector['text']);
                     if (selector.type == 'citations_incoming') {
                         text = 'citing ' + text;
                     } else if (selector.type == 'citations_outgoing') {
@@ -91,11 +91,11 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
             });
             this.computeEntrySelectorSimilarities();
             this.applyFilter();
-            util.generateTooltips($('#selectors_container').find('.selector'));
+            tooltips.generateTooltips($('#selectors_container').find('.selector'));
         },
 
         readQueryFromUrl: function () {
-            var query = util.getUrlParameter('q');
+            var query = browserUtil.getUrlParameter('q');
             if (query) {
                 toggleSelector('search', query);
             }
@@ -420,10 +420,10 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
         if (!bib.entries[id]['author']) {
             return 0.0;
         }
-        text = util.simplifyTag(text);
+        text = tagUtil.simplifyTag(text);
         var similarity = 0.0;
         $.each(bib.parsedEntries[id]['author'], function(i, author) {
-            if (text === util.simplifyTag(author)) {
+            if (text === tagUtil.simplifyTag(author)) {
                 similarity = 1.0;
                 return;
             }
@@ -470,7 +470,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
                 if (warningText['type']) {
                     warningText = warningText['type'];
                 }
-                if (util.latexToHtml(warningText) === util.latexToHtml(text)) {
+                if (latexUtil.latexToHtml(warningText) === latexUtil.latexToHtml(text)) {
                     similarity = 1.0;
                 }
             })
@@ -482,7 +482,7 @@ define(['jquery', 'app/util', 'app/bib'], function ($, util, bib) {
 
     function computeSeriesSimilarity(entry, text) {
         var series = entry["series"] ? entry["series"] : '';
-        if (util.simplifyTag(series) === util.simplifyTag(text)) {
+        if (tagUtil.simplifyTag(series) === tagUtil.simplifyTag(text)) {
             return 1.0;
         }
         return 0.0;

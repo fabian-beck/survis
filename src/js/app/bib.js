@@ -1,5 +1,5 @@
-define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
-    function ($, bibtexJS, fileSaver, CodeMirror, util, generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
+define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'data/generated/bib', 'data/generated/available_pdf', 'data/generated/available_img', 'data/search_stopwords', 'data/tag_categories', 'data/authorized_tags'],
+    function ($, bibtexJS, fileSaver, CodeMirror,  generatedBib, availaiblePdf, availableImg, stopwords, tagCategories, authorizedTags) {
 
         var entries = readBibtex();
         if (!entries && !electron) {
@@ -25,7 +25,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
             createBibtex: function (id, entry) {
                 var bibtex = '@' + entry['type'] + '{' + id;
                 for (var fieldName in entry) {
-                    if (fieldName == 'type' || util.isFieldForbidden(fieldName)) {
+                    if (fieldName == 'type' || isFieldForbidden(fieldName)) {
                         continue;
                     }
                     if (entry.hasOwnProperty(fieldName)) {
@@ -54,7 +54,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                         if (i == bib.parsedEntries[id]['author'].length - 1 && i > 0) {
                             citation += 'and ';
                         }
-                        citation += util.latexToHtml(author);
+                        citation += latexUtil.latexToHtml(author);
                         if (bib.parsedEntries[id]['author'].length > 2 || i > 0) {
                             citation += ', ';
                         } else {
@@ -67,21 +67,21 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                     citation += year + '. ';
                 }
                 if (title = bib.entries[id]['title']) {
-                    citation += util.latexToHtml(title) + '. ';
+                    citation += latexUtil.latexToHtml(title) + '. ';
                 }
                 var journal = bib.entries[id]['journal'];
                 var pages = bib.entries[id]['pages'];
                 if (journal) {
-                    citation += 'In <i>' + util.latexToHtml(journal) + '</i>';
+                    citation += 'In <i>' + latexUtil.latexToHtml(journal) + '</i>';
                     var volume = bib.entries[id]['volume'];
                     if (volume) {
-                        citation += ' (Vol. ' + util.latexToHtml(volume);
+                        citation += ' (Vol. ' + latexUtil.latexToHtml(volume);
                         var number = bib.entries[id]['number'];
                         if (number) {
-                            citation += ', No. ' + util.latexToHtml(number);
+                            citation += ', No. ' + latexUtil.latexToHtml(number);
                         }
                         if (pages) {
-                            citation += ', pp. ' + util.latexToHtml(pages);
+                            citation += ', pp. ' + latexUtil.latexToHtml(pages);
                         }
                         citation += ')';
                     }
@@ -89,9 +89,9 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 }
                 var booktitle = bib.entries[id]['booktitle'];
                 if (booktitle) {
-                    citation += 'In <i>' + util.latexToHtml(booktitle) + '</i>';
+                    citation += 'In <i>' + latexUtil.latexToHtml(booktitle) + '</i>';
                     if (pages) {
-                        citation += ' (pp. ' + util.latexToHtml(pages) + ')';
+                        citation += ' (pp. ' + latexUtil.latexToHtml(pages) + ')';
                     }
                     citation += '. ';
                 }
@@ -307,7 +307,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 }
                 return null;
             } else {
-                var loadFromLocalStorage = util.getUrlParameter('loadFromLocalStorage') === 'true';
+                var loadFromLocalStorage = browserUtil.getUrlParameter('loadFromLocalStorage') === 'true';
                 if (editable && loadFromLocalStorage && localStorage.bibtexString) {
                     try {
                         bibParser.setInput(localStorage.bibtexString);
@@ -326,7 +326,7 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
         function generateTagCategoriesFromKeywords(entries) {
             const tagCategories = {};
             Object.keys(entries).forEach(id => {
-                util.parseField(entries[id].keywords, 'keywords', tagCategories).forEach(keyword => { 
+                bibUtil.parseField(entries[id].keywords, 'keywords', tagCategories).forEach(keyword => { 
                     if (keyword.indexOf(':') > 0) {
                         const category = keyword.split(':')[0];
                         if (!tagCategories[category]) {
@@ -336,6 +336,19 @@ define(['jquery', 'bibtex_js', 'FileSaver', 'codemirror', 'app/util', 'data/gene
                 });
             });
             return tagCategories;
+        }
+
+        function isFieldForbidden(fieldName) {
+            const forbiddenFields = []; //['referencedby', 'titlesafe', 'references'];
+            if (typeof forbiddenFields === 'undefined' || !forbiddenFields) {
+                return false;
+            }
+            for (var i in forbiddenFields) {
+                if (fieldName.indexOf(forbiddenFields[i]) == 0) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     });

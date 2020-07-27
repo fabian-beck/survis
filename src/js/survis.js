@@ -5,7 +5,7 @@ const warnings = (function () {
     const fieldCrossRefMap = {
         doi: function (result) { return result.DOI },
         journal: function (result) { return result['container-title'][0] },
-        pages: function (result) { return result.page},
+        pages: function (result) { return result.page },
         title: function (result) { return result.title[0] }
     }
 
@@ -65,7 +65,7 @@ const warnings = (function () {
                                             return response.json()
                                         }).then(data => {
                                             if (!data.message) {
-                                                notifications.notify(`Could not find a publication with this ${(entry.doi? 'DOI' : 'title')} on CrossRef.`, 'error');
+                                                notifications.notify(`Could not find a publication with this ${(entry.doi ? 'DOI' : 'title')} on CrossRef.`, 'error');
                                             } else {
                                                 const result = (entry.doi ? data.message : data.message.items[0]);
                                                 notifications.notify(`Paper found on CrossRef titled '${result.title}'`);
@@ -146,8 +146,8 @@ const warnings = (function () {
                                 var subword = word.substring(1);
                                 if (subword.length > 0 && subword.toLowerCase() != subword) {
                                     capitalizationCorrect = false;
-                                    var re = new RegExp('\{?'+word+'\}?','g');
-                                    correctedValue = correctedValue.replace(re, '{'+word+'}');
+                                    var re = new RegExp('\{?' + word + '\}?', 'g');
+                                    correctedValue = correctedValue.replace(re, '{' + word + '}');
                                 }
                             }
                         });
@@ -191,7 +191,7 @@ const warnings = (function () {
     }
 
     function computeWholeFieldCapitalizationProtected(warningsList, field, value) {
-        if (value.indexOf('{') === 0 && value.lastIndexOf('}') === value.length - 1 && value.length > 10 && (value.split("{").length - 1 === 1) )  {
+        if (value.indexOf('{') === 0 && value.lastIndexOf('}') === value.length - 1 && value.length > 10 && (value.split("{").length - 1 === 1)) {
             warningsList.push('whole field "' + field + '" with protected capitalization');
         }
     }
@@ -199,11 +199,25 @@ const warnings = (function () {
 
 })();
 
+/**
+ * UI
+ */
+
 const notifications = (function () {
     return {
         notify: function (message, type) {
             const notificationDiv = $(`<div ${type ? `class="${type}"` : ''}>${message}</div>`).appendTo($('#notifications'));
             notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
+        }
+    }
+})();
+
+const tooltips = (function () {
+    return {
+        generateTooltips: function (div) {
+            div.find('.tooltip').tooltipster({
+                theme: 'tooltipster-survis'
+            });
         }
     }
 })();

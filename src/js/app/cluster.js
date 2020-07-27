@@ -1,4 +1,4 @@
-define(['jquery', 'app/util', 'figue', 'app/selectors', 'app/bib'], function ($, util, figue, selectors, bib) {
+define(['jquery', 'figue', 'app/selectors', 'app/bib'], function ($, figue, selectors, bib) {
 
     var clusteringCount = 0;
 
@@ -229,7 +229,7 @@ define(['jquery', 'app/util', 'figue', 'app/selectors', 'app/bib'], function ($,
                         });
 
                         var clusterDiv = $('<div>', {
-                            class: 'tooltip tag authorized ' + util.getFrequencyClass(clusterSizes[clusterName])
+                            class: 'tooltip tag authorized ' + tagUtil.getFrequencyClass(clusterSizes[clusterName])
                         }).appendTo(clusteringDiv);
                         var sparklineDiv = $('<div>', {
                             class: 'vis sparkline'
@@ -249,7 +249,7 @@ define(['jquery', 'app/util', 'figue', 'app/selectors', 'app/bib'], function ($,
                         for (i = 0; i < Math.min(3, tfidf.length); i++) {
                             $('<div>', {
                                 class: 'term',
-                                html: util.latexToHtml(tfidf[i].name)
+                                html: latexUtil.latexToHtml(tfidf[i].name)
                             }).appendTo(termsDiv);
                         }
                         clusterDiv.click(function (event) {
@@ -265,7 +265,7 @@ define(['jquery', 'app/util', 'figue', 'app/selectors', 'app/bib'], function ($,
                         for (i = 0; i < Math.min(10, tfidf.length); i++) {
                             $('<div>', {
                                 class: 'term',
-                                html: util.latexToHtml(tfidf[i].name)//+'('+tfidf[i].value.toFixed(3)+')'
+                                html: latexUtil.latexToHtml(tfidf[i].name)//+'('+tfidf[i].value.toFixed(3)+')'
                             }).appendTo(termDetailsDiv);
                         }
                         var totalSimilarity = selectors.computeTotalSimilarity(clusterSelectorSimilarities[clusterName]);
