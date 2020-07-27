@@ -1,7 +1,6 @@
-define(['jquery', 'figue'], function ($, figue) {
+const clustering = (function() {
 
     var clusteringCount = 0;
-
 
     return {
         nClusters: 5,
@@ -94,7 +93,7 @@ define(['jquery', 'figue'], function ($, figue) {
                 $.each(maxTerms, function (i, j) {
                     terms.push(Object.keys(allTerms)[j] + ' (' + centroid[j].toFixed(2) + ')');
                 });
-                cluster.terms = terms;
+                clustering.terms = terms;
                 bib.clusters[clusteringName][i + 1] = cluster;
             });
 
@@ -288,8 +287,4 @@ define(['jquery', 'figue'], function ($, figue) {
         }
     }
 
-})
-;
-
-
-
+})();

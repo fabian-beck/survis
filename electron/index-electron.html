@@ -2,7 +2,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <!-- Rename required to not conflict with JQuery and RequireJS: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron -->  
+    <!-- Rename required to not conflict with JQuery and RequireJS: https://electronjs.org/docs/faq#i-can-not-use-jqueryrequirejsmeteorangularjs-in-electron -->
     <script>
         window.nodeRequire = require;
         delete window.require;
@@ -14,7 +14,10 @@
     <script type="text/javascript" src="../src/js/lib/codemirror.js"></script>
     <script type="text/javascript" src="../src/js/lib/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="../src/js/lib/jquery.tooltipster.js"></script>
-
+    <script type="text/javascript" src="../src/js/lib/jquery_layout.js"></script>
+    <script type="text/javascript" src="../src/js/lib/figue.js"></script>
+    <script type="text/javascript" src="../src/js/lib/d3.v3.min.js"></script>
+    
     <script type="text/javascript" src="../src/data/search_stopwords.js"></script>
     <script type="text/javascript" src="../src/data/tag_categories.js"></script>
     <script type="text/javascript" src="../src/data/authorized_tags.js"></script>
@@ -24,9 +27,16 @@
     <script type="text/javascript" src="../src/js/util.js"></script>
     <script type="text/javascript" src="../src/js/bib.js"></script>
     <script type="text/javascript" src="../src/js/selectors.js"></script>
-
-    <script data-main="../src/js/app.js" src="../src/js/require.js"></script>
+    <script type="text/javascript" src="../src/js/references.js"></script>
+    <script type="text/javascript" src="../src/js/clustering.js"></script>
+    <script type="text/javascript" src="../src/js/stats.js"></script>
+    <script type="text/javascript" src="../src/js/tags.js"></script>
+    <script type="text/javascript" src="../src/js/page.js"></script>
+    <script type="text/javascript" src="../src/js/entry_layout.js"></script>
+    <script type="text/javascript" src="../src/js/timeline.js"></script>
     
+    <script data-main="../src/js/app.js" src="../src/js/require.js"></script>
+
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
 

@@ -1,4 +1,4 @@
-define(['jquery'], function ($) {
+const references = (function() {
 
     var minSimilarity = 0.8;
     var minReferenceLength = 20;
@@ -141,4 +141,4 @@ define(['jquery'], function ($) {
         return self.indexOf(value) === index;
     }
 
-});
+})();

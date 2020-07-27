@@ -1,4 +1,4 @@
-define(['d3'], function (d3) {
+const timeline = (function () {
 
     var d3data;
     var d3referenceCount;
@@ -617,4 +617,4 @@ define(['d3'], function (d3) {
             });
         }
     }
-});
+})();

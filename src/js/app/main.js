@@ -3,15 +3,8 @@ define(function (require) {
     window.surVisVersion = '0.1.0';
 
     var $ = require('jquery');
-    var tooltipster = require('jquery.tooltipster');
-
-    var stats = require('app/stats');
-    var timeline = require('app/timeline');
-    var tags = require('app/tags');
-    var cluster = require('app/cluster');
-    var entryLayout = require('app/entry_layout');
-
-    var references = require('app/references');
+    require('jquery.tooltipster');
+    require('jquery_layout');
     
     //Import citations from reference list (warning: experimental feature)
     //bib.referenceLists = require('data/generated/reference_lists').referenceLists;
@@ -23,7 +16,7 @@ define(function (require) {
         references.updateReferences();
         stats.updateStats();
         tags.updateTagClouds();
-        cluster.updateClusters();
+        clustering.updateClusters();
         entryLayout.updateEntryList();
         timeline.updateTimeline();
         if (scrollToTop) {
@@ -84,7 +77,7 @@ define(function (require) {
     });
 
     $(document).ready(function () {
-        require('app/init_page').init();
+        page.init();
         window.update(true);
         selectors.readQueryFromUrl();
     });

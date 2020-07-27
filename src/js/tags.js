@@ -1,7 +1,4 @@
-/**
- * Creates and updates all tag clouds
- */
-define([], function () {
+const tags = (function () {
 
     var tagIDCache = {};
 
@@ -193,7 +190,7 @@ define([], function () {
                 return 1;
             else if (nA > nB)
                 return -1;
-            else{
+            else {
                 // return 0;
                 return a.children()[1].innerText.localeCompare(b.children()[1].innerText);
             }
@@ -224,7 +221,7 @@ define([], function () {
             while (incrementAtNPublications[i] <= n && i < incrementAtNPublications.length) {
                 i++;
             }
-            options.minTagFrequency = i+1;
+            options.minTagFrequency = i + 1;
         }
         var id = 'tag_cloud_' + options.field;
         var tagCloudDiv = $(id);
@@ -327,8 +324,7 @@ define([], function () {
         return tagIDCache[tagID];
     }
 
-})
-;
+})();
 
 
 

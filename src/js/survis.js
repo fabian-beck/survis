@@ -215,9 +215,9 @@ const notifications = (function () {
 const tooltips = (function () {
     return {
         generateTooltips: function (div) {
-            /*div.find('.tooltip').tooltipster({
+            div.find('.tooltip').tooltipster({
                 theme: 'tooltipster-survis'
-            });*/
+            });
         }
     }
 })();
