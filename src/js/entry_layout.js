@@ -127,7 +127,7 @@ const entryLayout = (function () {
             createEntryMainDiv(id).appendTo(entryDiv);
             createFooter(id, entry).appendTo(entryDiv);
             bib.entryDivs[id] = entryDiv;
-            tooltips.generateTooltips(bib.entryDivs[id]);
+            page.generateTooltips(bib.entryDivs[id]);
         }
         return bib.entryDivs[id];
     }
@@ -658,9 +658,9 @@ const entryLayout = (function () {
             }
         }
         if (fieldType) {
-            notifications.notify(`Automatically detected field type: "${fieldType}".`);
+            page.notify(`Automatically detected field type: "${fieldType}".`);
         } else {
-            notifications.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.', 'error');
+            page.notify('Could not automatically detect field type. Added value with field type "unknown", please change manually.', 'error');
             fieldType = 'unknown';
         }
         var newFieldText = ',\n  ' + fieldType + ' = {' + inputText + '}';

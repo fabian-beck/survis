@@ -1,16 +1,14 @@
 window.surVisVersion = '0.1.0';
 
-$(window).resize(function () {
-    if (page.adaptHeaderSize) {
-        page.adaptHeaderSize();
-    }
-});
-
 $(document).ready(function () {
     page.init();
     page.update(true);
     selectors.readQueryFromUrl();
 });
+
+$( window ).resize(function() {
+    timeline.updateTimeline();
+  });
 
 const electron = typeof require !== 'undefined';
 
@@ -79,19 +77,19 @@ const warnings = (function () {
                                             return response.json()
                                         }).then(data => {
                                             if (!data.message) {
-                                                notifications.notify(`Could not find a publication with this ${(entry.doi ? 'DOI' : 'title')} on CrossRef.`, 'error');
+                                                page.notify(`Could not find a publication with this ${(entry.doi ? 'DOI' : 'title')} on CrossRef.`, 'error');
                                             } else {
                                                 const result = (entry.doi ? data.message : data.message.items[0]);
-                                                notifications.notify(`Paper found on CrossRef titled '${result.title}'`);
+                                                page.notify(`Paper found on CrossRef titled '${result.title}'`);
                                                 let value = (fieldCrossRefMap[field] ? fieldCrossRefMap[field](result) : result[field]);
                                                 if (!value) {
-                                                    notifications.notify(`However, field '${field}' not available in the CrossRef record.`, 'error')
+                                                    page.notify(`However, field '${field}' not available in the CrossRef record.`, 'error')
                                                 } else {
                                                     if (field === 'pages') {
                                                         value = value.replace('-', '--');
                                                     }
                                                     entry[field] = value;
-                                                    notifications.notify(`Updated field '${field}' with value '${value}'.`)
+                                                    page.notify(`Updated field '${field}' with value '${value}'.`)
                                                     onFix(entry);
                                                 }
                                             }
@@ -211,27 +209,4 @@ const warnings = (function () {
     }
 
 
-})();
-
-/**
- * UI
- */
-
-const notifications = (function () {
-    return {
-        notify: function (message, type) {
-            const notificationDiv = $(`<div ${type ? `class="${type}"` : ''}>${message}</div>`).appendTo($('#notifications'));
-            notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
-        }
-    }
-})();
-
-const tooltips = (function () {
-    return {
-        generateTooltips: function (div) {
-            div.find('.tooltip').tooltipster({
-                theme: 'tooltipster-survis'
-            });
-        }
-    }
 })();

@@ -11,7 +11,7 @@ const clustering = (function() {
             var clusterAuthor = $('#author_checkbox').is(':checked');
 
             if (!clusterKeywords && !clusterAuthor) {
-                notifications.notify('Please select at least one of the clustering criteria checkboxes.', 'error');
+                page.notify('Please select at least one of the clustering criteria checkboxes.', 'error');
                 return;
             }
 

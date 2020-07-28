@@ -3,15 +3,14 @@ const page = (function () {
     return {
         init: function () {
             loadAllCSS();
-            initBody();
             initTitle();
+            initBody();
             initHeader();
             initControl();
             initResult();
             initFooter();
             addActions();
-            applyLayout();
-            tooltips.generateTooltips($('body'));
+            page.generateTooltips($('body'));
         },
         update: function (scrollToTop) {
             $('.tooltipstered').tooltipster('hide');
@@ -21,16 +20,20 @@ const page = (function () {
             tags.updateTagClouds();
             clustering.updateClusters();
             entryLayout.updateEntryList();
-            timeline.updateTimeline();
+            setTimeout(
+                function() 
+                {
+                  // workaround: delayed loading waiting for the grid layout to be computed (to determine the correct width of the svg)
+                  timeline.updateTimeline();
+                }, 500);
             if (scrollToTop) {
                 $('#result_body').scrollTop(0);
             }
-            page.adaptHeaderSize();
         },
         updateShowAll: function () {
             bib.nVisibleEntries = 999999999;
             page.update(false);
-        },   
+        },
         updateShowMore: function () {
             bib.nVisibleEntries += 20;
             page.update(false);
@@ -47,34 +50,29 @@ const page = (function () {
         },
         updateTimelineLayout: function () {
             timeline.updateTimeline(true);
+        },
+        notify: function (message, type) {
+            const notificationDiv = $(`<div ${type ? `class="${type}"` : ''}>${message}</div>`).appendTo($('#notifications'));
+            notificationDiv.fadeIn('fast').delay(5000).fadeOut('fast');
+        },
+        generateTooltips: function (div) {
+            div.find('.tooltip').tooltipster({
+                theme: 'tooltipster-survis'
+            });
         }
     };
 
     function initBody() {
-        var body = $('body');
-        $('<div>', {
-            id: 'result',
-            class: 'ui-layout-center'
-        }).appendTo(body);
-        $('<div>', {
-            id: 'header',
-            class: 'ui-layout-north'
-        }).appendTo(body);
-        $('<div>', {
-            id: 'footer',
-            class: 'ui-layout-south'
-        }).appendTo(body);
-        $('<div>', {
-            id: 'control',
-            class: 'ui-layout-west'
-        }).appendTo(body);
-        $('<div>', {
-            id: 'notifications'
-        }).appendTo(body);
+        var container = ($('<div>', { id: 'page-container' })).appendTo($('body'));
+        $('<div>', { id: 'header' }).appendTo(container);
+        $('<div>', { id: 'control' }).appendTo(container);
+        $('<div>', { id: 'result' }).appendTo(container);
+        $('<div>', { id: 'footer' }).appendTo(container);
+        $('<div>', { id: 'notifications'}).appendTo($('body'));
     }
 
     function loadAllCSS() {
-        var cssList = ["jquery-ui/jquery-ui-1.10.4.custom.min.css",
+        var cssList = [
             "codemirror/codemirror.css",
             "tooltipster/tooltipster.css",
             "tooltipster/tooltipster-survis.css",
@@ -123,7 +121,7 @@ const page = (function () {
                         text: 'select'
                     });
                     showPaperButton.click(function (event) {
-                        toggleSelector('search', paper.id, event);
+                        selectors.toggleSelector('search', paper.id, event);
                         if (showPaperButton.text() == 'select') {
                             showPaperButton.text('deselect');
                         } else {
@@ -355,7 +353,7 @@ const page = (function () {
         }
     };
 
-    function applyLayout() {
+    /*function applyLayout() {
         var layout = $('body').layout({
             applyDefaultStyles: true,
             north: {
@@ -382,7 +380,7 @@ const page = (function () {
             var height = $('#selectors_container').height() + (electron ? 20 : 70);
             layout.sizePane('north', height);
         }
-    }
+    }*/
 
     function openExtraPage(pageName, pageSrc) {
         $('#extra_page').remove();

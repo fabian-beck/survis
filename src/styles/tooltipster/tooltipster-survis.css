@@ -15,7 +15,7 @@
 }
 
 .tooltipster-survis h3 {
-    border-bottom: 1px solid black;
+    border-bottom: var(--strongBorder);
     margin: 10px 0px;
     padding: 0px;
 }

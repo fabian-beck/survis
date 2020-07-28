@@ -11,7 +11,7 @@ body {
 
 label {
     background: #FFFFEE;
-    border: 1px solid black;
+    border: var(--strongBorder);
 }
 
 a {
@@ -32,5 +32,5 @@ a:visited {
 
 h1 {
     font-size: 14pt;
-    border-bottom: 1px solid black;
+    border-bottom: var(--strongBorder);
 }

@@ -1,7 +1,11 @@
 :root {
+    --bgColor1: white;
+    --bgColor2: #f3f3f3;
+    --bgColor3: #ddd;
     --warningBgColor: #fcefa1;
     --errorBgColor: #fef1ec;
     --lightBorder: 1px solid silver;
+    --strongBorder: 1px solid #999;
     --errorBorder: 1px solid #b46464;
     --defaultShadow: 1px 1px 5px #AAAAAA;
     --fontSmall: 10pt;
@@ -18,9 +22,29 @@ body {
     padding: 0;
 }
 
+#page-container{ 
+    display: grid;
+    grid-template-areas: 
+    'header header'
+    'control result'
+    'footer footer';
+    grid-gap: 7px 14px;
+    grid-template-columns: 3fr 4fr;
+    grid-template-rows: min-content auto min-content;
+    background-color: var(--bgColor3);
+    width: 100%;
+    height: 100%;
+}
+
+#page-container > div {
+    padding: 10px;
+    box-shadow: var(--defaultShadow);
+    background-color: var(--bgColor1);
+}
+
 label {
     background: #FFFFEE;
-    border: 1px solid black;
+    border: var(--strongBorder);
 }
 
 a {
@@ -56,7 +80,7 @@ a:visited {
     margin: 5px 5px;
     padding: 2px 5px;
     border-radius: 5px;
-    background: #EEEEEE;
+    background: var(--bgColor2);
     color: #666666;
     font-size: var(--fontSmall);
     cursor: pointer;
@@ -83,11 +107,13 @@ a:visited {
 }
 
 #header {
+    grid-area: header;
+    border-top: var(--strongBorder);
     padding-bottom: 0;
 }
 
 #title {
-    border-bottom: 1px solid black;
+    border-bottom: var(--strongBorder);
     overflow: auto;
 }
 
@@ -123,7 +149,7 @@ a:visited {
 
 #search {
     float: right;
-    margin-top: 12px;
+    margin: 12px 0px 0px 0px;
 }
 
 #search input {
@@ -132,12 +158,14 @@ a:visited {
 }
 
 #control {
+    grid-area: control;
+    margin-left: 7px;
     overflow-y: scroll !important;
 }
 
 #control h2 {
     font-size: 12pt;
-    border-bottom: 1px solid black;
+    border-bottom: var(--strongBorder);
     clear: both;
     margin: 0 0 10px 0;
     cursor: pointer;
@@ -150,7 +178,7 @@ a:visited {
 }
 
 #control h2:hover {
-    background: #EEEEEE;
+    background: var(--bgColor3);
 }
 
 #control h2 .symbol {
@@ -252,7 +280,7 @@ a:visited {
 }
 
 .tag:hover {
-    background: #EEEEEE;
+    background: var(--bgColor3);
 }
 
 .tag.active, .author.active {
@@ -324,14 +352,18 @@ a:visited {
 }
 
 #result {
+    grid-area: result;
+    display: grid;
+    grid-template-rows: min-content auto;
     margin: 0;
+    margin-right: 7px;
     padding: 0 !important;
+    overflow: auto;
 }
 
 #result_header {
     padding: 5px;
     border-bottom: var(--lightBorder);
-    overflow: auto;
 }
 
 #stats {
@@ -348,6 +380,7 @@ a:visited {
 
 #result_body {
     padding: 10px;
+    overflow-y: scroll;
 }
 
 #show_more_entries {
@@ -360,6 +393,7 @@ a:visited {
 }
 
 #footer {
+    grid-area: footer;
     font-size: var(--fontSmall);
 }
 
@@ -373,10 +407,6 @@ a:visited {
 #extra_pages_list {
     float: right;
     height: 19px;
-}
-
-#extra_pages_list .button {
-    /*top: 0;*/
 }
 
 #menu {

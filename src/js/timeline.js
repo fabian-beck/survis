@@ -294,7 +294,7 @@ const timeline = (function () {
     }
 
     function toggleCitationSelector(id) {
-        toggleSelector('search', id, d3.event);
+        selectors.toggleSelector('search', id, d3.event);
     }
 
     function drawTimeline(displayHeight, timelineDiv, dataSelector) {
@@ -389,11 +389,11 @@ const timeline = (function () {
                 return d.key + ': ' + d.value + ' publications';
             })
             .on('click', function (d) {
-                toggleSelector('year', d.key, d3.event);
+                selectors.toggleSelector('year', d.key, d3.event);
             });
         chart.selectAll('svg').data(d3data).enter().append('rect')
             .attr('class', 'bar total tooltip')
-            .style('fill', '#EEEEEE')
+            .style('fill', 'var(--bgColor3)')
             .style('stroke', 'black')
             .attr('shape-rendering', 'crispEdges')
             .attr('x', function (d) {
@@ -410,7 +410,7 @@ const timeline = (function () {
                 return d.key + ': ' + d.value + ' publications';
             })
             .on('click', function (d) {
-                toggleSelector('year', d.key, d3.event);
+                selectors.toggleSelector('year', d.key, d3.event);
             });
     }
 
@@ -439,7 +439,7 @@ const timeline = (function () {
                             return publicationHeight * d.value;
                         })
                         .on('click', function (d) {
-                            toggleSelector('year', d.key, d3.event);
+                            selectors.toggleSelector('year', d.key, d3.event);
                         });
                     j++;
                 }

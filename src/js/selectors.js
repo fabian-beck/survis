@@ -91,7 +91,7 @@ const selectors = (function() {
             });
             this.computeEntrySelectorSimilarities();
             this.applyFilter();
-            tooltips.generateTooltips($('#selectors_container').find('.selector'));
+            page.generateTooltips($('#selectors_container').find('.selector'));
         },
 
         readQueryFromUrl: function () {
@@ -158,7 +158,7 @@ const selectors = (function() {
             }
             var selector = this.nextFreeSelector();
             if (!selector) {
-                notifications.notify('The maximum number of selectors that can be active at the same time is ' + this.nSelectors + '. Please close at least one selector before activating another.', 'error');
+                page.notify('The maximum number of selectors that can be active at the same time is ' + this.nSelectors + '. Please close at least one selector before activating another.', 'error');
                 return;
             }
             selector['type'] = type;

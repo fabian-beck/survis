@@ -1,8 +1,8 @@
 .entry {
     margin: 2px;
-    background: #EEEEEE;
+    background: var(--bgColor2);
     counter-increment: problem;
-    border: 1px solid black;
+    border: var(--strongBorder);
     border-left: 5px solid black;
     padding: 0;
     float: left;

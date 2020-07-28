@@ -1,9 +1,9 @@
 .entry {
     margin-bottom: 5px;
-    background: #EEEEEE;
+    background: var(--bgColor2);
     counter-increment: problem;
-    border: 1px solid black;
-    border-left: 5px solid black;
+    border: var(--strongBorder);
+    border-left: 7px solid black;
     padding: 10px 10px 0;
     overflow: auto;
 }
@@ -125,7 +125,7 @@
 .entry .links {
     font-size: 8pt;
     float: right;
-    #border: 1px solid black;
+    #border: var(--strongBorder);
 }
 
 .entry .links a:before {
