@@ -84,9 +84,6 @@
     background: #DDDDDD;
 }
 
-.entry .tags .add_tag {
-}
-
 .entry .tags .add_tag .tag_input {
     display: none;
 }
@@ -125,16 +122,12 @@
 .entry .links {
     font-size: 8pt;
     float: right;
-    #border: var(--strongBorder);
 }
 
 .entry .links a:before {
     content: "|";
     margin-right: 5px;
     margin-left: 5px;
-}
-
-.entry .links a {
 }
 
 .entry .links a:visited {

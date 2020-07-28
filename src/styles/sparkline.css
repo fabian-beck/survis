@@ -41,13 +41,6 @@
 	height: 14px;
 }
 
-.vis .selector.total {
-	: 5px;
-}
-
-.vis .bar {
-}
-
 .vis .bar.total {
 	background-color: #666666;
 	margin-left: 0;
