@@ -17,7 +17,9 @@ const network = (function () {
 
     function layout(graph, chart, width, height) {
         network.simulation = d3.forceSimulation()
-            .force('link', d3.forceLink().id(d => d.id))
+            .force('link', d3.forceLink()
+                .id(d => d.id)
+                .strength(link => link.strength))
             .force('charge', d3.forceManyBody())
             .force('center', d3.forceCenter(width / 2, height / 2));
 
@@ -102,18 +104,32 @@ const network = (function () {
         const links = [];
         nodes.forEach(nodeA => {
             nodes.forEach(nodeB => {
-                let intersectionSize = 0;
-                Object.keys(bib.parsedEntries).forEach(entry => {
-                    if (bib.parsedEntries[entry].keywords.indexOf(nodeA.id) >= 0 && bib.parsedEntries[entry].keywords.indexOf(nodeB.id) >= 0) {
-                        intersectionSize += 1;
+                if (nodeA.id != nodeB.id) {
+                    let intersectionSize = 0;
+                    Object.keys(bib.parsedEntries).forEach(entry => {
+                        if (bib.parsedEntries[entry].keywords.indexOf(nodeA.id) >= 0 && bib.parsedEntries[entry].keywords.indexOf(nodeB.id) >= 0) {
+                            intersectionSize += 1;
+                        }
+                    });
+                    const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
+                    if (weight > 0.4) {
+                        links.push({
+                            'source': nodeA.id,
+                            'target': nodeB.id,
+                            'weight': weight,
+                        });
                     }
-                });
-                const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
-                if (weight > 0.4) {
-                    links.push({ 'source': nodeA.id, 'target': nodeB.id, 'weight': weight });
                 }
             });
         });
+        links.forEach(linkA => {
+            linkA.degree = links.filter(linkB =>
+                linkA.source === linkB.source || linkA.target === linkB.target
+                || linkA.source === linkB.target || linkA.target === linkB.source
+            ).length;
+            linkA.strength =  Math.pow((Math.pow(linkA.weight, 0.2)) / Math.pow(linkA.degree, 0.5), 0.7)
+        });
+        console.log(links)
         nodes.forEach(node => {
             let neighborhoodNodeSizes = 0;
             links.forEach(link => {
@@ -123,7 +139,6 @@ const network = (function () {
             });
             node.relativeImportance = Math.pow(bib.keywordFrequencies[node.id] / nEntries, 0.5)
                 * Math.pow(bib.keywordFrequencies[node.id] / Math.max(bib.keywordFrequencies[node.id], neighborhoodNodeSizes), 0.5);
-            console.log(node);
         });
         return { links, nodes };
     }
