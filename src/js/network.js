@@ -49,7 +49,7 @@ const network = (function () {
                 .on('end', dragended));
 
         node.append('text')
-            .text(d => d.frequency > 50 ? d.id : '')
+            .text(d => d.relativeImportance > 0.05 ? d.id : '')
             .attr('x', d => 6 + Math.sqrt(d.frequency) * 0.2)
             .attr('y', d => 3 + Math.sqrt(d.frequency) * 0.2);
 
@@ -95,10 +95,11 @@ const network = (function () {
     }
 
     function computeGraph() {
-        let nodes = Object.keys(bib.keywordFrequencies)
+        const nEntries = Object.keys(bib.entries).length;
+        const nodes = Object.keys(bib.keywordFrequencies)
             .filter(keyword => bib.keywordFrequencies[keyword] > 5)
             .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
-        let links = [];
+        const links = [];
         nodes.forEach(nodeA => {
             nodes.forEach(nodeB => {
                 let intersectionSize = 0;
@@ -112,6 +113,17 @@ const network = (function () {
                     links.push({ 'source': nodeA.id, 'target': nodeB.id, 'weight': weight });
                 }
             });
+        });
+        nodes.forEach(node => {
+            let neighborhoodNodeSizes = 0;
+            links.forEach(link => {
+                if (link.source === node.id) {
+                    neighborhoodNodeSizes += bib.keywordFrequencies[link.target];
+                }
+            });
+            node.relativeImportance = Math.pow(bib.keywordFrequencies[node.id] / nEntries, 0.5)
+                * Math.pow(bib.keywordFrequencies[node.id] / Math.max(bib.keywordFrequencies[node.id], neighborhoodNodeSizes), 0.5);
+            console.log(node);
         });
         return { links, nodes };
     }
