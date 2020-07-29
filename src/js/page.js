@@ -21,10 +21,10 @@ const page = (function () {
             clustering.updateClusters();
             entryLayout.updateEntryList();
             setTimeout(
-                function() 
-                {
-                  // workaround: delayed loading waiting for the grid layout to be computed (to determine the correct width of the svg)
-                  timeline.updateTimeline();
+                function () {
+                    // workaround: delayed loading waiting for the grid layout to be computed (to determine the correct width of the svg)
+                    timeline.updateTimeline();
+                    network.update();
                 }, 500);
             if (scrollToTop) {
                 $('#result_body').scrollTop(0);
@@ -68,7 +68,7 @@ const page = (function () {
         $('<div>', { id: 'control' }).appendTo(container);
         $('<div>', { id: 'result' }).appendTo(container);
         $('<div>', { id: 'footer' }).appendTo(container);
-        $('<div>', { id: 'notifications'}).appendTo($('body'));
+        $('<div>', { id: 'notifications' }).appendTo($('body'));
     }
 
     function loadAllCSS() {
@@ -153,6 +153,10 @@ const page = (function () {
         });
         $('<div>', {
             id: 'timeline',
+            class: 'toggle-container'
+        }).appendTo(timelineContainerDiv);
+        $('<div>', {
+            id: 'network',
             class: 'toggle-container'
         }).appendTo(timelineContainerDiv);
         $('<div>', {

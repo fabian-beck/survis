@@ -283,7 +283,7 @@ const bib = (function () {
                         bib.parsedEntries[id]['keywords'] = keywordListParsed;
                     }
                 });
-                update(false);
+                page.update(false);
                 page.notify('Renamed keywords of ' + renameCount + ' entries. ');
             });
             renameDiv.dialog({
