@@ -79,13 +79,13 @@ const network = (function () {
 
         const link = chart.append('g')
             .attr('fill', 'none')
-            .attr('stroke-width', 1.5)
             .selectAll('path')
             .data(graph.links)
             .join('path')
             .attr('stroke', 'black')
             .attr('stroke-opacity', d => Math.pow(d.importance, 0.9))
-            .attr('stroke-width', d => network.edgeStrength + 2 * Math.pow(d.weight, 5));
+            .attr('stroke-width', d => network.edgeStrength + 2 * Math.pow(d.weight, 5))
+            .attr('stroke-dasharray', d => d.weight > 0.99999?'4 1':'');
 
         const node = chart.append('g')
             .attr('class', 'nodes')
