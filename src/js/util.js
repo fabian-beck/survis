@@ -164,13 +164,3 @@ const browserUtil = (function () {
         }
     }
 })();
-
-const uiUtil = (function () {
-    return {
-        toggleControl: function (h2Div) {
-            h2Div.parent().children('.toggle-container').toggle();
-            var symbol = h2Div.find('span.symbol');
-            symbol.text(symbol.text() == '/' ? '>' : '/');
-        },
-    }
-})();

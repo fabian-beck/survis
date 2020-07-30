@@ -10,7 +10,7 @@ const page = (function () {
             initResult();
             initFooter();
             addActions();
-            page.generateTooltips($('body'));
+            this.generateTooltips($('body'));
         },
         update: function (scrollToTop) {
             $('.tooltipstered').tooltipster('hide');
@@ -59,6 +59,11 @@ const page = (function () {
             div.find('.tooltip').tooltipster({
                 theme: 'tooltipster-survis'
             });
+        },
+        toggleControl: function (div) {
+            div.parent().find('.toggle-container').toggle();
+            var symbol = div.find('span.symbol').first();
+            symbol.text(symbol.text() == '/' ? '>' : '/');
         }
     };
 
@@ -146,17 +151,17 @@ const page = (function () {
         var timelineContainerDiv = $('<div>', {
             id: 'timeline-container'
         }).appendTo(controlDiv);
-        var timelineHeading = $('<h2><span class="symbol">/</span>Timeline</h2>').appendTo(timelineContainerDiv);
+        const timelineHeading = $(`
+            <div class="tags-header">
+                <h2><span class="symbol">/</span>Timeline</h2>
+            </div>`)
+            .appendTo(timelineContainerDiv);
         timelineHeading.click(function () {
-            uiUtil.toggleControl(timelineHeading);
+            page.toggleControl(timelineHeading);
             page.updateTimeline();
         });
         $('<div>', {
             id: 'timeline',
-            class: 'toggle-container'
-        }).appendTo(timelineContainerDiv);
-        $('<div>', {
-            id: 'network',
             class: 'toggle-container'
         }).appendTo(timelineContainerDiv);
         $('<div>', {
@@ -166,9 +171,13 @@ const page = (function () {
             id: 'clusters',
             class: 'tag_cloud'
         }).appendTo(controlDiv);
-        var clusterHeading = $('<h2><span class="symbol">/</span>Clusters</h2>').appendTo(clustersDiv);
+        var clusterHeading = $(`
+            <div class="tags-header">
+                <h2><span class="symbol">/</span>Clusters</h2>
+            </div>`)
+            .appendTo(clustersDiv);
         clusterHeading.click(function () {
-            uiUtil.toggleControl(clusterHeading);
+            page.toggleControl(clusterHeading);
             page.updateTimeline();
         });
         $('<div>', {

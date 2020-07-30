@@ -2,6 +2,7 @@
     --bgColor1: white;
     --bgColor2: #f3f3f3;
     --bgColor3: #ddd;
+    --activeBgColor: #ccc;
     --warningBgColor: #fcefa1;
     --errorBgColor: #fef1ec;
     --lightBorder: 1px solid silver;
@@ -94,8 +95,12 @@ a:visited {
 
 .button:hover {
     border: 1px solid #666666;
-    background: #CCCCCC;
+    background: var(--activeBgColor);
     color: black;
+}
+
+.button.active {
+    background-color: var(--activeBgColor);
 }
 
 .ui-layout-resizer {
@@ -163,10 +168,11 @@ a:visited {
     overflow-y: scroll !important;
 }
 
-#control h2 {
-    font-size: 12pt;
+#control .tags-header {
     border-bottom: var(--strongBorder);
+    width: 100%;
     clear: both;
+    height: 27px;
     margin: 0 0 10px 0;
     cursor: pointer;
     -webkit-touch-callout: none;
@@ -177,36 +183,31 @@ a:visited {
     user-select: none;
 }
 
-#control h2:hover {
+#control .tags-header:hover {
     background: var(--bgColor3);
+}
+
+#control h2 {
+    font-size: 12pt;
+    float: left;
+    margin: 4px 0 0 2px;
 }
 
 #control h2 .symbol {
     font-size: var(--fontSmall);
 }
 
-#control .tag_cloud_filter {
-    font-size: 9pt;
+#control .tags-header > div {
     float: right;
     position: relative;
-    height: 0;
-    top: -1px;
-    left: -100px;
-    margin: 0;
+    font-size: var(--fontSmall);
+    margin: 2px 0 0 30px;
 }
 
 #control .tag_cloud_filter input {
     width: 70px;
     font-size: 8pt;
-}
-
-#control .tag_occurrence {
-    font-size: 9pt;
-    float: right;
-    position: relative;
-    height: 0;
-    top: -4px;
-    left: -1px;
+    margin-top: 3px;
 }
 
 #control .button {

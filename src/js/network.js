@@ -1,11 +1,13 @@
 const network = (function () {
 
     return {
+        hidden: true,
         update: function () {
-            $('#network').empty();
+            $('#network_vis').empty();
+            if (this.hidden) return;
             const width = $('#timeline').width() - 3;
-            const height = width;
-            var chart = d3.select('#network').append('svg')
+            const height = width * 0.75;
+            var chart = d3.select('#network_vis').append('svg')
                 .attr('class', 'chart')
                 .style('border', '1px solid black')
                 .attr('height', height + 'px');
@@ -13,6 +15,52 @@ const network = (function () {
             graph = computeGraph();
             layout(graph, chart, width, height);
         }
+    }
+
+    function computeGraph() {
+        const nEntries = Object.keys(bib.entries).length;
+        const nodes = Object.keys(bib.keywordFrequencies)
+            .filter(keyword => bib.keywordFrequencies[keyword] > 5)
+            .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
+        const links = [];
+        nodes.forEach(nodeA => {
+            nodes.forEach(nodeB => {
+                if (nodeA.id != nodeB.id) {
+                    let intersectionSize = 0;
+                    Object.keys(bib.parsedEntries).forEach(entry => {
+                        if (bib.parsedEntries[entry].keywords.indexOf(nodeA.id) >= 0 && bib.parsedEntries[entry].keywords.indexOf(nodeB.id) >= 0) {
+                            intersectionSize += 1;
+                        }
+                    });
+                    const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
+                    if (weight > 0.4) {
+                        links.push({
+                            'source': nodeA.id,
+                            'target': nodeB.id,
+                            'weight': weight,
+                        });
+                    }
+                }
+            });
+        });
+        links.forEach(linkA => {
+            linkA.degree = links.filter(linkB =>
+                linkA.source === linkB.source || linkA.target === linkB.target
+                || linkA.source === linkB.target || linkA.target === linkB.source
+            ).length;
+            linkA.strength = Math.pow((Math.pow(linkA.weight, 0.2)) / Math.pow(linkA.degree, 0.5), 0.7)
+        });
+        nodes.forEach(node => {
+            let neighborhoodNodeSizes = 0;
+            links.forEach(link => {
+                if (link.source === node.id) {
+                    neighborhoodNodeSizes += bib.keywordFrequencies[link.target];
+                }
+            });
+            node.relativeImportance = Math.pow(bib.keywordFrequencies[node.id] / nEntries, 0.5)
+                * Math.pow(bib.keywordFrequencies[node.id] / Math.max(bib.keywordFrequencies[node.id], neighborhoodNodeSizes), 0.5);
+        });
+        return { links, nodes };
     }
 
     function layout(graph, chart, width, height) {
@@ -94,53 +142,6 @@ const network = (function () {
               A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
             `;
         }
-    }
-
-    function computeGraph() {
-        const nEntries = Object.keys(bib.entries).length;
-        const nodes = Object.keys(bib.keywordFrequencies)
-            .filter(keyword => bib.keywordFrequencies[keyword] > 5)
-            .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
-        const links = [];
-        nodes.forEach(nodeA => {
-            nodes.forEach(nodeB => {
-                if (nodeA.id != nodeB.id) {
-                    let intersectionSize = 0;
-                    Object.keys(bib.parsedEntries).forEach(entry => {
-                        if (bib.parsedEntries[entry].keywords.indexOf(nodeA.id) >= 0 && bib.parsedEntries[entry].keywords.indexOf(nodeB.id) >= 0) {
-                            intersectionSize += 1;
-                        }
-                    });
-                    const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
-                    if (weight > 0.4) {
-                        links.push({
-                            'source': nodeA.id,
-                            'target': nodeB.id,
-                            'weight': weight,
-                        });
-                    }
-                }
-            });
-        });
-        links.forEach(linkA => {
-            linkA.degree = links.filter(linkB =>
-                linkA.source === linkB.source || linkA.target === linkB.target
-                || linkA.source === linkB.target || linkA.target === linkB.source
-            ).length;
-            linkA.strength =  Math.pow((Math.pow(linkA.weight, 0.2)) / Math.pow(linkA.degree, 0.5), 0.7)
-        });
-        console.log(links)
-        nodes.forEach(node => {
-            let neighborhoodNodeSizes = 0;
-            links.forEach(link => {
-                if (link.source === node.id) {
-                    neighborhoodNodeSizes += bib.keywordFrequencies[link.target];
-                }
-            });
-            node.relativeImportance = Math.pow(bib.keywordFrequencies[node.id] / nEntries, 0.5)
-                * Math.pow(bib.keywordFrequencies[node.id] / Math.max(bib.keywordFrequencies[node.id], neighborhoodNodeSizes), 0.5);
-        });
-        return { links, nodes };
     }
 
 })();

@@ -3,10 +3,6 @@ const tags = (function () {
     var tagIDCache = {};
 
     return {
-
-        /**
-         * Updates all tag clouds
-         */
         updateTagClouds: function () {
             bib.keywordFrequencies = {};
             $('#tag_clouds').find('.tags-container').empty();
@@ -14,7 +10,6 @@ const tags = (function () {
                 updateTagCloud(this);
             });
         }
-
     };
 
     function updateTagCloud(options) {
@@ -223,8 +218,12 @@ const tags = (function () {
             }
             options.minTagFrequency = i + 1;
         }
-        var id = 'tag_cloud_' + options.field;
-        var tagCloudDiv = $(id);
+        if (options.minTagFrequency < 1) {
+            options.minTagFrequency = 1
+        }
+
+        const id = 'tag_cloud_' + options.field;
+        let tagCloudDiv = $(id);
         if (tagCloudDiv.length == 0) {
             tagCloudDiv = $('<div>', {
                 class: 'tag_cloud',
@@ -233,58 +232,57 @@ const tags = (function () {
             $('#tag_clouds').append(tagCloudDiv);
         }
         tagCloudDiv.empty();
-        var tagOccurrenceDiv = $('<div>', {
-            class: 'tag_occurrence toggle-container',
-            text: 'min'
-        }).appendTo(tagCloudDiv);
-        var frequencySpan = $('<span>', {
-            text: Math.max(1, options.minTagFrequency)
-        });
-        var buttonDec = $('<div>', {
-            class: 'button dec small',
-            text: '-'
-        }).appendTo(tagOccurrenceDiv);
-        buttonDec.click(function () {
+
+        const tagsHeaderDiv = $(`
+                <div class="tags-header">
+                    <h2><span class="symbol">/</span>${options.title}</h2>
+                    <div class="tag_occurrence toggle-container" style="">min frequency<div class="button dec small">-</div><span>${Math.max(1, options.minTagFrequency)}</span><div class="button inc small">+</div></div>
+                    <div class="toggle-container">
+                        <form class="tag_cloud_filter" style="">
+                            <input type="search" placeholder="filter ...">
+                        </form>
+                    </div>
+                </div>`)
+            .appendTo(tagCloudDiv);
+        if (options.field === 'keywords') {
+            const visButton = $(` 
+                <div id="network_vis_button" class="button tooltip toggle-container" title="show/hide keyword relationships as network visualization">
+                    <span class="symbol">7</span>
+                </div>`)
+                .appendTo(tagsHeaderDiv);
+            visButton.click(() => {
+                network.hidden = !network.hidden;
+                visButton.toggleClass('active');
+                network.update();
+            })
+            $(`<div id="network_vis" class="toggle-container"></div>`)
+                .appendTo(tagCloudDiv);
+        }
+        $('<div class="tags-container toggle-container"></div>')
+            .appendTo(tagCloudDiv);
+
+        tagsHeaderDiv.find('.dec').click(() => {
             if (options.minTagFrequency > 1) {
                 options.minTagFrequency--;
-                frequencySpan.text(options.minTagFrequency);
+                tagsHeaderDiv.find('.tag_occurrence span').text(options.minTagFrequency);
                 page.updateTags();
             }
         });
-        if (options.minTagFrequency < 1) {
-            options.minTagFrequency = 1
-        }
-        frequencySpan.appendTo(tagOccurrenceDiv);
-        var buttonInc = $('<div>', {
-            class: 'button inc small',
-            text: '+'
-        }).appendTo(tagOccurrenceDiv);
-        buttonInc.click(function () {
+        tagsHeaderDiv.find('.inc').click(function () {
             options.minTagFrequency++;
-            frequencySpan.text(options.minTagFrequency);
+            tagsHeaderDiv.find('.tag_occurrence span').text(options.minTagFrequency);
             page.updateTags();
         });
-
-        var tagCloudFilterForm = $('<form>', {
-            class: 'tag_cloud_filter toggle-container'
-        }).appendTo(tagCloudDiv);
-        var tagCloudFilterInput = $('<input type="search" placeholder="filter ..."/>').appendTo(tagCloudFilterForm);
-
-        tagCloudFilterInput.on('input', function () {
+        tagsHeaderDiv.find('.tag_cloud_filter input').on('input', () => {
             filterTags(tagCloudDiv);
         });
-        tagCloudFilterForm.submit(function () {
-            return false;
+        tagsHeaderDiv.find('.tag_cloud_filter').submit(event => event.preventDefault());
+        tagsHeaderDiv.click(() => {
+            page.toggleControl(tagsHeaderDiv);
         });
-
-        var h2Div = $('<h2><span class="symbol">/</span>' + options.title + '</h2>').appendTo(tagCloudDiv);
-        h2Div.click(function () {
-            uiUtil.toggleControl(h2Div);
-        });
-
-        tagCloudDiv.append($('<div>', {
-            class: 'tags-container toggle-container'
-        }));
+        tagsHeaderDiv.find('.button, form').click(event => event.stopPropagation());
+        
+        page.generateTooltips(tagsHeaderDiv);
 
         return tagCloudDiv;
     }
