@@ -100,9 +100,11 @@ const network = (function () {
             .append('g');
 
         node.append('circle')
+            .attr('class', 'tooltip')
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
             .attr('fill', '#999')
             .attr('cursor', 'pointer')
+            .attr('title', d => d.id)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
@@ -113,11 +115,9 @@ const network = (function () {
 
         node.append('text')
             .text(d => d.relativeImportance > 0.1 ? d.id : '')
+            .attr('pointer-events', 'none')
             .attr('x', d => 6 + Math.sqrt(d.frequency) * 0.2)
             .attr('y', d => 3 + Math.sqrt(d.frequency) * 0.2);
-
-        node.append('title')
-            .text(d => d.id);
 
         network.simulation
             .nodes(graph.nodes)
@@ -125,6 +125,8 @@ const network = (function () {
 
         network.simulation.force('link')
             .links(graph.links);
+        
+        page.generateTooltips($('#network_vis'));
 
         function ticked() {
             link.attr('d', linkArc);
