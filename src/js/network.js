@@ -2,16 +2,24 @@ const network = (function () {
 
     return {
         hidden: true,
+        minKeywordFrequency: null,
+        minEdgeWeight: 0.5,
+        edgeStrength: 1.0,
         update: function () {
             $('#network_vis').empty();
             if (this.hidden) return;
             const width = $('#timeline').width() - 3;
             const height = width * 0.75;
-            var chart = d3.select('#network_vis').append('svg')
+            var chart = d3.select('#network_vis')
+                .append('svg')
                 .attr('class', 'chart')
                 .style('border', '1px solid black')
-                .attr('height', height + 'px');
-            chart.attr('width', width + 'px');
+                .attr('height', height + 'px')
+                .attr('width', width + 'px')
+                .append('svg:g');
+            d3.select('#network_vis').call(d3.zoom().on("zoom", function () {
+                chart.attr("transform", d3.event.transform)
+            }));
             graph = computeGraph();
             layout(graph, chart, width, height);
         }
@@ -20,7 +28,7 @@ const network = (function () {
     function computeGraph() {
         const nEntries = Object.keys(bib.entries).length;
         const nodes = Object.keys(bib.keywordFrequencies)
-            .filter(keyword => bib.keywordFrequencies[keyword] > 5)
+            .filter(keyword => bib.keywordFrequencies[keyword] >= network.minKeywordFrequency)
             .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
         const links = [];
         nodes.forEach(nodeA => {
@@ -33,7 +41,7 @@ const network = (function () {
                         }
                     });
                     const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
-                    if (weight > 0.4) {
+                    if (weight > network.minEdgeWeight) {
                         links.push({
                             'source': nodeA.id,
                             'target': nodeB.id,
@@ -44,11 +52,8 @@ const network = (function () {
             });
         });
         links.forEach(linkA => {
-            linkA.degree = links.filter(linkB =>
-                linkA.source === linkB.source || linkA.target === linkB.target
-                || linkA.source === linkB.target || linkA.target === linkB.source
-            ).length;
-            linkA.strength = Math.pow((Math.pow(linkA.weight, 0.2)) / Math.pow(linkA.degree, 0.5), 0.7)
+            linkA.importance = Math.min(bib.keywordFrequencies[linkA.source], bib.keywordFrequencies[linkA.target])
+                / Math.max(bib.keywordFrequencies[linkA.source], bib.keywordFrequencies[linkA.target]);
         });
         nodes.forEach(node => {
             let neighborhoodNodeSizes = 0;
@@ -67,9 +72,10 @@ const network = (function () {
         network.simulation = d3.forceSimulation()
             .force('link', d3.forceLink()
                 .id(d => d.id)
-                .strength(link => link.strength))
-            .force('charge', d3.forceManyBody())
-            .force('center', d3.forceCenter(width / 2, height / 2));
+                .strength(link => network.edgeStrength * (0.9 * link.importance * link.weight + 0.1)))
+            .force('charge', d3.forceManyBody().strength(-100))
+            .force('x', d3.forceX(width / 2))
+            .force('y', d3.forceY(height / 2))
 
         const link = chart.append('g')
             .attr('fill', 'none')
@@ -78,28 +84,28 @@ const network = (function () {
             .data(graph.links)
             .join('path')
             .attr('stroke', 'black')
-            .attr('stroke-opacity', d => Math.pow(
-                Math.min(bib.keywordFrequencies[d.source], bib.keywordFrequencies[d.target])
-                / Math.max(bib.keywordFrequencies[d.source], bib.keywordFrequencies[d.target]), 0.9)
-            )
-            .attr('stroke-width', d => 0.5 + 2 * Math.pow(d.weight, 5));
+            .attr('stroke-opacity', d => Math.pow(d.importance, 0.9))
+            .attr('stroke-width', d => network.edgeStrength + 2 * Math.pow(d.weight, 5));
 
         const node = chart.append('g')
             .attr('class', 'nodes')
             .selectAll('g')
             .data(graph.nodes)
-            .enter().append('g')
-
-        node.append('circle')
+            .enter()
+            .append('g');
+            
+            node.append('circle')
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
             .attr('fill', '#999')
+            .attr('x', width / 2)
+            .attr('y', height / 2)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
                 .on('end', dragended));
 
         node.append('text')
-            .text(d => d.relativeImportance > 0.05 ? d.id : '')
+            .text(d => d.relativeImportance > 0.1 ? d.id : '')
             .attr('x', d => 6 + Math.sqrt(d.frequency) * 0.2)
             .attr('y', d => 3 + Math.sqrt(d.frequency) * 0.2);
 

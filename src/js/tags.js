@@ -253,6 +253,7 @@ const tags = (function () {
             visButton.click(() => {
                 network.hidden = !network.hidden;
                 visButton.toggleClass('active');
+                network.minKeywordFrequency = options.minTagFrequency;
                 network.update();
             })
             $(`<div id="network_vis" class="toggle-container"></div>`)
@@ -264,14 +265,12 @@ const tags = (function () {
         tagsHeaderDiv.find('.dec').click(() => {
             if (options.minTagFrequency > 1) {
                 options.minTagFrequency--;
-                tagsHeaderDiv.find('.tag_occurrence span').text(options.minTagFrequency);
-                page.updateTags();
+                updateTagFrequency(tagsHeaderDiv, options);
             }
         });
-        tagsHeaderDiv.find('.inc').click(function () {
+        tagsHeaderDiv.find('.inc').click(() => {
             options.minTagFrequency++;
-            tagsHeaderDiv.find('.tag_occurrence span').text(options.minTagFrequency);
-            page.updateTags();
+            updateTagFrequency(tagsHeaderDiv, options);
         });
         tagsHeaderDiv.find('.tag_cloud_filter input').on('input', () => {
             filterTags(tagCloudDiv);
@@ -312,14 +311,20 @@ const tags = (function () {
         return tagID;
     }
 
-    /**
-     * Looks up the tag for a tag ID
-     */
     function getTag(tagID, field) {
         if (field === 'keywords' || field === 'warning') {
             return tagID;
         }
         return tagIDCache[tagID];
+    }
+
+    function updateTagFrequency(tagsHeaderDiv, options) {
+        tagsHeaderDiv.find('.tag_occurrence span').text(options.minTagFrequency);
+        page.updateTags();
+        if (options.field === 'keywords') {
+            network.minKeywordFrequency = options.minTagFrequency;
+            network.update();
+        }
     }
 
 })();
