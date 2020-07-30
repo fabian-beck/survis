@@ -85,7 +85,7 @@ const network = (function () {
             .attr('stroke', 'black')
             .attr('stroke-opacity', d => Math.pow(d.importance, 0.9))
             .attr('stroke-width', d => network.edgeStrength + 2 * Math.pow(d.weight, 5))
-            .attr('stroke-dasharray', d => d.weight > 0.99999?'4 1':'');
+            .attr('stroke-dasharray', d => d.weight > 0.99999 ? '4 1' : '');
 
         const node = chart.append('g')
             .attr('class', 'nodes')
@@ -93,16 +93,20 @@ const network = (function () {
             .data(graph.nodes)
             .enter()
             .append('g');
-            
-            node.append('circle')
+
+        node.append('circle')
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
             .attr('fill', '#999')
+            .attr('cursor', 'pointer')
             .attr('x', width / 2)
             .attr('y', height / 2)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
-                .on('end', dragended));
+                .on('end', dragended))
+            .on('click', d => {
+                selectors.toggleSelector('keywords', d.id);
+            })
 
         node.append('text')
             .text(d => d.relativeImportance > 0.1 ? d.id : '')
