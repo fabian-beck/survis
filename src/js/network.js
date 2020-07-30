@@ -31,16 +31,21 @@ const network = (function () {
             .filter(keyword => bib.keywordFrequencies[keyword] >= network.minKeywordFrequency)
             .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
         const links = [];
+        const keywordCoOccurrence = {};
+        Object.keys(bib.parsedEntries).forEach(entry => {
+            const keywords = bib.parsedEntries[entry].keywords;
+            keywords.forEach(keywordA => {
+                if (!keywordCoOccurrence[keywordA]) keywordCoOccurrence[keywordA] = {};
+                keywords.forEach(keywordB => {
+                    if (!keywordCoOccurrence[keywordA][keywordB]) keywordCoOccurrence[keywordA][keywordB] = 0;
+                    keywordCoOccurrence[keywordA][keywordB] += 1;
+                });
+            });
+        });
         nodes.forEach(nodeA => {
             nodes.forEach(nodeB => {
                 if (nodeA.id != nodeB.id) {
-                    let intersectionSize = 0;
-                    Object.keys(bib.parsedEntries).forEach(entry => {
-                        if (bib.parsedEntries[entry].keywords.indexOf(nodeA.id) >= 0 && bib.parsedEntries[entry].keywords.indexOf(nodeB.id) >= 0) {
-                            intersectionSize += 1;
-                        }
-                    });
-                    const weight = intersectionSize / bib.keywordFrequencies[nodeA.id];
+                    const weight = keywordCoOccurrence[nodeA.id][nodeB.id] / bib.keywordFrequencies[nodeA.id];
                     if (weight > network.minEdgeWeight) {
                         links.push({
                             'source': nodeA.id,
@@ -98,8 +103,6 @@ const network = (function () {
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
             .attr('fill', '#999')
             .attr('cursor', 'pointer')
-            .attr('x', width / 2)
-            .attr('y', height / 2)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
