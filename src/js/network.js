@@ -74,6 +74,10 @@ const network = (function () {
     }
 
     function layout(graph, chart, width, height) {
+        const defaultNodeColor = '#999';
+        const highlightedNodeColor = 'black';
+        const highlightedNodeColor2 = '#666';
+
         network.simulation = d3.forceSimulation()
             .force('link', d3.forceLink()
                 .id(d => d.id)
@@ -87,6 +91,7 @@ const network = (function () {
             .selectAll('path')
             .data(graph.links)
             .join('path')
+            .attr('class', 'link')
             .attr('stroke', 'black')
             .attr('stroke-opacity', d => Math.pow(d.importance, 0.9))
             .attr('stroke-width', d => network.edgeStrength + 2 * Math.pow(d.weight, 5))
@@ -97,21 +102,56 @@ const network = (function () {
             .selectAll('g')
             .data(graph.nodes)
             .enter()
-            .append('g');
+            .append('g')
+            .attr('class', 'node-container');
 
         node.append('circle')
-            .attr('class', 'tooltip')
+            .attr('class', 'node tooltip')
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
-            .attr('fill', '#999')
+            .attr('fill', defaultNodeColor)
             .attr('cursor', 'pointer')
             .attr('title', d => d.id)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
                 .on('end', dragended))
-            .on('click', d => {
-                selectors.toggleSelector('keywords', d.id);
+            .on('click', d => selectors.toggleSelector('keywords', d.id))
+            .on('mouseover', d => {
+                chart.selectAll('.node')
+                    .filter(d2 => d2.id === d.id)
+                    .attr('fill', highlightedNodeColor);
+                chart.selectAll('.node')
+                    .filter(d2 => d2.id === d.id)
+                    .attr('fill', highlightedNodeColor);
+                const includeSelectedNode = [];
+                const adjacentToSelectedNode = [];
+                chart.selectAll('.link')
+                    .filter(d2 => {
+                        if (d2.source.id != d.id && d2.target.id != d.id) return true;
+                        if (d2.source.id === d.id) {
+                            includeSelectedNode.push(d2.target.id);
+                            adjacentToSelectedNode.push(d2.target.id)
+                        } else {
+                            adjacentToSelectedNode.push(d2.source.id)
+                        }
+                        return false;
+                    })
+                    .attr('visibility', 'hidden');
+                chart.selectAll('.node')
+                    .filter(d2 => includeSelectedNode.indexOf(d2.id) >= 0)
+                    .attr('fill', highlightedNodeColor2);
+                chart.selectAll('.node-container')
+                    .filter(d2 => adjacentToSelectedNode.indexOf(d2.id) < 0 && d2.id != d.id)
+                    .attr('visibility', 'hidden');
             })
+            .on('mouseout', () => {
+                chart.selectAll('.node-container')
+                    .attr('visibility', 'visible');
+                chart.selectAll(`.node`)
+                    .attr('fill', defaultNodeColor);
+                chart.selectAll('.link')
+                    .attr('visibility', 'visible');
+            });
 
         node.append('text')
             .text(d => d.relativeImportance > 0.1 ? d.id : '')
@@ -125,7 +165,7 @@ const network = (function () {
 
         network.simulation.force('link')
             .links(graph.links);
-        
+
         page.generateTooltips($('#network_vis'));
 
         function ticked() {
