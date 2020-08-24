@@ -77,6 +77,8 @@ const network = (function () {
         const defaultNodeColor = '#999';
         const highlightedNodeColor = 'black';
         const highlightedNodeColor2 = '#666';
+        const nLabels = 15;
+        const minLabelsRatio = 0.2;
 
         network.simulation = d3.forceSimulation()
             .force('link', d3.forceLink()
@@ -103,26 +105,29 @@ const network = (function () {
             .data(graph.nodes)
             .enter()
             .append('g')
-            .attr('class', 'node-container');
+            .attr('class', 'node-container')
+            .attr('visibility', 'visible');
 
         node.append('circle')
-            .attr('class', 'node tooltip')
+            .attr('class', 'node')
             .attr('r', d => 3 + Math.sqrt(d.frequency) * 0.2)
             .attr('fill', defaultNodeColor)
             .attr('cursor', 'pointer')
-            .attr('title', d => d.id)
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
                 .on('end', dragended))
             .on('click', d => selectors.toggleSelector('keywords', d.id))
             .on('mouseover', d => {
-                chart.selectAll('.node')
+                const highlightedNodeContainer = chart.selectAll('.node-container')
                     .filter(d2 => d2.id === d.id)
+                    .classed('highlighted', true);
+                highlightedNodeContainer
+                    .selectAll('.node')
                     .attr('fill', highlightedNodeColor);
-                chart.selectAll('.node')
-                    .filter(d2 => d2.id === d.id)
-                    .attr('fill', highlightedNodeColor);
+                highlightedNodeContainer
+                    .selectAll('text')
+                    .attr('font-weight', 'bold');
                 const includeSelectedNode = [];
                 const adjacentToSelectedNode = [];
                 chart.selectAll('.link')
@@ -143,18 +148,23 @@ const network = (function () {
                 chart.selectAll('.node-container')
                     .filter(d2 => adjacentToSelectedNode.indexOf(d2.id) < 0 && d2.id != d.id)
                     .attr('visibility', 'hidden');
+                updateLabelVisibility();
             })
             .on('mouseout', () => {
                 chart.selectAll('.node-container')
-                    .attr('visibility', 'visible');
-                chart.selectAll(`.node`)
+                    .attr('visibility', 'visible')
+                    .classed('highlighted', false);
+                chart.selectAll('.node')
                     .attr('fill', defaultNodeColor);
+                chart.selectAll('.node-container text')
+                    .attr('font-weight', 'normal');
                 chart.selectAll('.link')
                     .attr('visibility', 'visible');
+                updateLabelVisibility();
             });
 
         node.append('text')
-            .text(d => d.relativeImportance > 0.1 ? d.id : '')
+            .text(d => d.id)
             .attr('pointer-events', 'none')
             .attr('x', d => 6 + Math.sqrt(d.frequency) * 0.2)
             .attr('y', d => 3 + Math.sqrt(d.frequency) * 0.2);
@@ -166,7 +176,7 @@ const network = (function () {
         network.simulation.force('link')
             .links(graph.links);
 
-        page.generateTooltips($('#network_vis'));
+        updateLabelVisibility();
 
         function ticked() {
             link.attr('d', linkArc);
@@ -197,7 +207,22 @@ const network = (function () {
               A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
             `;
         }
+
+        function updateLabelVisibility() {
+            let relativeImportanceOfVisible = [];
+            chart.selectAll('.node-container[visibility = "visible"]').each(d => relativeImportanceOfVisible.push(d.relativeImportance));
+            relativeImportanceOfVisible = relativeImportanceOfVisible.sort((a, b) => b - a);
+            const nLabelsAdapted = Math.floor(nLabels * (minLabelsRatio + (1 - minLabelsRatio) * relativeImportanceOfVisible.length / graph.nodes.length));
+            const relativeImportanceLabelingThreshold = relativeImportanceOfVisible.length > nLabelsAdapted ? relativeImportanceOfVisible[nLabelsAdapted] : 0.0;
+            node.selectAll('text')
+                .attr('visibility', d => d.relativeImportance > relativeImportanceLabelingThreshold ? 'inherit' : 'hidden');
+            node.filter(d => d.relativeImportance > relativeImportanceLabelingThreshold)
+                .raise();
+            chart.selectAll('.node-container.highlighted')
+                .raise()
+                .selectAll('text')
+                .attr('visibility', 'visible');
+        }
     }
 
 })();
-
