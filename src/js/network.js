@@ -3,7 +3,7 @@ const network = (function () {
     return {
         hidden: true,
         minKeywordFrequency: null,
-        minEdgeWeight: 0.5,
+        minEdgeWeight: 0.7,
         edgeStrength: 1.0,
         update: function () {
             $('#network_vis').empty();
@@ -26,13 +26,13 @@ const network = (function () {
     }
 
     function computeGraph() {
-        const nEntries = Object.keys(bib.entries).length;
+        const nEntries = Object.keys(bib.filteredEntries).length;
         const nodes = Object.keys(bib.keywordFrequencies)
             .filter(keyword => bib.keywordFrequencies[keyword] >= network.minKeywordFrequency)
             .map(keyword => { return { 'id': keyword, 'frequency': bib.keywordFrequencies[keyword] }; });
         const links = [];
         const keywordCoOccurrence = {};
-        Object.keys(bib.parsedEntries).forEach(entry => {
+        Object.keys(bib.filteredEntries).forEach(entry => {
             const keywords = bib.parsedEntries[entry].keywords;
             keywords.forEach(keywordA => {
                 if (!keywordCoOccurrence[keywordA]) keywordCoOccurrence[keywordA] = {};
