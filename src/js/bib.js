@@ -1,10 +1,12 @@
 const bib = (function () {
 
     var entries = readBibtex();
-    if (!entries && !electron) {
-        entries = generatedBibEntries;
-    } else {
-        console.error('Could not load bibliography: unknown reason. Please check if file is UTF8 encoded.');
+    if (!entries || Object.keys(entries).length === 0) {
+        if (!electron) {
+            entries = generatedBibEntries;
+        } else {
+            console.error('Could not load bibliography: unknown reason. Please check if file is UTF8 encoded.');
+        }
     }
 
     return {
