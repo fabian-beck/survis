@@ -10,8 +10,8 @@ const warnings = (function () {
     return {
 
         expectedFields: {
-            inproceedings: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year', 'doi', 'abstract'],
-            article: ['author', 'journal', 'number', 'pages', 'title', 'volume', 'year', 'doi', 'abstract'],
+            inproceedings: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year', 'doi'],
+            article: ['author', 'journal', 'number', 'pages', 'title', 'volume', 'year', 'doi'],
             techreport: ['author', 'institution', 'title', 'year'],
             incollection: ['author', 'booktitle', 'pages', 'publisher', 'title', 'year'],
             book: ['author', 'publisher', 'title', 'year'],
@@ -48,6 +48,9 @@ const warnings = (function () {
         },
 
         computeMissingFieldWarning: function (entry) {
+            function condenseTitle(title) {
+                return title.toLowerCase().replace(/\W+/g, '');
+            }
             var warningsList = [];
             if (entry) {
                 var expected = warnings.expectedFields[entry['type']];
@@ -58,29 +61,33 @@ const warnings = (function () {
                                 type: `missing or empty field '${field}'`,
                                 fix: {
                                     description: 'try to load from CrossRef', 'function': function (onFix) {
-                                        const titleSearchString = (entry.doi ? `/${entry.doi}` : `?query=${entry.title.replace(/\W+/g, '+')}`);
-                                        fetch(`https://api.crossref.org/works${titleSearchString}`).then(response => {
+                                        page.notify('Loading data from CrossRef...');
+                                        const searchString = (entry.doi ? `/${entry.doi}` : `?query=${entry.title.replace(/\W+/g, '+')}`);
+                                        fetch(`https://api.crossref.org/works${searchString}`).then(response => {
                                             return response.json()
                                         }).then(data => {
                                             if (!data.message) {
-                                                page.notify(`Could not find a publication with this ${(entry.doi ? 'DOI' : 'title')} on CrossRef.`, 'error');
+                                                throw 'No return message';
+                                            }
+                                            const result = (entry.doi ? data.message : data.message.items[0]);
+                                            if (!entry.doi && condenseTitle(entry.title) != condenseTitle(result.title[0])) {
+                                                throw `Titles do not match: "${entry.title}" and "${result.title[0]}"`;
+                                            }
+                                            page.notify(`Paper found on CrossRef titled '${result.title}'`);
+                                            let value = (fieldCrossRefMap[field] ? fieldCrossRefMap[field](result) : result[field]);
+                                            if (!value) {
+                                                page.notify(`However, field '${field}' not available in the CrossRef record.`, 'error')
                                             } else {
-                                                const result = (entry.doi ? data.message : data.message.items[0]);
-                                                page.notify(`Paper found on CrossRef titled '${result.title}'`);
-                                                let value = (fieldCrossRefMap[field] ? fieldCrossRefMap[field](result) : result[field]);
-                                                if (!value) {
-                                                    page.notify(`However, field '${field}' not available in the CrossRef record.`, 'error')
-                                                } else {
-                                                    if (field === 'pages') {
-                                                        value = value.replace('-', '--');
-                                                    }
-                                                    entry[field] = value;
-                                                    page.notify(`Updated field '${field}' with value '${value}'.`)
-                                                    onFix(entry);
+                                                if (field === 'pages') {
+                                                    value = value.replace('-', '--');
                                                 }
+                                                entry[field] = value;
+                                                page.notify(`Updated field '${field}' with value '${value}'.`)
+                                                onFix(entry);
                                             }
                                         }).catch(error => {
-                                            console.log(error);
+                                            console.error(error);
+                                            page.notify(`Could not find a publication with this ${(entry.doi ? 'DOI' : 'title')} on CrossRef.`, 'error');
                                         });
                                     }
                                 }
