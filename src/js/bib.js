@@ -306,7 +306,7 @@ const bib = (function () {
                 return bibParser.getEntries();
             } catch (err) {
                 console.error(err);
-                alert('Could not load bibliography: \n\n' + err.substring(0, 200));
+                alert('Could not load bibliography: \n\n' + err);
             }
             return null;
         } else {
