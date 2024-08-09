@@ -55,6 +55,7 @@ Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Disseminati
 * Optimization of Parallel Computing Systems - http://www.smemeti.com/slr/
 * Deep learning visualizations - https://snie2012.github.io/deep-learning-vis-collection/
 * Visualization in Astrophysics - https://tdavislab.github.io/astrovis-survis/
+* Categorical Visualisation Techniques - https://cat-vis.github.io/src/
 
 Please contact me (fabian.beck@uni-bamberg.de) if you know other collections using SurVis.
 
