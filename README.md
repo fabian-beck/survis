@@ -53,7 +53,7 @@ Beck, Fabian; Koch, Sebastian; Weiskopf, Daniel: Visual Analysis and Disseminati
 * Visualization of Cultural Heritage Collection Data - https://danubevislab.github.io/collectionvis/
 * Survey of Visual Summaries - http://graphics.cs.wisc.edu/Vis/vis_summaries/
 * Optimization of Parallel Computing Systems - http://www.smemeti.com/slr/
-* Deep learning visualizations - https://snie2012.github.io/deep-learning-vis-collection/
+* Deep Learning Visualizations - https://snie2012.github.io/deep-learning-vis-collection/
 * Visualization in Astrophysics - https://tdavislab.github.io/astrovis-survis/
 * Categorical Visualisation Techniques - https://cat-vis.github.io/src/
 
