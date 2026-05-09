@@ -1,14 +1,109 @@
-@article{Beck2016Visual,
-  abstract = {Bibiographic data such as collections of scientific articles and citation networks have been studied extensively in information visualization and visual analytics research. Powerful systems have been built to support various types of bibliographic analysis, but they require some training and cannot be used to disseminate the insights gained. In contrast, we focused on developing a more accessible visual analytics system, called SurVis, that is ready to disseminate a carefully surveyed literature collection. The authors of a survey may use our Web-based system to structure and analyze their literature database. Later, readers of the survey can obtain an overview, quickly retrieve specific publications, and reproduce or extend the original bibliographic analysis. Our system employs a set of selectors that enable users to filter and browse the literature collection as well as to control interactive visualizations. The versatile selector concept includes selectors for textual search, filtering by keywords and meta-information, selection and clustering of similar publications, and following citation links. Agreement to the selector is represented by word-sized sparkline visualizations seamlessly integrated into the user interface. Based on an analysis of the analytical reasoning process, we derived requirements for the system. We developed the system in a formative way involving other researchers writing literature surveys. A questionnaire study with 14 visual analytics experts confirms that SurVis meets the initially formulated requirements.},
-  author = {Beck, Fabian and Koch, Sebastian and Weiskopf, Daniel},
-  doi = {10.1109/TVCG.2015.2467757},
-  journal = {IEEE Transactions on Visualization and Computer Graphics},
-  keywords = {type:system, visual_analytics, sparklines, information_retrieval, clustering, literature_browser},
-  number = {01},
-  publisher = {IEEE},
-  volume = {22},
-  series = {TVCG},
-  title = {Visual Analysis and Dissemination of Scientific Literature Collections with {SurVis}},
-  url = {http://www.visus.uni-stuttgart.de/uploads/tx_vispublications/vast15-survis.pdf},
-  year = {2016}
+@inproceedings{Karpukhin2020,
+  author = {Karpukhin, Vladimir and Oguz, Barlas and Min, Sewon and Lewis, Patrick and Wu, Ledell and Edunov, Sergey and Chen, Danqi and Yih, Wen-tau},
+  title = {Dense Passage Retrieval for Open-Domain Question Answering},
+  booktitle = {Proceedings of EMNLP 2020},
+  year = {2020},
+  doi = {10.18653/v1/2020.emnlp-main.550},
+  keywords = {classification:foundations_of_rag, evaluation:software_performance, year:2020, dense_retrieval, open_domain_qa, dual_encoder, bert},
+  abstract = {DPR uses two BERT encoders trained with in-batch negatives to retrieve relevant passages for open-domain question answering. It outperforms BM25 by 9 to 19 percent in top-20 accuracy across five QA datasets including Natural Questions and TriviaQA.},
+  series = {EMNLP}
+}
+
+@inproceedings{Parvez2021,
+  author = {Parvez, Md Rizwan and Ahmad, Wasi Uddin and Chakraborty, Saikat and Ray, Baishakhi and Chang, Kai-Wei},
+  title = {Retrieval Augmented Code Generation and Summarization},
+  booktitle = {Findings of EMNLP 2021},
+  year = {2021},
+  doi = {10.18653/v1/2021.findings-emnlp.232},
+  keywords = {classification:foundations_of_rag, evaluation:software_performance, year:2021, code_generation, code_summarization, redcoder},
+  abstract = {REDCODER extends RAG to code generation and code summarization tasks. It shows that retrieved code does not need to match the target exactly to help the model produce better outputs, demonstrating RAG can transfer beyond open-domain QA.},
+  series = {EMNLP Findings}
+}
+
+@article{Ahn2022,
+  author = {Ahn, Yong Suk and Lee, Sang Goo and Shim, Junho and Park, Jihie},
+  title = {Retrieval-Augmented Response Generation for Knowledge-Grounded Conversation in the Wild},
+  journal = {IEEE Access},
+  year = {2022},
+  doi = {10.1109/ACCESS.2022.3228964},
+  keywords = {classification:foundations_of_rag, evaluation:software_performance, year:2022, dialogue, conversational_ai, reddit, knowledge_grounded},
+  abstract = {This paper applies RAG to in-the-wild conversational data from Reddit. The model combines global topic keywords from the whole conversation with local context to retrieve documents and generate grounded responses, even when no ground truth knowledge labels are available.},
+  series = {IEEE Access}
+}
+
+@inproceedings{Jiang2023,
+  author = {Jiang, Zhengbao and Xu, Frank F. and Gao, Luyu and Sun, Zhiqing and Liu, Qian and Dwivedi-Yu, Jane and Yang, Yiming and Callan, Jamie and Neubig, Graham},
+  title = {Active Retrieval Augmented Generation},
+  booktitle = {Proceedings of EMNLP 2023},
+  year = {2023},
+  doi = {10.18653/v1/2023.emnlp-main.495},
+  keywords = {classification:adaptive_rag, evaluation:software_performance, year:2023, active_retrieval, flare, long_form_generation},
+  abstract = {FLARE introduces active retrieval where the model triggers a new retrieval whenever its next-token probability falls below a threshold. The query is built from what the model is about to write rather than what it already wrote, which is the key innovation.},
+  series = {EMNLP}
+}
+
+@article{Jeong2024,
+  author = {Jeong, Minbyul and Sohn, Jiwoong and Sung, Mujeen and Kang, Jaewoo},
+  title = {Improving Medical Reasoning through Retrieval and Self-Reflection with Retrieval-Augmented Large Language Models},
+  journal = {Bioinformatics},
+  year = {2024},
+  doi = {10.1093/bioinformatics/btae238},
+  keywords = {classification:adaptive_rag, evaluation:software_performance, year:2024, medical_qa, self_reflection, self_biorag, domain_specific},
+  abstract = {Self-BioRAG adapts the Self-RAG self-reflection mechanism to the medical domain by replacing the general retriever with MedCPT and Wikipedia with PubMed and clinical guidelines. The 7B model outperforms general-purpose models of the same size on USMLE-style questions by 7.2 percent.},
+  series = {Bioinformatics}
+}
+
+@inproceedings{Fan2024,
+  author = {Fan, Wenqi and Ding, Yujuan and Ning, Liangbo and Wang, Shijie and Li, Hengyun and Yin, Dawei and Chua, Tat-Seng and Li, Qing},
+  title = {A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models},
+  booktitle = {Proceedings of KDD 2024},
+  year = {2024},
+  doi = {10.1145/3637528.3671470},
+  keywords = {classification:advanced_architectures, evaluation:literature_review, year:2024, survey, taxonomy, augmentation_methods},
+  abstract = {This KDD 2024 survey systematically reviews RAG methods combined with LLMs. It introduces three classification dimensions: architecture, training strategies, and application scenarios. The augmentation taxonomy of input, intermediate, and output layer integration is widely cited.},
+  series = {KDD}
+}
+
+@inproceedings{Xu2024,
+  author = {Xu, Zhentao and Cruz, Mark Jerome and Guevara, Matthew and Wang, Tie and Deshpande, Manasi and Wang, Xiaofeng and Li, Zheng},
+  title = {Retrieval-Augmented Generation with Knowledge Graphs for Customer Service Question Answering},
+  booktitle = {Proceedings of ACM SIGIR 2024},
+  year = {2024},
+  doi = {10.1145/3626772.3661370},
+  keywords = {classification:advanced_architectures, evaluation:case_study, year:2024, knowledge_graph, customer_service, linkedin, industrial_application},
+  abstract = {LinkedIn parses each Jira ticket into a tree and connects all tickets into a graph. Retrieval finds subgraphs instead of text chunks, preserving internal structure and explicit ticket relationships. The system reduced real ticket resolution time by 28.6 percent in production.},
+  series = {SIGIR}
+}
+
+@inproceedings{Qian2025,
+  author = {Qian, Hongjin and Liu, Zheng and Zhang, Peitian and Mao, Kelong and Lian, Defu and Zhao, Wayne Xin and Dou, Zhicheng},
+  title = {MemoRAG: Boosting Long Context Processing with Global Memory-Enhanced Retrieval Augmentation},
+  booktitle = {Proceedings of the ACM Web Conference 2025},
+  year = {2025},
+  doi = {10.1145/3696410.3714805},
+  keywords = {classification:advanced_architectures, evaluation:software_performance, year:2025, long_context, memory, dual_system, memorag},
+  abstract = {MemoRAG handles tasks where queries cannot be searched directly, such as full-book summarisation. A lightweight model first compresses the long text into KV memory, generates a draft answer as the retrieval query, then locates precise evidence from the original text.},
+  series = {WWW}
+}
+
+@inproceedings{Barnett2024,
+  author = {Barnett, Scott and Kurniawan, Stefanus and Thudumu, Srikanth and Brannelly, Zach and Abdelrazek, Mohamed},
+  title = {Seven Failure Points When Engineering a Retrieval Augmented Generation System},
+  booktitle = {Proceedings of CAIN 2024},
+  year = {2024},
+  doi = {10.1145/3644815.3644945},
+  keywords = {classification:engineering_evaluation, evaluation:case_study, year:2024, failure_modes, system_engineering, deployment},
+  abstract = {This paper summarises seven typical failure modes from three real RAG deployments. Two key insights: real RAG problems only emerge after deployment, and robustness must be built incrementally rather than designed upfront. The case studies expose evaluation difficulties.},
+  series = {CAIN}
+}
+
+@inproceedings{Park2025,
+  author = {Park, Chanhee and Moon, Hyunsoo and Park, Sungbin and Lim, Heuiseok},
+  title = {MIRAGE: A Metric-Intensive Benchmark for Retrieval-Augmented Generation Evaluation},
+  booktitle = {Findings of NAACL 2025},
+  year = {2025},
+  doi = {10.18653/v1/2025.findings-naacl.157},
+  keywords = {classification:engineering_evaluation, evaluation:software_performance, year:2025, benchmark, evaluation_metrics, mirage},
+  abstract = {MIRAGE is a benchmark dataset designed for fine-grained RAG evaluation. It splits accuracy into four metrics including noise vulnerability and context misinterpretation, and reduces the retrieval pool from millions to 37,800 to make evaluation accessible to small teams.},
+  series = {NAACL Findings}
 }
